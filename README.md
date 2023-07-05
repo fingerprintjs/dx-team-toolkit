@@ -1,2 +1,26 @@
-# dx-team-toolkit
-DX Team shared code and configurations like GitHub Actions reusable workflows
+# DX Team Toolkit
+
+## Reusable workflows
+
+### 1. Run tests and show coverage diff
+
+#### Prerequisites:
+1. Javascript/Typescript based project configured with `yarn`
+2. `yarn build` command builds the project
+3. `yarn test:coverage` runs tests and prepares coverage report in `./coverage/coverage.txt`
+
+#### Example of usage:
+```yaml
+name: Check coverage for PR
+
+on:
+  pull_request:
+
+jobs:
+  run-tests-check-coverage:
+    name: Run tests & check coverage
+    permissions:
+      checks: write
+      pull-requests: write
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/coverage-diff.yml@main
+```
