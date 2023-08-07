@@ -43,7 +43,7 @@ on:
       - main
 
 jobs:
-  generate-docs:
+  generate-docs-and-coverage:
     name: Generate docs and coverage report
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@main
 ```
