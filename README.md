@@ -47,3 +47,25 @@ jobs:
     name: Generate docs and coverage report
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@main
 ```
+
+### 3. Analyze commits
+
+- Checks with `commitlint` that all commit messages made in rules of `Semantic release`.
+- Generates release preview: next version and release notes.
+
+#### Prerequisites:
+1. Project uses `Semantic release` for a release workflow
+
+#### Example of usage:
+```yaml
+name: Analyze Commit Messages
+on: [pull_request]
+
+permissions:
+  pull-requests: write
+  contents: write
+jobs:
+  analyze-commits:
+    name: Generate docs and coverage report
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/analyze-commits.yml@main
+```
