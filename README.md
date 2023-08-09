@@ -22,7 +22,7 @@ jobs:
     permissions:
       checks: write
       pull-requests: write
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/coverage-diff.yml@main
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/coverage-diff.yml@v1
 ```
 
 ### 2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch
@@ -45,7 +45,7 @@ on:
 jobs:
   generate-docs-and-coverage:
     name: Generate docs and coverage report
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@main
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
 ```
 
 ### 3. Analyze commits
@@ -67,5 +67,5 @@ permissions:
 jobs:
   analyze-commits:
     name: Generate docs and coverage report
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/analyze-commits.yml@main
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/analyze-commits.yml@v1
 ```
