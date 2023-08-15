@@ -1,0 +1,65 @@
+name: 'Build TypeScript project'
+on:
+  workflow_call:
+    inputs:
+      yarnFlags:
+        description: 'Additional flags for yarn install'
+        required: false
+        type: string
+      artifactName:
+        description: 'Name of the artifact to upload'
+        required: false
+        type: string
+      artifactPath:
+        description: 'Path of the files to upload as artifact'
+        required: false
+        type: string
+
+jobs:
+  build:
+    name: 'Build sdk using last node version'
+    runs-on: ubuntu-latest
+    steps:
+      - name: 'Checkout project for pull_request_target trigger'
+        if: ${{ github.event_name == 'pull_request_target' }}
+        uses: actions/checkout@v3
+        with:
+          ref: ${{ github.event.pull_request.head.sha }}
+
+      - name: 'Checkout project for other scenarios'
+        if: ${{ github.event_name != 'pull_request_target' }}
+        uses: actions/checkout@v3
+
+      - name: 'Install latest node version'
+        uses: actions/setup-node@v3
+
+      - name: 'Cache'
+        uses: actions/cache@v3
+        with:
+          path: node_modules
+          key: nodemodules-${{ hashFiles('yarn.lock') }}
+          restore-keys: nodemodules-
+
+      - name: 'Install Dependencies and prepare packages'
+        run: yarn install ${{ inputs.yarnFlags }}
+        env:
+          CI: true
+
+      - name: 'Build'
+        run: yarn build
+
+      - name: 'Lint'
+        run: yarn lint
+
+      - name: 'Run tests'
+        run: yarn test
+
+      - name: 'Check types'
+        run: yarn test:dts
+
+      - name: 'Upload artifact'
+        if: ${{ inputs.artifactName }}
+        uses: actions/upload-artifact@v3
+        with:
+          name: ${{ inputs.artifactName }}
+          path: ${{ inputs.artifactPath || './dist' }}
