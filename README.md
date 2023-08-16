@@ -86,12 +86,12 @@ jobs:
 
 #### Inputs
 
-| Input Parameter              | Required | Type    | Default    | Description |
-|------------------------------|----------|---------|------------|-------------|
-| `yarnFlags`                  | No       | String  | `""`       | Additional flags for the `yarn install` command. |
-| `artifactName`               | No       | String  | `""`       | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
-| `artifactPath`               | No       | String  | `"./dist"` | Path of the files to upload as artifact. |
-| `checkoutPersistCredentials` | No       | Boolean | `true`     | Whether to persist credentials for checkout. |
+| Input Parameter              | Required | Type    | Default  | Description |
+|------------------------------|----------|---------|----------|-------------|
+| `yarnFlags`                  | No       | String  | `""`     | Additional flags for the `yarn install` command. |
+| `artifactName`               | No       | String  | `""`     | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
+| `artifactPath`               | No       | String  | `"./"`   | Path of the files to upload as artifact. |
+| `checkoutPersistCredentials` | No       | Boolean | `true`   | Whether to persist credentials for checkout. |
 
 #### Examples of usage:
 
