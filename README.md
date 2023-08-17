@@ -140,3 +140,40 @@ jobs:
       - name: Run tests
         run: yarn test:functional
 ```
+
+### 5. Release TypeScript project
+
+#### Description
+
+This workflow handles the release process for a TypeScript project. It builds the project, runs CI checks, and performs a semantic release.
+
+#### Prerequisites:
+
+1. NodeJS project
+2. Ensure that your repository is set up with the necessary environment and secrets for production
+3. Compatible with the `build-typescript-project.yml` workflow
+4. Secrets `GH_RELEASE_TOKEN` and `NPM_AUTH_TOKEN` should be set in the `production` environment
+
+#### Environment
+
+This workflow uses the `production` environment, which should be configured with the following secrets:
+- `GH_RELEASE_TOKEN`: GitHub token for creating releases
+- `NPM_AUTH_TOKEN`: NPM authentication token for publishing packages
+
+#### Usage
+
+```yaml
+name: release
+on:
+  push:
+    branches:
+      - main
+      - test
+jobs:
+  release-workflow:
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-typescript-project.yml
+```
+
+In this example, the workflow is triggered on a push event to the `main` or `test` branches. The secrets are automatically picked up from the `production` environment.
+
+Make sure you've configured the `production` environment with the required secrets (`GH_RELEASE_TOKEN` and `NPM_AUTH_TOKEN`) in your repository settings.
