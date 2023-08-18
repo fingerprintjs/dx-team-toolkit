@@ -150,15 +150,19 @@ This workflow handles the release process for a TypeScript project. It builds th
 #### Prerequisites:
 
 1. NodeJS project
-2. Ensure that your repository is set up with the necessary environment and secrets for production
+2. The workflow requires the `production` environment to be configured in your repository settings.
 3. Compatible with the `build-typescript-project.yml` workflow
 4. Secrets `GH_RELEASE_TOKEN` and `NPM_AUTH_TOKEN` should be set in the `production` environment
 
-#### Environment
+#### Workflow Secrets
 
-This workflow uses the `production` environment, which should be configured with the following secrets:
-- `GH_RELEASE_TOKEN`: GitHub token for creating releases
-- `NPM_AUTH_TOKEN`: NPM authentication token for publishing packages
+The workflow expects the following secrets to be provided:
+
+| Secret Name        | Description                                      |
+|--------------------|--------------------------------------------------|
+| `GH_RELEASE_TOKEN` | GitHub token for creating releases               |
+| `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages |
+
 
 #### Usage
 
@@ -172,8 +176,11 @@ on:
 jobs:
   release-workflow:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-typescript-project.yml
+  secrets:
+    GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 ```
 
 In this example, the workflow is triggered on a push event to the `main` or `test` branches. The secrets are automatically picked up from the `production` environment.
 
-Make sure you've configured the `production` environment with the required secrets (`GH_RELEASE_TOKEN` and `NPM_AUTH_TOKEN`) in your repository settings.
+Make sure you've configured the `production` environment and the required secrets (`GH_RELEASE_TOKEN` and `NPM_AUTH_TOKEN`) in your repository settings.

@@ -1,6 +1,11 @@
 name: 'Release TypeScript project'
 on:
   workflow_call:
+    secrets:
+      GH_RELEASE_TOKEN:
+        required: true
+      NPM_AUTH_TOKEN:
+        required: true
 
 jobs:
   build-and-check:
