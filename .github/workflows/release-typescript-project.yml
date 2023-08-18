@@ -5,7 +5,7 @@ on:
 jobs:
   build-and-check:
     name: 'Build project and run CI checks'
-    uses: ./build-typescript-project.yml
+    uses: ./.github/workflows/build-typescript-project.yml
 
   release:
     name: 'Release'
