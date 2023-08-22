@@ -1,6 +1,16 @@
 name: 'Generate docs and coverage report'
 on:
   workflow_call:
+    inputs:
+      prepare-gh-pages-commands:
+        required: false
+        default: |
+          mv docs ./gh-pages
+          mv coverage/lcov-report ./gh-pages/coverage
+        type: string
+        description: >
+          Commands to prepare the content of the gh-pages folder. The gh-pages folder will be created automatically.
+          Only specify the commands for moving files into it.
 
 jobs:
   generate-docs-and-coverage:
@@ -10,7 +20,7 @@ jobs:
         uses: actions/checkout@v3
 
       - name: Cache
-        uses: actions/cache@v2
+        uses: actions/cache@v3
         with:
           path: node_modules
           key: nodemodules-${{ hashFiles('yarn.lock') }}
@@ -35,10 +45,12 @@ jobs:
           output: coverage/lcov-report/badges.svg
 
       - name: Prepare folder for gh-pages
-        run: mv coverage/lcov-report ./docs/coverage
+        run: |
+          mkdir gh-pages
+          ${{ github.event.inputs.prepare-gh-pages-commands }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@8817a56e5bfec6e2b08345c81f4d422db53a2cdc
         with:
           branch: gh-pages
-          folder: docs
+          folder: gh-pages
