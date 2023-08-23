@@ -12,16 +12,6 @@ jobs:
       prepare-command: 'echo "prepare python"'
     secrets:
       GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-  release-server-sdk-java:
-    name: 'Release Java SDK'
-    uses: ./.github/workflows/release-server-sdk.yml
-    with:
-      language: java
-      language-version: '8'
-      java-version: '8'
-      prepare-command: 'echo "prepare java"'
-    secrets:
-      GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-server-sdk-dotnet:
     name: 'Release DotNET SDK'
     uses: ./.github/workflows/release-server-sdk.yml
