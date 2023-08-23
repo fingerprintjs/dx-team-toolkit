@@ -1,6 +1,11 @@
 name: 'Release TypeScript project'
 on:
   workflow_call:
+    inputs:
+      run-after-install:
+        type: string
+        required: false
+        description: Commands to run after installing dependencies.
     secrets:
       GH_RELEASE_TOKEN:
         required: true
@@ -34,6 +39,10 @@ jobs:
         run: yarn install
         env:
           CI: true
+
+      - name: 'Run after install commands'
+        run: ${{ github.event.inputs.run-after-install }}
+        if: ${{ github.event.inputs.run-after-install != '' }}
 
       - name: 'Semantic Release'
         uses: cycjimmy/semantic-release-action@91ab76a4a393a8d0c4739e9aea1818b56bc953ea
