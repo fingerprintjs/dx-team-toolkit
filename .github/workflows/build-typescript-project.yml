@@ -2,6 +2,10 @@ name: 'Build TypeScript project'
 on:
   workflow_call:
     inputs:
+      runAfterInstall:
+        type: string
+        required: false
+        description: Commands to run after installing dependencies.
       yarnFlags:
         description: 'Additional flags for yarn install'
         required: false
@@ -45,6 +49,10 @@ jobs:
         run: yarn install ${{ inputs.yarnFlags }}
         env:
           CI: true
+
+      - name: 'Run after install'
+        run: ${{ inputs.runAfterInstall }}
+        if: ${{ inputs.runAfterInstall }}
 
       - name: 'Build'
         run: yarn build
