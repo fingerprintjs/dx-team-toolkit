@@ -49,7 +49,7 @@ jobs:
         with:
           distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: ${{ inputs.java-version }}
-          cache: 'gradle'
+          cache: ${{ inputs.language == 'java' && 'gradle' || '' }}
 
       - name: 'Install DotNET'
         if: ${{ inputs.language == 'dotnet' }}
