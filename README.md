@@ -33,7 +33,19 @@ jobs:
 3. `yarn test:coverage` runs tests and prepares coverage report in `./coverage/coverage.txt`
 4. `yarn docs` generate documentation using typedoc in `./docs` folder
 
-#### Example of usage:
+> **Note**: By default, this workflow prepares the `gh-pages` folder by moving the contents of `./docs`
+> and `./coverage/lcov-report` into it. If you need a different structure, you can override the default behavior by
+> passing the appropriate commands in the `prepare-gh-pages-commands` input parameter.
+
+#### Inputs
+
+#### Inputs
+
+| Input Parameter             | Required | Type   | Default                                                                             | Description                                                                                                                                                        |
+|-----------------------------|----------|--------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `prepare-gh-pages-commands` | No       | String | <pre>mv docs/* ./gh-pages<br>mv coverage/lcov-report/*<br>./gh-pages/coverage</pre> | Commands to prepare the content of the `gh-pages` folder. The `gh-pages` folder will be created automatically. Only specify the commands for moving files into it. |
+
+#### Example of usage with default behavior:
 ```yaml
 name: Generate docs and coverage report
 
@@ -47,6 +59,32 @@ jobs:
     name: Generate docs and coverage report
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
 ```
+
+This example uses the default commands to prepare the content of the gh-pages folder, which moves the `docs` and
+`coverage/lcov-report` folders into the `gh-pages` folder.
+
+#### Example of usage with custom behavior:
+```yaml
+name: Generate docs and coverage report
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  generate-docs-and-coverage:
+    name: Generate docs and coverage report
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
+    with:
+      prepare-gh-pages-commands: |
+        docs/* ./gh-pages
+        mv coverage/lcov-report ./gh-pages/coverage
+```
+
+In this example, we're explicitly passing the `prepare-gh-pages-commands` parameter with the commands to move the `docs`
+and `coverage/lcov-report` folders into the `gh-pages` folder. You can customize these commands to fit your project's
+structure.
 
 ### 3. Analyze commits
 
