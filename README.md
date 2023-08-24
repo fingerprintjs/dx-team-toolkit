@@ -10,6 +10,12 @@
 2. `yarn build` command builds the project
 3. `yarn test:coverage` runs tests and prepares coverage report in `./coverage/coverage.txt`
 
+#### Inputs
+
+| Input Parameter   | Required | Type   | Default    | Description                                                                                |
+|-------------------|----------|--------|------------|--------------------------------------------------------------------------------------------|
+| `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies.                                             |
+
 #### Example of usage:
 
 ```yaml
