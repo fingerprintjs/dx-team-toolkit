@@ -1,6 +1,11 @@
 name: 'Run tests & check coverage workflow'
 on:
   workflow_call:
+    inputs:
+      runAfterInstall:
+        type: string
+        required: false
+        description: Commands to run after installing dependencies.
 
 jobs:
   run-tests-check-coverage:
@@ -19,6 +24,10 @@ jobs:
 
       - name: Install Node packages
         run: yarn install
+
+      - name: 'Run after install commands'
+        run: ${{ inputs.runAfterInstall }}
+        if: ${{ inputs.runAfterInstall != '' }}
 
       - name: Build
         run: yarn build
