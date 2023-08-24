@@ -246,3 +246,66 @@ automatically picked up from the `production` environment.
 
 Make sure you've configured the `production` environment and the required secrets (`GH_RELEASE_TOKEN`
 and `NPM_AUTH_TOKEN`) in your repository settings.
+
+### 6. Release Server SDK
+
+#### Description
+
+This workflow handles the release process for server projects across multiple programming languages like Java, DotNET,
+Python, Golang, and PHP. It sets up the required environment, prepares the project, and executes a semantic release to
+determine the next version number and generate release notes based on commit messages.
+
+#### Prerequisites:
+
+1. The project is written in one of the supported languages: Java, DotNET, Python, Golang, or PHP.
+2. The workflow requires the `production` environment to be configured in your repository settings.
+
+#### Workflow Inputs
+
+The workflow accepts the following input parameters:
+
+| Input Parameter                  | Required | Type   | Default | Description                                                                                          |
+|----------------------------------|----------|--------|---------|------------------------------------------------------------------------------------------------------|
+| `language`                       | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, and `php`. |
+| `language-version`               | Yes      | String | -       | Version of the programming language to set up.                                                       |
+| `prepare-command`                | Yes      | String | -       | Command(s) to run for project preparation, such as installing dependencies.                          |
+| `java-version`                   | No       | String | `11`    | Version of Java to set up.                                                                           |
+| `semantic-release-extra-plugins` | No       | String | -       | Additional plugins to install for the semantic-release action.                                       |
+
+#### Workflow Secrets
+
+The workflow expects the following secrets to be provided:
+
+| Secret Name        | Description                                                 | Required For    |
+|--------------------|-------------------------------------------------------------|-----------------|
+| `GH_RELEASE_TOKEN` | GitHub token used for making releases and other operations. | All projects    |
+| `PYPI_TOKEN`       | PyPI token used for publishing Python packages.             | Python projects |
+| `NUGET_API_KEY`    | NuGet API key for publishing .NET packages.                 | DotNET projects |
+
+#### Example of usage:
+
+Below is an example showcasing the workflow setup for releasing a Python SDK:
+
+```yaml
+name: 'Release Python SDK'
+on:
+  push:
+
+jobs:
+  release-server-sdk-python:
+    name: 'Publish new version'
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-server-sdk.yml
+    with:
+      language: python
+      language-version: '3.9'
+      prepare-command: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install wheel
+        pip install twine
+    secrets:
+      GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+```
+
+**Note**: Ensure you've configured the appropriate environment and secrets based on the programming language of your project. For a Python project, for instance, the `PYPI_TOKEN` must be available.

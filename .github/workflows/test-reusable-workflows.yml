@@ -1,0 +1,41 @@
+name: 'Test reusable workflows'
+on:
+  push:
+
+jobs:
+  release-server-sdk-python:
+    name: 'Release Python SDK'
+    uses: ./.github/workflows/release-server-sdk.yml
+    with:
+      language: python
+      language-version: '3.9'
+      prepare-command: 'echo "prepare python"'
+    secrets:
+      GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release-server-sdk-dotnet:
+    name: 'Release DotNET SDK'
+    uses: ./.github/workflows/release-server-sdk.yml
+    with:
+      language: dotnet
+      language-version: '7.x'
+      prepare-command: 'echo "prepare DotNET"'
+    secrets:
+      GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release-server-sdk-php:
+    name: 'Release PHP SDK'
+    uses: ./.github/workflows/release-server-sdk.yml
+    with:
+      language: php
+      language-version: '7.3'
+      prepare-command: 'echo "prepare PHP"'
+    secrets:
+      GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+  release-server-sdk-golang:
+    name: 'Release Go SDK'
+    uses: ./.github/workflows/release-server-sdk.yml
+    with:
+      language: golang
+      language-version: '1.19'
+      prepare-command: 'echo "prepare golang"'
+    secrets:
+      GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}

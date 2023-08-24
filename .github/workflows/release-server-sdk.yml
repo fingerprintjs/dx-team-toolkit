@@ -1,0 +1,93 @@
+name: 'Release Server SDK'
+on:
+  workflow_call:
+    inputs:
+      language:
+        description: 'Programming language for the project. Supported values are "java", "dotnet", "python", "golang", and "php".'
+        required: true
+        type: string
+      language-version:
+        description: 'Version of the programming language to setup.'
+        required: true
+        type: string
+      java-version:
+        description: 'Version of Java to setup.'
+        required: false
+        type: string
+        default: '11'
+      prepare-command:
+        description: 'Command to run for project preparation (e.g., installing dependencies).'
+        required: true
+        type: string
+      semantic-release-extra-plugins:
+        description: 'Additional plugins to install for the semantic-release action.'
+        required: false
+        type: string
+    secrets:
+      GH_RELEASE_TOKEN:
+        description: 'GitHub token with permissions to create releases and perform other necessary operations.'
+        required: true
+      PYPI_TOKEN:
+        description: 'PyPI token used for publishing Python packages. Required only for Python projects.'
+        required: false
+      NUGET_API_KEY:
+        description: 'NuGet API key for publishing .NET packages. Required only for DotNET projects.'
+        required: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    environment: production
+    steps:
+      - name: 'Checkout repository'
+        uses: actions/checkout@v3
+        with:
+          persist-credentials: false
+
+      - name: 'Install Java'
+        uses: actions/setup-java@v3
+        with:
+          distribution: 'zulu' # See 'Supported distributions' for available options
+          java-version: ${{ inputs.java-version }}
+          cache: ${{ inputs.language == 'java' && 'gradle' || '' }}
+
+      - name: 'Install DotNET'
+        if: ${{ inputs.language == 'dotnet' }}
+        uses: actions/setup-dotnet@v3
+        with:
+          dotnet-version: ${{ inputs.language-version }}
+
+      - name: 'Install Python'
+        if: ${{ inputs.language == 'python' }}
+        uses: actions/setup-python@v2
+        with:
+          python-version: ${{ inputs.language-version }}
+
+      - name: 'Install Golang'
+        if: ${{ inputs.language == 'golang' }}
+        uses: actions/setup-go@v3
+        with:
+          go-version: ${{ inputs.language-version }}
+
+      - name: 'Install PHP'
+        if: ${{ inputs.language == 'php' }}
+        uses: shivammathur/setup-php@72ae4ccbe57f82bbe08411e84e2130bd4ba1c10f
+        with:
+          php-version: ${{ inputs.language-version }}
+          coverage: none
+          tools: composer:v2
+
+      - name: 'Prepare project'
+        run: ${{ inputs.prepare-command }}
+
+      - name: 'Semantic Release'
+        uses: cycjimmy/semantic-release-action@91ab76a4a393a8d0c4739e9aea1818b56bc953ea
+        with:
+          extra_plugins: |
+            @semantic-release/exec@6.0.3
+            conventional-changelog-conventionalcommits@5.0.0
+            ${{ inputs.semantic-release-extra-plugins }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
+          NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
