@@ -1,5 +1,5 @@
 module.exports = {
-
+  "dryRun": true,
   "branches": [
     "main",
     {
