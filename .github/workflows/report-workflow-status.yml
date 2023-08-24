@@ -1,0 +1,27 @@
+name: 'Report workflow status'
+on:
+  workflow_call:
+    inputs:
+      job_status:
+        description: 'Job status to report'
+        required: true
+        type: string
+      notification_title:
+        description: 'Title of the notification'
+        required: true
+        type: string
+    secrets:
+      SLACK_WEBHOOK_URL:
+        required: true
+
+jobs:
+  send-notification:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Report Status
+        uses: ravsamhq/notify-slack-action@0d9c6ff1de9903da88d24c0564f6e83cb28faca9
+        with:
+          status: ${{ inputs.job_status }}
+          notification_title: ${{ inputs.notification_title }}
+        env:
+          SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

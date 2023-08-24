@@ -309,3 +309,61 @@ jobs:
 ```
 
 **Note**: Ensure you've configured the appropriate environment and secrets based on the programming language of your project. For a Python project, for instance, the `PYPI_TOKEN` must be available.
+
+### 7. Report Workflow Status
+
+This reusable workflow sends notifications reporting the status of a GitHub Actions workflow. Currently, it sends these
+notifications to Slack using the `ravsamhq/notify-slack-action`. The workflow requires the status of a job and a
+notification title to be provided as inputs.
+
+#### Prerequisites:
+
+1. A configured Slack webhook URL. You'll set this up in your Slack workspace and then save it as a secret in your
+   GitHub repository.
+
+#### Workflow Inputs
+
+The workflow accepts the following input parameters:
+
+| Input Parameter      | Required | Type   | Description                                                             |
+|----------------------|----------|--------|-------------------------------------------------------------------------|
+| `job_status`         | Yes      | String | The status of the job. Valid values: 'success', 'failure', 'cancelled'. |
+| `notification_title` | Yes      | String | The title of the notification message to be sent to Slack.              |
+
+#### Workflow Secrets
+
+The workflow expects the following secrets to be provided:
+
+| Secret Name         | Description                                                            |
+|---------------------|------------------------------------------------------------------------|
+| `SLACK_WEBHOOK_URL` | Slack webhook URL. This secret is used to send notifications to Slack. |
+
+#### Example of usage:
+
+```yaml
+name: Your Workflow Name
+on:
+  push:
+
+jobs:
+  test-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v3
+        # ... other steps ...
+
+  report-status:
+    needs: test-job
+    if: always()
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/report-workflow-status.yml@v1
+    with:
+      notification_title: 'Notification for your job'
+      job_status: ${{ jobs.test-job.status }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+```
+
+Make sure you've set up the required `SLACK_WEBHOOK_URL` secret in your repository's settings. Adjust the values in the
+example as needed for your use case.
