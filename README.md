@@ -235,7 +235,7 @@ on:
       - test
 jobs:
   release-workflow:
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-typescript-project.yml
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-typescript-project.yml@v1
   secrets:
     GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
@@ -294,7 +294,7 @@ on:
 jobs:
   release-server-sdk-python:
     name: 'Publish new version'
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-server-sdk.yml
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-server-sdk.yml@v1
     with:
       language: python
       language-version: '3.9'
