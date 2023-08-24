@@ -48,10 +48,10 @@ jobs:
 
 #### Inputs
 
-| Input Parameter             | Required | Type    | Default                                                                             | Description                                                                                                                                                        |
-|-----------------------------|----------|---------|-------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `prepare-gh-pages-commands` | No       | String  | <pre>mv docs/* ./gh-pages<br>mv coverage/lcov-report/*<br>./gh-pages/coverage</pre> | Commands to prepare the content of the `gh-pages` folder. The `gh-pages` folder will be created automatically. Only specify the commands for moving files into it. |
-| `skip-docs-step`            | No       | Boolean | `false`                                                                             | Skip the documentation generation step.                                                                                                                            |
+| Input Parameter             | Required | Type    | Default                                                                      | Description                                                                                                                                                        |
+|-----------------------------|----------|---------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `prepare-gh-pages-commands` | No       | String  | <pre>mv docs ./gh-pages<br>mv coverage/lcov-report ./gh-pages/coverage</pre> | Commands to prepare the content of the `gh-pages` folder. The `gh-pages` folder will be created automatically. Only specify the commands for moving files into it. |
+| `skip-docs-step`            | No       | Boolean | `false`                                                                      | Skip the documentation generation step.                                                                                                                            |
 
 #### Example of usage with default behavior:
 
