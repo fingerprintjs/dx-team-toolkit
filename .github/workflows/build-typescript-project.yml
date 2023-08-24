@@ -52,7 +52,7 @@ jobs:
 
       - name: 'Run after install'
         run: ${{ inputs.runAfterInstall }}
-        if: ${{ inputs.runAfterInstall }}
+        if: ${{ inputs.runAfterInstall != '' }}
 
       - name: 'Build'
         run: yarn build

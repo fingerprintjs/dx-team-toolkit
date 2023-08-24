@@ -5,11 +5,13 @@
 ### 1. Run tests and show coverage diff
 
 #### Prerequisites:
+
 1. Javascript/Typescript based project configured with `yarn`
 2. `yarn build` command builds the project
 3. `yarn test:coverage` runs tests and prepares coverage report in `./coverage/coverage.txt`
 
 #### Example of usage:
+
 ```yaml
 name: Check coverage for PR
 
@@ -28,6 +30,7 @@ jobs:
 ### 2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch
 
 #### Prerequisites:
+
 1. Javascript/Typescript based project configured with `yarn`
 2. `yarn build` command builds the project
 3. `yarn test:coverage` runs tests and prepares coverage report in `./coverage/coverage.txt`
@@ -45,6 +48,7 @@ jobs:
 | `skip-docs-step`            | No       | Boolean | `false`                                                                             | Skip the documentation generation step.                                                                                                                            |
 
 #### Example of usage with default behavior:
+
 ```yaml
 name: Generate docs and coverage report
 
@@ -63,6 +67,7 @@ This example uses the default commands to prepare the content of the gh-pages fo
 `coverage/lcov-report` folders into the `gh-pages` folder.
 
 #### Example of usage with custom behavior:
+
 ```yaml
 name: Generate docs and coverage report
 
@@ -91,12 +96,14 @@ structure.
 - Generates release preview: next version and release notes.
 
 #### Prerequisites:
+
 1. Project uses `Semantic release` for a release workflow
 
 #### Example of usage:
+
 ```yaml
 name: Analyze Commit Messages
-on: 
+on:
   pull_request:
 
 permissions:
@@ -115,6 +122,7 @@ jobs:
 - Creates an artifact that can be reused in other jobs
 
 #### Prerequisites:
+
 1. NodeJS project
 2. `yarn build` command builds the project
 3. `yarn lint` lints code
@@ -123,18 +131,20 @@ jobs:
 
 #### Inputs
 
-| Input Parameter | Required | Type   | Default    | Description |
-|-----------------|----------|--------|------------|-------------|
-| `yarnFlags`     | No       | String | `""`       | Additional flags for the `yarn install` command. |
-| `artifactName`  | No       | String | `""`       | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
-| `artifactPath`  | No       | String | `"./dist"` | Path of the files to upload as artifact. |
+| Input Parameter   | Required | Type   | Default    | Description                                                                                |
+|-------------------|----------|--------|------------|--------------------------------------------------------------------------------------------|
+| `yarnFlags`       | No       | String | `""`       | Additional flags for the `yarn install` command.                                           |
+| `artifactName`    | No       | String | `""`       | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
+| `artifactPath`    | No       | String | `"./dist"` | Path of the files to upload as artifact.                                                   |
+| `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies.                                             |
 
 #### Examples of usage:
 
 Build project
+
 ```yaml
 name: Build project and run CI checks
-on: 
+on:
   pull_request:
 
 jobs:
@@ -144,9 +154,10 @@ jobs:
 ```
 
 Build project and run functional tests
+
 ```yaml
 name: Build project and run functional tests
-on: 
+on:
   pull_request_target:
 jobs:
   build-and-check:
@@ -182,7 +193,8 @@ jobs:
 
 #### Description
 
-This workflow handles the release process for a TypeScript project. It builds the project, runs CI checks, and performs a semantic release.
+This workflow handles the release process for a TypeScript project. It builds the project, runs CI checks, and performs
+a semantic release.
 
 #### Prerequisites:
 
@@ -200,6 +212,11 @@ The workflow expects the following secrets to be provided:
 | `GH_RELEASE_TOKEN` | GitHub token for creating releases               |
 | `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages |
 
+#### Inputs
+
+| Input Parameter   | Required | Type   | Default    | Description                                                                                |
+|-------------------|----------|--------|------------|--------------------------------------------------------------------------------------------|
+| `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies.                                             |
 
 #### Usage
 
@@ -218,6 +235,8 @@ jobs:
     NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 ```
 
-In this example, the workflow is triggered on a push event to the `main` or `test` branches. The secrets are automatically picked up from the `production` environment.
+In this example, the workflow is triggered on a push event to the `main` or `test` branches. The secrets are
+automatically picked up from the `production` environment.
 
-Make sure you've configured the `production` environment and the required secrets (`GH_RELEASE_TOKEN` and `NPM_AUTH_TOKEN`) in your repository settings.
+Make sure you've configured the `production` environment and the required secrets (`GH_RELEASE_TOKEN`
+and `NPM_AUTH_TOKEN`) in your repository settings.
