@@ -1,0 +1,36 @@
+name: 'Test status reporting workflow'
+on:
+  workflow_dispatch:
+
+jobs:
+  success-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: This step always succeeds
+        run: echo "Success!"
+
+  failed-job:
+    runs-on: ubuntu-latest
+    steps:
+      - name: This step always fails
+        run: exit 1
+
+  notify-success:
+    needs: success-job
+    if: always()
+    uses: ./.github/workflows/report-workflow-status.yml
+    with:
+      notification_title: 'DX tools: test workflow-status-reporter success scenario'
+      job_status: ${{ needs.success-job.result }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  notify-fail:
+    needs: failed-job
+    if: always()
+    uses: ./.github/workflows/report-workflow-status.yml
+    with:
+      notification_title: 'DX tools: test workflow-status-reporter fail scenario'
+      job_status: ${{ needs.failed-job.result }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

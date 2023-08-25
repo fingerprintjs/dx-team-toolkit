@@ -1,6 +1,6 @@
 name: 'Test reusable workflows'
 on:
-  push:
+  pull_request:
 
 jobs:
   release-server-sdk-python:
