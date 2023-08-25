@@ -6,3 +6,7 @@ jobs:
   generate-docs-and-coverage:
     name: Generate docs and coverage report
     uses: ./.github/workflows/docs-and-coverage.yml
+    with:
+      prepare-gh-pages-commands: |
+        mv docs/* ./gh-pages
+        mv coverage/lcov-report ./gh-pages/coverage
