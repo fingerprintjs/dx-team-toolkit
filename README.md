@@ -88,7 +88,7 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
     with:
       prepare-gh-pages-commands: |
-        docs/* ./gh-pages
+        mv docs/* ./gh-pages
         mv coverage/lcov-report ./gh-pages/coverage
 ```
 
