@@ -1,0 +1,10 @@
+{
+  "name": "@fingerprintjs/dx-team-toolkit",
+  "version": "1.0.0",
+  "description": "DX Team shared code and configurations like GitHub Actions reusable workflows.",
+  "scripts": {
+    "build": "echo \"Build\"",
+    "test:coverage": "mkdir coverage && cp ./test-mocks/coverage-summary.json ./coverage/coverage-summary.json",
+    "docs": "mkdir docs && cp README.md ./docs/README.md"
+  }
+}
