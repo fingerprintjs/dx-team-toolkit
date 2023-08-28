@@ -360,7 +360,7 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/report-workflow-status.yml@v1
     with:
       notification_title: 'Notification for your job'
-      job_status: ${{ jobs.test-job.status }}
+      job_status: ${{ needs.test-job.status }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
