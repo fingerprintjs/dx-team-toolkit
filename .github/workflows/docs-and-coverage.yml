@@ -38,7 +38,7 @@ jobs:
         run: yarn build
 
       - name: Create the docs
-        if: ${{ github.event.inputs.skip-docs-step != 'true' }}
+        if: ${{ inputs.skip-docs-step != 'true' }}
         run: yarn docs
 
       - name: Collect coverage report
@@ -53,7 +53,7 @@ jobs:
       - name: Prepare folder for gh-pages
         run: |
           mkdir gh-pages
-          ${{ github.event.inputs.prepare-gh-pages-commands }}
+          ${{ inputs.prepare-gh-pages-commands }}
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@8817a56e5bfec6e2b08345c81f4d422db53a2cdc
