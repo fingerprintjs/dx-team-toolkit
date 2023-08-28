@@ -2,6 +2,10 @@ name: 'Generate docs and coverage report'
 on:
   workflow_call:
     inputs:
+      run-after-install:
+        type: string
+        required: false
+        description: Commands to run after installing dependencies.
       prepare-gh-pages-commands:
         required: false
         default: |
@@ -33,6 +37,10 @@ jobs:
 
       - name: Install dependencies
         run: yarn install
+
+      - name: Run after install
+        run: ${{ inputs.run-after-install }}
+        if: ${{ inputs.run-after-install != '' }}
 
       - name: Build
         run: yarn build

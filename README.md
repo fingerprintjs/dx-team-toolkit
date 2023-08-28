@@ -52,6 +52,7 @@ jobs:
 |-----------------------------|----------|---------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `prepare-gh-pages-commands` | No       | String  | <pre>mv docs ./gh-pages<br>mv coverage/lcov-report ./gh-pages/coverage</pre> | Commands to prepare the content of the `gh-pages` folder. The `gh-pages` folder will be created automatically. Only specify the commands for moving files into it. |
 | `skip-docs-step`            | No       | Boolean | `false`                                                                      | Skip the documentation generation step.                                                                                                                            |
+| `run-after-install`         | No       | String  | `""`                                                                         | Commands to run after installing dependencies.                                                                                                                     |
 
 #### Example of usage with default behavior:
 
