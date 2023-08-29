@@ -17,7 +17,7 @@ on:
         default: '11'
       prepare-command:
         description: 'Command to run for project preparation (e.g., installing dependencies).'
-        required: true
+        required: false
         type: string
       semantic-release-extra-plugins:
         description: 'Additional plugins to install for the semantic-release action.'
@@ -85,6 +85,7 @@ jobs:
           tools: composer:v2
 
       - name: 'Prepare project'
+        if:  ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
 
       - name: 'Semantic Release'
