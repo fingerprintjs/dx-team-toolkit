@@ -265,13 +265,13 @@ determine the next version number and generate release notes based on commit mes
 
 The workflow accepts the following input parameters:
 
-| Input Parameter                  | Required | Type   | Default | Description                                                                                          |
-|----------------------------------|----------|--------|---------|------------------------------------------------------------------------------------------------------|
-| `language`                       | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, and `php`. |
-| `language-version`               | Yes      | String | -       | Version of the programming language to set up.                                                       |
-| `prepare-command`                | Yes      | String | -       | Command(s) to run for project preparation, such as installing dependencies.                          |
-| `java-version`                   | No       | String | `11`    | Version of Java to set up.                                                                           |
-| `semantic-release-extra-plugins` | No       | String | -       | Additional plugins to install for the semantic-release action.                                       |
+| Input Parameter                  | Required | Type   | Default | Description                                                                                                    |
+|----------------------------------|----------|--------|---------|----------------------------------------------------------------------------------------------------------------|
+| `language`                       | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, `flutter` and `php`. |
+| `language-version`               | Yes      | String | -       | Version of the programming language to set up.                                                                 |
+| `prepare-command`                | Yes      | String | -       | Command(s) to run for project preparation, such as installing dependencies.                                    |
+| `java-version`                   | No       | String | `11`    | Version of Java to set up.                                                                                     |
+| `semantic-release-extra-plugins` | No       | String | -       | Additional plugins to install for the semantic-release action.                                                 |
 
 #### Workflow Secrets
 

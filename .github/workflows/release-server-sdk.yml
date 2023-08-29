@@ -3,7 +3,7 @@ on:
   workflow_call:
     inputs:
       language:
-        description: 'Programming language for the project. Supported values are "java", "dotnet", "python", "golang", and "php".'
+        description: 'Programming language for the project. Supported values are "java", "dotnet", "python", "golang", "flutter" and "php".'
         required: true
         type: string
       language-version:
@@ -68,6 +68,13 @@ jobs:
         uses: actions/setup-go@v3
         with:
           go-version: ${{ inputs.language-version }}
+
+      - name: 'Install Flutter'
+        if: ${{ inputs.language == 'flutter' }}
+        uses: subosito/flutter-action@0c3f14223a08fa950c8a4c00bcfb834e65744135
+        with:
+          flutter-version: ${{ inputs.language-version }}
+          channel: 'stable'
 
       - name: 'Install PHP'
         if: ${{ inputs.language == 'php' }}
