@@ -359,8 +359,8 @@ jobs:
     if: always()
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/report-workflow-status.yml@v1
     with:
-      notification_title: 'Notification for your job'
-      job_status: ${{ needs.test-job.status }}
+      notification_title: 'Notification: your job run with {status_message} result'
+      job_status: ${{ needs.test-job.result }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 
