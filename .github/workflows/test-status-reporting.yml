@@ -34,3 +34,26 @@ jobs:
       job_status: ${{ needs.failed-job.result }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  matrix-job:
+    strategy:
+      fail-fast: false
+      matrix:
+        cmd:
+          - echo "Success!"
+          - exit 1
+        os: [ ubuntu-latest, macos-latest ]
+    runs-on: ${{ matrix.os }}
+    steps:
+      - name: Execute command
+        run: ${{ matrix.cmd }}
+
+  notify-matrix:
+    needs: matrix-job
+    if: always()
+    uses: ./.github/workflows/report-workflow-status.yml
+    with:
+      notification_title: 'DX tools: test workflow-status-reporter for matrix-job, result is {status_message}'
+      job_status: ${{ needs.matrix-job.result }}
+    secrets:
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
