@@ -56,3 +56,11 @@ jobs:
 
               ${{ steps.coverage-md.outputs.markdownReport }}
             </details>
+
+      - name: Add coverage report to the job summary
+        run: |
+          echo "## Code Coverage" >> $GITHUB_STEP_SUMMARY
+          echo "### Diff" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.coverage.outputs.report }}" >> $GITHUB_STEP_SUMMARY
+          echo "### Full coverage report" >> $GITHUB_STEP_SUMMARY
+          echo "${{ steps.coverage-md.outputs.markdownReport }}" >> $GITHUB_STEP_SUMMARY
