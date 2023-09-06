@@ -1,5 +1,8 @@
 # DX Team Toolkit
 
+> **Note**
+> This package isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support from Fingerprint. We warmly welcome community contributions.
+
 ## Reusable workflows
 
 ### 1. Run tests and show coverage diff
