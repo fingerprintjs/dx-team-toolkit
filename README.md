@@ -1,7 +1,7 @@
 # DX Team Toolkit
 
 > **Note**
-> This package isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support from Fingerprint. We warmly welcome community contributions.
+> This repository isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support from Fingerprint. We warmly welcome community contributions.
 
 ## Reusable workflows
 
