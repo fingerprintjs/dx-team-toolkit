@@ -1,0 +1,11 @@
+name: Analyze Commit Messages
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+  contents: write
+jobs:
+  analyze-commits:
+    name: Generate docs and coverage report
+    uses: ./.github/workflows/analyze-commits.yml
