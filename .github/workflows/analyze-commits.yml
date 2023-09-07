@@ -63,3 +63,12 @@ jobs:
           recreate: true
           message: |
             ## This PR will not create a new release :rocket:
+      - name: Add release notes preview to the job summary
+        if: ${{ steps.semantic_release_info.outputs.no_release == 'false' }}
+        run: |
+          echo "## This PR will create a ${{steps.semantic_release_info.outputs.type}} release :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo "${{steps.semantic_release_info.outputs.notes}}" >> $GITHUB_STEP_SUMMARY
+      - name: Add release notes preview to the job summary
+        if: ${{ steps.semantic_release_info.outputs.no_release == 'true' }}
+        run: |
+          echo "## This PR will not create a new release :rocket:" >> $GITHUB_STEP_SUMMARY

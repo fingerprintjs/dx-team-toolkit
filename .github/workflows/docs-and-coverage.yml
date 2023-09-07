@@ -46,7 +46,7 @@ jobs:
         run: yarn build
 
       - name: Create the docs
-        if: ${{ inputs.skip-docs-step != 'true' }}
+        if: ${{ inputs.skip-docs-step != true }}
         run: yarn docs
 
       - name: Collect coverage report
