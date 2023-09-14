@@ -224,9 +224,10 @@ The workflow expects the following secrets to be provided:
 
 #### Inputs
 
-| Input Parameter   | Required | Type   | Default    | Description                                                                                |
-|-------------------|----------|--------|------------|--------------------------------------------------------------------------------------------|
-| `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies.                                             |
+| Input Parameter            | Required | Type    | Default | Description                                               |
+|----------------------------|----------|---------|---------|-----------------------------------------------------------|
+| `runAfterInstall`          | No       | String  | `""`    | Commands to run after installing dependencies.            |
+| `distFolderNeedForRelease` | No       | Boolean | `false` | Flag that we need `dist` folder to start release process. |
 
 #### Usage
 
