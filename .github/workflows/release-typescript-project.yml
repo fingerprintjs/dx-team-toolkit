@@ -22,7 +22,7 @@ jobs:
     uses: ./.github/workflows/build-typescript-project.yml
     with:
       runAfterInstall: ${{ inputs.runAfterInstall }}
-      artifactName: ${{ inputs.distFolderNeedForRelease == 'true' && 'dist-folder' || '' }}
+      artifactName: ${{ inputs.distFolderNeedForRelease && 'dist-folder' || '' }}
       artifactPath: ./dist
 
   release:
@@ -37,7 +37,7 @@ jobs:
           persist-credentials: false
 
       - name: 'Download dist folder artifact'
-        if: ${{ inputs.distFolderNeedForRelease == 'true' }}
+        if: ${{ inputs.distFolderNeedForRelease }}
         uses: actions/download-artifact@v3
         with:
           name: dist-folder
