@@ -15,10 +15,10 @@
 
 #### Inputs
 
-| Input Parameter   | Required | Type   | Default | Description                                    |
-|-------------------|----------|--------|---------|------------------------------------------------|
-| `runAfterInstall` | No       | String | `""`    | Commands to run after installing dependencies. |
-| `testScript`      | No       | String | `""`    | The test script to run.                        |
+| Input Parameter   | Required | Type   | Default    | Description                                    |
+|-------------------|----------|--------|------------|------------------------------------------------|
+| `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies. |
+| `testScript`      | No       | String | `npx jest` | The test script to run.                        |
 
 #### Example of usage:
 
