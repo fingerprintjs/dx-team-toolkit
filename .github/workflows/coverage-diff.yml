@@ -2,6 +2,11 @@ name: 'Run tests & check coverage workflow'
 on:
   workflow_call:
     inputs:
+      testScript:
+        type: string
+        required: false
+        description: The test script to run.
+        default: npx jest
       runAfterInstall:
         type: string
         required: false
@@ -45,6 +50,7 @@ jobs:
         with:
           package-manager: yarn
           output: report-markdown
+          test-script: ${{ inputs.testScript }}
 
       - name: Add comment with coverage report
         uses: marocchino/sticky-pull-request-comment@adca94abcaf73c10466a71cc83ae561fd66d1a56
