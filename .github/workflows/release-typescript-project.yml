@@ -14,7 +14,7 @@ on:
       GH_RELEASE_TOKEN:
         required: true
       NPM_AUTH_TOKEN:
-        required: true
+        required: false
 
 jobs:
   build-and-check:
