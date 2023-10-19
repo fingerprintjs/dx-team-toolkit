@@ -250,8 +250,8 @@ jobs:
 In this example, the workflow is triggered on a push event to the `main` or `test` branches. The secrets are
 automatically picked up from the `production` environment.
 
-Make sure you've configured the `production` environment and the required secrets (`GH_RELEASE_TOKEN`
-and `NPM_AUTH_TOKEN`) in your repository settings.
+Make sure you've configured the `production` environment and the required secrets: `GH_RELEASE_TOKEN`
+and `NPM_AUTH_TOKEN` (if you want to release to NPM) in your repository settings.
 
 ### 6. Release Server SDK
 
