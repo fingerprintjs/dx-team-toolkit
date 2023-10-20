@@ -242,9 +242,9 @@ on:
 jobs:
   release-workflow:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-typescript-project.yml@v1
-  secrets:
-    GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
-    NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+    secrets:
+      GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+      NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 ```
 
 In this example, the workflow is triggered on a push event to the `main` or `test` branches. The secrets are
