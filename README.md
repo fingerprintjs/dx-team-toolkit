@@ -122,7 +122,7 @@ permissions:
   contents: write
 jobs:
   analyze-commits:
-    name: Generate docs and coverage report
+    name: Analyze commit messages
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/analyze-commits.yml@v1
 ```
 
