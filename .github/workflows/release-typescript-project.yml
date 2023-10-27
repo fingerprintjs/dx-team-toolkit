@@ -36,6 +36,11 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: 'Install latest node version'
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.node-version'
+
       - name: 'Download dist folder artifact'
         if: ${{ inputs.distFolderNeedForRelease }}
         uses: actions/download-artifact@v3

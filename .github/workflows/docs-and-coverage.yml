@@ -28,6 +28,11 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
+      - name: 'Install latest node version'
+        uses: actions/setup-node@v3
+        with:
+          node-version-file: '.node-version'
+
       - name: Cache
         uses: actions/cache@v3
         with:
