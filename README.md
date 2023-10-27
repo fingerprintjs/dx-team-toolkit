@@ -112,6 +112,12 @@ structure.
 
 1. Project uses `Semantic release` for a release workflow
 
+#### Inputs
+
+| Input Parameter | Required | Type   | Default | Description         |
+|-----------------|----------|--------|---------|---------------------|
+| `nodeVersion`   | No       | String | `lts/*` | Node version to use |
+
 #### Example of usage:
 
 ```yaml
@@ -150,7 +156,7 @@ jobs:
 | `artifactName`    | No       | String | `""`       | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
 | `artifactPath`    | No       | String | `"./dist"` | Path of the files to upload as artifact.                                                   |
 | `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies.                                             |
-| `nodeVersion`     | No       | String | `lts/*`     | Node version to use                                                                        |
+| `nodeVersion`     | No       | String | `lts/*`    | Node version to use                                                                        |
 
 #### Examples of usage:
 
