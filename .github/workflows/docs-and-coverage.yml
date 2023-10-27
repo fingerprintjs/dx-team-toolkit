@@ -2,6 +2,11 @@ name: 'Generate docs and coverage report'
 on:
   workflow_call:
     inputs:
+      node-version:
+        description: 'Node version to use'
+        required: false
+        type: string
+        default: '20.x'
       run-after-install:
         type: string
         required: false
@@ -31,7 +36,7 @@ jobs:
       - name: 'Install latest node version'
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.node-version'
+          node-version: ${{ inputs.node-version }}
 
       - name: Cache
         uses: actions/cache@v3

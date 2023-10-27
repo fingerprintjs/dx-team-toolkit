@@ -1,6 +1,12 @@
 name: 'Analyze Commits'
 on:
   workflow_call:
+    inputs:
+      nodeVersion:
+        description: 'Node version to use'
+        required: false
+        type: string
+        default: '20.x'
 
 jobs:
   commitlint:
@@ -13,7 +19,7 @@ jobs:
       - name: 'Install latest node version'
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.node-version'
+          node-version: ${{ inputs.nodeVersion }}
       - uses: wagoid/commitlint-github-action@v5
         id: commitlint
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
@@ -50,7 +56,7 @@ jobs:
       - name: 'Install latest node version'
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.node-version'
+          node-version: ${{ inputs.nodeVersion }}
       - name: Collect semantic-release-info
         id: semantic_release_info
         uses: fingerprintjs/action-semantic-release-info@v1

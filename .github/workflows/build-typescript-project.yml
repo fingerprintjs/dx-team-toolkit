@@ -10,6 +10,11 @@ on:
         description: 'Additional flags for yarn install'
         required: false
         type: string
+      nodeVersion:
+        description: 'Node version to use'
+        required: false
+        type: string
+        default: '20.x'
       artifactName:
         description: 'Name of the artifact to upload'
         required: false
@@ -38,7 +43,7 @@ jobs:
       - name: 'Install latest node version'
         uses: actions/setup-node@v3
         with:
-          node-version-file: '.node-version'
+          node-version: ${{ inputs.nodeVersion }}
 
       - name: 'Cache'
         uses: actions/cache@v3
