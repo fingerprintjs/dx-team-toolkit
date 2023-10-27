@@ -6,7 +6,7 @@ on:
         description: 'Node version to use'
         required: false
         type: string
-        default: '20.x'
+        default: 'lts/*'
       run-after-install:
         type: string
         required: false
