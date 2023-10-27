@@ -2,6 +2,11 @@ name: 'Release TypeScript project'
 on:
   workflow_call:
     inputs:
+      nodeVersion:
+        description: 'Node version to use'
+        required: false
+        type: string
+        default: 'lts/*'
       runAfterInstall:
         type: string
         required: false
@@ -35,6 +40,11 @@ jobs:
         uses: actions/checkout@v3
         with:
           persist-credentials: false
+
+      - name: 'Install latest node version'
+        uses: actions/setup-node@v3
+        with:
+          node-version: ${{ inputs.nodeVersion }}
 
       - name: 'Download dist folder artifact'
         if: ${{ inputs.distFolderNeedForRelease }}

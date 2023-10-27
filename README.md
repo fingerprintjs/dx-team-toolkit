@@ -19,6 +19,7 @@
 |-------------------|----------|--------|------------|------------------------------------------------|
 | `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies. |
 | `testScript`      | No       | String | `npx jest` | The test script to run.                        |
+| `nodeVersion`     | No       | String | `lts/*`    | Node version to use                            |
 
 #### Example of usage:
 
@@ -57,6 +58,7 @@ jobs:
 | `prepare-gh-pages-commands` | No       | String  | <pre>mv docs ./gh-pages<br>mv coverage/lcov-report ./gh-pages/coverage</pre> | Commands to prepare the content of the `gh-pages` folder. The `gh-pages` folder will be created automatically. Only specify the commands for moving files into it. |
 | `skip-docs-step`            | No       | Boolean | `false`                                                                      | Skip the documentation generation step.                                                                                                                            |
 | `run-after-install`         | No       | String  | `""`                                                                         | Commands to run after installing dependencies.                                                                                                                     |
+| `node-version`              | No       | String  | `lts/*`                                                                      | Node version to use                                                                                                                                                |
 
 #### Example of usage with default behavior:
 
@@ -110,6 +112,12 @@ structure.
 
 1. Project uses `Semantic release` for a release workflow
 
+#### Inputs
+
+| Input Parameter | Required | Type   | Default | Description         |
+|-----------------|----------|--------|---------|---------------------|
+| `nodeVersion`   | No       | String | `lts/*` | Node version to use |
+
 #### Example of usage:
 
 ```yaml
@@ -148,6 +156,7 @@ jobs:
 | `artifactName`    | No       | String | `""`       | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
 | `artifactPath`    | No       | String | `"./dist"` | Path of the files to upload as artifact.                                                   |
 | `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies.                                             |
+| `nodeVersion`     | No       | String | `lts/*`    | Node version to use                                                                        |
 
 #### Examples of usage:
 
@@ -229,6 +238,7 @@ The workflow expects the following secrets to be provided:
 |----------------------------|----------|---------|---------|-----------------------------------------------------------|
 | `runAfterInstall`          | No       | String  | `""`    | Commands to run after installing dependencies.            |
 | `distFolderNeedForRelease` | No       | Boolean | `false` | Flag that we need `dist` folder to start release process. |
+| `nodeVersion`              | No       | String  | `lts/*` | Node version to use                                       |
 
 #### Usage
 
