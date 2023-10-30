@@ -27,6 +27,7 @@ jobs:
     uses: ./.github/workflows/build-typescript-project.yml
     with:
       runAfterInstall: ${{ inputs.runAfterInstall }}
+      nodeVersion: ${{ inputs.nodeVersion }}
       artifactName: ${{ inputs.distFolderNeedForRelease && 'dist-folder' || '' }}
       artifactPath: ./dist
 
