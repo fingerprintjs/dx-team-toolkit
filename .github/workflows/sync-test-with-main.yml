@@ -1,0 +1,26 @@
+name: Sync test with main
+
+on:
+  workflow_call:
+    inputs:
+      repository:
+        required: true
+        type: string
+    secrets:
+      GITHUB_TOKEN:
+        required: true
+
+jobs:
+  sync-test-with-main:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout main branch
+        uses: actions/checkout@v3
+        with:
+          ref: 'main'
+
+      - name: Create Pull Request from main to test
+        run: |
+          gh pr create --title "Sync test with main" --base test --head main --repo ${{ inputs.repository }} --label "sync"
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
