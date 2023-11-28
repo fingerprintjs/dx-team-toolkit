@@ -5,6 +5,15 @@
 
 ## Reusable workflows
 
+* [1. Run tests and show coverage diff](#1-run-tests-and-show-coverage-diff)
+* [2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
+* [3. Analyze commits](#3-analyze-commits)
+* [4. Build typescript project](#4-build-typescript-project)
+* [5. Release TypeScript project](#5-release-typescript-project)
+* [6. Release Server SDK](#6-release-server-sdk)
+* [7. Report Workflow Status](#7-report-workflow-status)
+* [8. Create PR to Main on Release](#8-create-pr-to-main-on-release)
+
 ### 1. Run tests and show coverage diff
 
 #### Prerequisites:
