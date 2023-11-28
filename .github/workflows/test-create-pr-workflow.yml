@@ -1,0 +1,28 @@
+name: Test Create PR workflow
+
+on:
+  workflow_dispatch:
+    inputs:
+      target_branch:
+        description: 'Target branch for the PR (main or test)'
+        required: true
+        default: 'main'
+      tag_name:
+        description: 'Tag name for release (optional)'
+        required: false
+        default: ''
+      prerelease:
+        description: 'Is this a prerelease? (true/false)'
+        required: false
+        default: false
+
+jobs:
+  test-create-pr-to-main-workflow:
+    name: Test create PR to main workflow
+    uses: ./.github/workflows/create-pr-to-main.yml
+    with:
+      target_branch: ${{ github.event.inputs.target_branch }}
+      tag_name: ${{ github.event.inputs.tag_name }}
+      prerelease: ${{ github.event.inputs.prerelease }}
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
