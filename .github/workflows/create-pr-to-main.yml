@@ -13,9 +13,6 @@ on:
       prerelease:
         required: false
         type: boolean
-    secrets:
-      GITHUB_TOKEN:
-        required: true
 
 jobs:
   create-pr-to-main-on-release:
