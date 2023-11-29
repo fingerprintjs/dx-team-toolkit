@@ -15,6 +15,14 @@ on:
         type: boolean
 
 jobs:
+  debug:
+    runs-on: ubuntu-latest
+    steps:
+      - run: |
+          echo "target_branch: ${{ inputs.target_branch }}"
+          echo "tag_name: ${{ inputs.tag_name }}"
+          echo "prerelease: ${{ inputs.prerelease }}"
+
   create-pr-to-main-on-release:
     if: inputs.target_branch == 'main'
     runs-on: ubuntu-latest
