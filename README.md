@@ -411,12 +411,6 @@ to another specified branch.
 | `tag_name`      | No       | String  | -       | The name of the release tag            |
 | `prerelease`    | No       | Boolean | `false` | Whether the release is a pre-release   |
 
-#### Secrets
-
-| Secret Name     | Description                                      |
-|-----------------|--------------------------------------------------|
-| `GITHUB_TOKEN`  | GitHub Token for authorization and actions.      |
-
 #### Examples of usage:
 
 ```yaml
@@ -427,28 +421,12 @@ on:
       types:
          - published
 
-permissions:
-   pull-requests: write
-   contents: read
-
 jobs:
-  create-pr-to-main:
-    if: github.event.release.prerelease
-    name: Create PR to the main branch
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/create-pr-to-main.yml@v1
+  create-pr:
+    name: Create PR
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/create-pr.yml@v1
     with:
-      target_branch: main
-      tag_name: ${{ github.event.release.tag_name }}
-      prerelease: ${{ github.event.release.prerelease }}
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-  create-pr-to-test:
-    if: !github.event.release.prerelease
-    name: Create PR from main to the test branch
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/create-pr-to-main.yml@v1
-    with:
-      target_branch: test
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+       target_branch: ${{ github.event.release.prerelease && 'main' || 'test' }}
+       tag_name: ${{ github.event.release.tag_name }}
+       prerelease: ${{ github.event.release.prerelease }}
 ```
