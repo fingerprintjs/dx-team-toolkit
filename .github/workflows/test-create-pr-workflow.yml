@@ -13,16 +13,15 @@ on:
         default: ''
       prerelease:
         description: 'Is this a prerelease? (true/false)'
+        type: boolean
         required: false
         default: false
 
 jobs:
   test-create-pr-to-main-workflow:
-    name: Test create PR to main workflow
-    uses: ./.github/workflows/create-pr-to-main.yml
+    name: Test create PR workflow
+    uses: ./.github/workflows/create-pr.yml
     with:
       target_branch: ${{ github.event.inputs.target_branch }}
       tag_name: ${{ github.event.inputs.tag_name }}
-      prerelease: ${{ github.event.inputs.prerelease }}
-    secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      prerelease: ${{ github.event.inputs.prerelease == 'true' }}
