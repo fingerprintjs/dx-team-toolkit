@@ -52,6 +52,6 @@ jobs:
 
       - name: Create Pull Request from main to test
         run: |
-          gh pr create --title "Sync ${{ inputs.target_branch }} with main" --base ${{ inputs.target_branch }} --head main --repo ${{ github.repository }} --label "sync"
+          gh pr create --title "Sync ${{ inputs.target_branch }} with main" --body "Sync ${{ inputs.target_branch }} with main" --base ${{ inputs.target_branch }} --head main --repo ${{ github.repository }} --label "sync"
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
