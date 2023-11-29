@@ -5,6 +5,15 @@
 
 ## Reusable workflows
 
+* [1. Run tests and show coverage diff](#1-run-tests-and-show-coverage-diff)
+* [2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
+* [3. Analyze commits](#3-analyze-commits)
+* [4. Build typescript project](#4-build-typescript-project)
+* [5. Release TypeScript project](#5-release-typescript-project)
+* [6. Release Server SDK](#6-release-server-sdk)
+* [7. Report Workflow Status](#7-report-workflow-status)
+* [8. Create PR to Main on Release](#8-create-pr-to-main-on-release)
+
 ### 1. Run tests and show coverage diff
 
 #### Prerequisites:
@@ -383,3 +392,41 @@ jobs:
 
 Make sure you've set up the required `SLACK_WEBHOOK_URL` secret in your repository's settings. Adjust the values in the
 example as needed for your use case.
+
+### 8. Create PR to Main on Release
+
+This reusable workflow creates a Pull Request (PR) to the `main` branch in case of the prerelease or from `main` branch
+to another specified branch.
+
+#### Prerequisites:
+
+1. The project must use git tags to denote releases.
+2. A GitHub Token must be configured for repository access.
+
+#### Inputs
+
+| Input Parameter | Required | Type    | Default | Description                            |
+|-----------------|----------|---------|---------|----------------------------------------|
+| `target_branch` | Yes      | String  | -       | The branch for which the PR is created |
+| `tag_name`      | No       | String  | -       | The name of the release tag            |
+| `prerelease`    | No       | Boolean | `false` | Whether the release is a pre-release   |
+
+#### Examples of usage:
+
+```yaml
+name: Create PR
+
+on:
+   release:
+      types:
+         - published
+
+jobs:
+  create-pr:
+    name: Create PR
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/create-pr.yml@v1
+    with:
+       target_branch: ${{ github.event.release.prerelease && 'main' || 'test' }}
+       tag_name: ${{ github.event.release.tag_name }}
+       prerelease: ${{ github.event.release.prerelease }}
+```
