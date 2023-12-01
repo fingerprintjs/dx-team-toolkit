@@ -14,10 +14,12 @@
     "noImplicitReturns": true,
     "exactOptionalPropertyTypes": true
   },
-  "files": ["src/index.ts"],
+  "files": [
+    "./src/index.ts"
+  ],
   "exclude": [
     "dist",
-    "node_modules",
+    "../../node_modules",
     "**/*.test.ts"
   ]
 }
