@@ -22,14 +22,14 @@ jobs:
       - name: Abort if it's not a pre-release
         if: inputs.prerelease == false
         run: exit 1
-      - name: Checkout test branch
+      - name: Checkout rc branch
         uses: actions/checkout@v3
         with:
-          ref: 'test'
+          ref: 'rc'
 
       - name: Create Pull Request from tag branch to main
         run: |
-          gh pr create --title "Release ${{ inputs.tag_name }}" --body "Release ${{ inputs.tag_name }}" --base main --head test --repo ${{ github.repository }}
+          gh pr create --title "Release ${{ inputs.tag_name }}" --body "Release ${{ inputs.tag_name }}" --base main --head rc --repo ${{ github.repository }}
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -42,7 +42,7 @@ jobs:
         with:
           ref: 'main'
 
-      - name: Create Pull Request from main to test
+      - name: Create Pull Request from main to rc
         run: |
           gh pr create --title "Sync ${{ inputs.target_branch }} with main" --body "Sync ${{ inputs.target_branch }} with main" --base ${{ inputs.target_branch }} --head main --repo ${{ github.repository }}
         env:
