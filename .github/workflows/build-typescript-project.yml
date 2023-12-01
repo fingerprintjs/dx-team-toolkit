@@ -50,11 +50,16 @@ jobs:
             echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
           fi
 
+      - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
+        with:
+          version: 8
+
       - name: 'Install latest node version'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.nodeVersion }}
-          cache: $PACKAGE_MANAGER
+          cache: ${{ env.PACKAGE_MANAGER }}
 
       - name: 'Install Dependencies and prepare packages'
         run: $PACKAGE_MANAGER install ${{ inputs.yarnFlags }}

@@ -25,30 +25,39 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
+      - name: 'Determine package manager'
+        run: |
+          if [[ -f "pnpm-lock.yaml" ]]; then
+            echo "Using pnpm"
+            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
+          else
+            echo "Using yarn"
+            echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
+          fi
+
+      - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
+        with:
+          version: 8
+
       - name: 'Install latest node version'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.nodeVersion }}
-
-      - name: Cache
-        uses: actions/cache@v3
-        with:
-          path: node_modules
-          key: nodemodules-${{ hashFiles('yarn.lock') }}
-          restore-keys: nodemodules-
+          cache: ${{ env.PACKAGE_MANAGER }}
 
       - name: Install Node packages
-        run: yarn install
+        run: $PACKAGE_MANAGER install
 
       - name: 'Run after install commands'
         run: ${{ inputs.runAfterInstall }}
         if: ${{ inputs.runAfterInstall != '' }}
 
       - name: Build
-        run: yarn build
+        run: $PACKAGE_MANAGER build
 
       - name: Run tests and prepare coverage report
-        run: yarn test:coverage
+        run: $PACKAGE_MANAGER test:coverage
 
       - name: Read coverage text report
         uses: fingerprintjs/action-coverage-report-md@v1
