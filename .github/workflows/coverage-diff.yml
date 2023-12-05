@@ -36,6 +36,7 @@ jobs:
           fi
 
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+        name: 'Install pnpm'
         uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
         with:
           version: 8
