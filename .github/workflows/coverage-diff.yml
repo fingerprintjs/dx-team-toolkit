@@ -36,6 +36,7 @@ jobs:
           fi
 
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+        name: 'Install pnpm'
         uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
         with:
           version: 8
@@ -67,7 +68,7 @@ jobs:
         id: coverage
         uses: ArtiomTr/jest-coverage-report-action@df2b025553c31d68f84be6337843e277e2576844
         with:
-          package-manager: yarn
+          package-manager: ${{ env.PACKAGE_MANAGER }}
           output: report-markdown
           test-script: ${{ inputs.testScript }}
 
