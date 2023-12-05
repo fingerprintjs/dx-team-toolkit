@@ -4,11 +4,14 @@
   "description": "DX Team shared code and configurations like GitHub Actions reusable workflows.",
   "scripts": {
     "build": "echo \"Build\"",
-    "test": "pnpm -r --filter \"@fingerprintjs/dx-team-toolkit-demo\" run test",
-    "test:coverage": "pnpm -r --filter \"@fingerprintjs/dx-team-toolkit-demo\" run test:coverage",
+    "test": "jest",
+    "test:coverage": "jest --coverage",
     "docs": "mkdir docs && cp README.md ./docs/README.md"
   },
   "devDependencies": {
-    "pnpm": "^8.11.0"
+    "@types/jest": "^29.5.4",
+    "jest": "^29.6.4",
+    "ts-jest": "^29.1.1",
+    "typescript": "^5.2.2"
   }
 }
