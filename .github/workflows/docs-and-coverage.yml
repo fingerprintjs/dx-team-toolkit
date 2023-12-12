@@ -33,34 +33,44 @@ jobs:
       - name: Checkout the repository
         uses: actions/checkout@v3
 
-      - name: 'Install latest node version'
-        uses: actions/setup-node@v3
-        with:
-          node-version: ${{ inputs.node-version }}
+      - name: 'Determine package manager'
+        run: |
+          if [[ -f "pnpm-lock.yaml" ]]; then
+            echo "Using pnpm"
+            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
+          else
+            echo "Using yarn"
+            echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
+          fi
 
-      - name: Cache
-        uses: actions/cache@v3
+      - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+        name: 'Install pnpm'
+        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
         with:
-          path: node_modules
-          key: nodemodules-${{ hashFiles('yarn.lock') }}
-          restore-keys: nodemodules-
+          version: 8
+
+      - name: 'Install latest node version'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.nodeVersion }}
+          cache: ${{ env.PACKAGE_MANAGER }}
 
       - name: Install dependencies
-        run: yarn install
+        run: $PACKAGE_MANAGER install ${{ inputs.yarnFlags }}
 
       - name: Run after install
         run: ${{ inputs.run-after-install }}
         if: ${{ inputs.run-after-install != '' }}
 
       - name: Build
-        run: yarn build
+        run: $PACKAGE_MANAGER build
 
       - name: Create the docs
         if: ${{ inputs.skip-docs-step != true }}
-        run: yarn docs
+        run: $PACKAGE_MANAGER run docs
 
       - name: Collect coverage report
-        run: yarn test:coverage
+        run: $PACKAGE_MANAGER test:coverage
 
       - name: Create Coverage Badges
         uses: jaywcjlove/coverage-badges-cli@e07f25709cd25486855c1ba1b26da53576ff3620
