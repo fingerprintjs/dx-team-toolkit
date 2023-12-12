@@ -9,6 +9,7 @@
     "docs": "mkdir docs && cp README.md ./docs/README.md"
   },
   "devDependencies": {
+    "@fingerprintjs/conventional-changelog-dx-team": "local",
     "@types/jest": "^29.5.4",
     "jest": "^29.6.4",
     "ts-jest": "^29.1.1",
