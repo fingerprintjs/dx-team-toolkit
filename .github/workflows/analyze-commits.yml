@@ -2,6 +2,11 @@ name: 'Analyze Commits'
 on:
   workflow_call:
     inputs:
+      isTest:
+        description: 'Determines whether it is a test run. It is only meant to be used in the DX repo itself.'
+        required: false
+        type: boolean
+        default: false
       nodeVersion:
         description: 'Node version to use'
         required: false
@@ -49,6 +54,8 @@ jobs:
   release-notes-comment:
     name: Generate release notes preview
     runs-on: ubuntu-latest
+    env:
+      TEST_MESSAGE: ${{ inputs.isTest && '### ⚠️ This is a test run of the release-notes-comment action that can be found in .github/workflows/analyze-commits.yml' || ''}}
     steps:
       - uses: actions/checkout@v3
         with:
@@ -68,6 +75,7 @@ jobs:
           recreate: true
           message: |
             ## This PR will create a ${{steps.semantic_release_info.outputs.type}} release :rocket:
+            ${{ env.TEST_MESSAGE }}           
             ${{steps.semantic_release_info.outputs.notes}}
       - if: ${{ steps.semantic_release_info.outputs.no_release == 'true' }}
         name: Add comment to the PR
@@ -77,12 +85,15 @@ jobs:
           recreate: true
           message: |
             ## This PR will not create a new release :rocket:
+            ${{ env.TEST_MESSAGE }}
       - name: Add release notes preview to the job summary
         if: ${{ steps.semantic_release_info.outputs.no_release == 'false' }}
         run: |
           echo "## This PR will create a ${{steps.semantic_release_info.outputs.type}} release :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo ${{ env.TEST_MESSAGE }} >> $GITHUB_STEP_SUMMARY
           echo "${{steps.semantic_release_info.outputs.notes}}" >> $GITHUB_STEP_SUMMARY
       - name: Add release notes preview to the job summary
         if: ${{ steps.semantic_release_info.outputs.no_release == 'true' }}
         run: |
           echo "## This PR will not create a new release :rocket:" >> $GITHUB_STEP_SUMMARY
+          echo ${{ env.TEST_MESSAGE }} >> $GITHUB_STEP_SUMMARY
