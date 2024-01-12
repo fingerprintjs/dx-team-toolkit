@@ -20,6 +20,9 @@ jobs:
         with:
           node-version: 20.x
 
+      - name: Setup npmrc
+        run: echo "//registry.npmjs.org/:_authToken=${{ secrets.NPM_AUTH_TOKEN }}" > .npmrc
+
       - name: Install Dependencies
         run: pnpm install
 
