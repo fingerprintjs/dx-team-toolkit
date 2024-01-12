@@ -5,5 +5,10 @@
   "access": "restricted",
   "baseBranch": "main",
   "ignore": [],
-  "changelog": "@changesets/changelog-github"
+  "changelog": [
+    "@changesets/changelog-github",
+    {
+      "repo": "fingerprintjs/dx-team-toolkit"
+    }
+  ]
 }
