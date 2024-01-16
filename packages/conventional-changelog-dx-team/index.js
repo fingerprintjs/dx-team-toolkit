@@ -15,6 +15,6 @@ module.exports = createPreset({
     { type: 'refactor', section: 'Code Refactoring', hidden: true },
     { type: 'test', section: 'Tests', hidden: true },
     { type: 'build', section: 'Build System', hidden: true },
-    { type: 'ci', section: 'Continuous Integration', hidden: true }
-  ]
+    { type: 'ci', section: 'Continuous Integration', hidden: true },
+  ],
 });
