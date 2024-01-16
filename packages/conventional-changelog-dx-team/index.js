@@ -1,4 +1,4 @@
-const createPreset = require('conventional-changelog-conventionalcommits');
+const createPreset = require('conventional-changelog-conventionalcommits')
 
 module.exports = createPreset({
   types: [
@@ -17,4 +17,4 @@ module.exports = createPreset({
     { type: 'build', section: 'Build System', hidden: true },
     { type: 'ci', section: 'Continuous Integration', hidden: true },
   ],
-});
+})

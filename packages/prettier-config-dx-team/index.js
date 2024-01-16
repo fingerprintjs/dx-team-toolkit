@@ -2,12 +2,12 @@ module.exports = {
   printWidth: 120,
   tabWidth: 2,
   useTabs: false,
-  semi: true,
+  semi: false,
   singleQuote: true,
   jsxSingleQuote: true,
-  trailingComma: "es5",
+  trailingComma: 'es5',
   bracketSpacing: true,
   bracketSameLine: false,
-  arrowParens: "always",
-  svelteSortOrder: "options-scripts-markup-styles"
+  arrowParens: 'always',
+  svelteSortOrder: 'options-scripts-markup-styles',
 }

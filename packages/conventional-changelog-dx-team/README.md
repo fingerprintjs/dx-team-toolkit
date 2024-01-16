@@ -43,12 +43,15 @@ module.exports = {
 ### Will trigger a release
 
 #### Bugfix (patch)
+
 `fix: Fixed logic bug`
 
 #### New feature (minor)
+
 `feat: Added new feature`
 
 #### Breaking change (major)
+
 ```
 feat: upgrade runtime to Node 20 
 
@@ -56,6 +59,7 @@ BREAKING CHANGE: use node 20
 ```
 
 ### Will not trigger a release
+
 - `docs: Updated documentation`
 - `perf: Performance improvements`
 - `build: add test pipeline`
@@ -64,4 +68,6 @@ BREAKING CHANGE: use node 20
 - `refactor: refactored code for readability`
 
 ## License
-This project is licensed under the MIT license. See the [LICENSE](https://github.com/fingerprintjs/dx-team-toolkit/blob/main/LICENSE) file for more info.
+
+This project is licensed under the MIT license. See
+the [LICENSE](https://github.com/fingerprintjs/dx-team-toolkit/blob/main/LICENSE) file for more info.

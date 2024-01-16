@@ -8,6 +8,7 @@ for the DX team at FingerprintJS.
 
 To install this package, use the following command:
 9
+
 ```bash
 pnpm install @fingerprintjs/commit-lint-dx-team
 ```
@@ -24,4 +25,6 @@ module.exports = {
 ```
 
 ## License
-This project is licensed under the MIT license. See the [LICENSE](https://github.com/fingerprintjs/dx-team-toolkit/blob/main/LICENSE) file for more info.
+
+This project is licensed under the MIT license. See
+the [LICENSE](https://github.com/fingerprintjs/dx-team-toolkit/blob/main/LICENSE) file for more info.
