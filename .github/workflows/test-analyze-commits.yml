@@ -9,3 +9,5 @@ jobs:
   analyze-commits:
     name: Generate docs and coverage report
     uses: ./.github/workflows/analyze-commits.yml
+    with:
+      isTest: true
