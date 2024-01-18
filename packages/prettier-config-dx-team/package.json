@@ -1,0 +1,19 @@
+{
+  "name": "@fingerprintjs/prettier-config-dx-team",
+  "version": "0.0.1",
+  "private": false,
+  "description": "Custom prettier config for DX Team",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fingerprintjs/dx-team-toolkit"
+  },
+  "author": "FingerprintJS, Inc (https://fingerprint.com)",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "peerDependencies": {
+    "prettier": ">=2"
+  }
+}

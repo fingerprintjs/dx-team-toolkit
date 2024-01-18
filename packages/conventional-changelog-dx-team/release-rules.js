@@ -9,6 +9,6 @@ const releaseRules = [
 
   { type: 'build', scope: 'deps', release: 'patch' }, // dependabot
   { type: 'docs', scope: 'README', release: 'patch' },
-];
+]
 
-module.exports = releaseRules;
+module.exports = releaseRules

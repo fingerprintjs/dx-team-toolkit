@@ -1,7 +1,7 @@
-# Commit lint dx-team preset
+# Prettier dx-team preset
 
 This package provides a custom preset
-for [commitlint](https://github.com/conventional-changelog/commitlint/tree/master), specifically designed
+for [prettier](https://github.com/prettier/prettier), specifically designed
 for the DX team at FingerprintJS.
 
 ## Installation
@@ -10,16 +10,16 @@ To install this package, use the following command:
 9
 
 ```bash
-pnpm install @fingerprintjs/commit-lint-dx-team
+pnpm install @fingerprintjs/prettier-config-dx-team
 ```
 
 ## Configuration
 
-To use this preset in your project, add the following configuration to your project's commitlint configuration file:
+To use this preset in your project, add the following configuration to your project's prettier configuration file:
 
 ```js
 module.exports = {
-  extends: ['@fingerprintjs/commit-lint-dx-team'],
+  extends: ['@fingerprintjs/prettier-dx-team'],
 }
 
 ```
