@@ -21,6 +21,7 @@
     "@fingerprintjs/conventional-changelog-dx-team": "local",
     "@fingerprintjs/eslint-config-dx-team": "local",
     "@fingerprintjs/prettier-config-dx-team": "local",
+    "@fingerprintjs/tsconfig-dx-team": "local",
     "@types/jest": "^29.5.4",
     "@typescript-eslint/eslint-plugin": "^6.19.0",
     "@typescript-eslint/parser": "^6.19.0",
