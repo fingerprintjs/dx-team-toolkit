@@ -1,6 +1,6 @@
 {
   "name": "@fingerprintjs/eslint-config-dx-team",
-  "version": "0.0.1",
+  "version": "0.0.2",
   "private": false,
   "description": "Custom eslint config for DX Team",
   "repository": {
