@@ -1,0 +1,19 @@
+{
+  "name": "@fingerprintjs/commit-lint-dx-team",
+  "version": "0.0.1",
+  "private": false,
+  "description": "Custom commitlint preset for semantic-release",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fingerprintjs/dx-team-toolkit"
+  },
+  "author": "FingerprintJS, Inc (https://fingerprint.com)",
+  "license": "MIT",
+  "main": "index.js",
+  "files": [
+    "index.js"
+  ],
+  "dependencies": {
+    "@commitlint/config-conventional": "^17.0.3"
+  }
+}
