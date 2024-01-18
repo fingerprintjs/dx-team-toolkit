@@ -18,8 +18,26 @@ To use this preset in your project, add the following configuration to your proj
 
 ```json
 {
-  "extends": "@fingerprintjs/tsconfig-dx-team/tsconfig.json"
+  "extends": "@fingerprintjs/tsconfig-dx-team/tsconfig.json",
+  "compilerOptions": {
+    // Specify other configuration
+    "outDir": "dist/src",
+    "module": "es6",
+    "moduleResolution": "node",
+    "target": "es2020",
+    // Don't forget to specify jsx for react projects - https://www.typescriptlang.org/docs/handbook/jsx.html
+    "jsx": "react-jsx"
+  },
+  "files": [
+    "./src/index.ts"
+  ],
+  "exclude": [
+    "dist",
+    "node_modules",
+    "**/*.test.ts"
+  ]
 }
+
 
 ```
 
