@@ -1,4 +1,4 @@
-# Commit lint dx-team preset
+# ESLint dx-team preset
 
 This package provides a custom preset
 for [eslint](https://github.com/eslint/eslint), specifically designed

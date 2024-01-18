@@ -1,4 +1,4 @@
-# Commit lint dx-team preset
+# Prettier dx-team preset
 
 This package provides a custom preset
 for [prettier](https://github.com/prettier/prettier), specifically designed
