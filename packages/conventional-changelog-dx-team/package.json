@@ -1,6 +1,6 @@
 {
   "name": "@fingerprintjs/conventional-changelog-dx-team",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "private": false,
   "description": "Custom conventional changelog preset for semantic-release",
   "repository": {
