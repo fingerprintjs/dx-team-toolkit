@@ -2,7 +2,7 @@
   "commit": false,
   "updateInternalDependencies": "patch",
   "linked": [],
-  "access": "restricted",
+  "access": "public",
   "baseBranch": "main",
   "ignore": [],
   "changelog": [
