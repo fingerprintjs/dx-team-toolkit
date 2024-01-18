@@ -11,14 +11,21 @@ jobs:
   release:
     name: Release
     runs-on: ubuntu-latest
+    environment: production
     steps:
       - name: Checkout Repo
         uses: actions/checkout@v3
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
+        with:
+          version: 8
 
       - name: Setup Node.js
         uses: actions/setup-node@v3
         with:
           node-version: 20.x
+          cache: pnpm
 
       - name: Install Dependencies
         run: pnpm install
