@@ -3,6 +3,31 @@
 > **Note**
 > This repository isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support from Fingerprint. We warmly welcome community contributions.
 
+## Reusable configurations
+
+This monorepo reusable configurations for tools like ESLint, Prettier, etc. used by the DX team at Fingerprint.
+
+1. Eslint: [@fingerprintjs/eslint-config-dx-team](packages/eslint-config-dx-team)
+<a href="https://www.npmjs.com/package/@fingerprintjs/eslint-config-dx-team">
+   <img src="https://img.shields.io/npm/v/@fingerprintjs/eslint-config-dx-team.svg" alt="Current NPM version @fingerprintjs/eslint-config-dx-team">
+</a>
+2. Prettier: [@fingerprintjs/prettier-config-dx-team](packages/prettier-config-dx-team)
+<a href="https://www.npmjs.com/package/@fingerprintjs/prettier-config-dx-team">
+   <img src="https://img.shields.io/npm/v/@fingerprintjs/prettier-config-dx-team.svg" alt="Current NPM version @fingerprintjs/prettier-config-dx-team">
+</a>
+3. Typescript: [@fingerprintjs/tsconfig-dx-team](packages/tsconfig-dx-team)
+<a href="https://www.npmjs.com/package/@fingerprintjs/tsconfig-dx-team">
+  <img src="https://img.shields.io/npm/v/@fingerprintjs/tsconfig-dx-team.svg" alt="Current NPM version @fingerprintjs/tsconfig-dx-team">
+</a>
+4. Convectional Commits: [@fingerprintjs/commit-lint-dx-team](packages/commit-lint-dx-team)
+<a href="https://www.npmjs.com/package/@fingerprintjs/commit-lint-dx-team">
+  <img src="https://img.shields.io/npm/v/@fingerprintjs/commit-lint-dx-team.svg" alt="Current NPM version @fingerprintjs/commit-lint-dx-team">
+</a>
+5. Commits Analyzer: [@fingerprintjs/conventional-changelog-dx-team](packages/conventional-changelog-dx-team)
+<a href="https://www.npmjs.com/package/@fingerprintjs/conventional-changelog-dx-team">
+  <img src="https://img.shields.io/npm/v/@fingerprintjs/conventional-changelog-dx-team.svg" alt="Current NPM version @fingerprintjs/conventional-changelog-dx-team">
+</a>
+
 ## Reusable workflows
 
 * [1. Run tests and show coverage diff](#1-run-tests-and-show-coverage-diff)
