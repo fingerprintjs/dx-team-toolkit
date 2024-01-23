@@ -19,10 +19,20 @@ To use this preset in your project, add the following configuration to your proj
 
 ```js
 module.exports = {
-  extends: ['@fingerprintjs/eslint-dx-team'],
+  extends: ['@fingerprintjs/eslint-config-dx-team'],
 }
-
 ```
+
+## Dependencies
+
+To simplify dependencies update in project this package has eslint and eslint packages as a dependencies.
+Please don't add any of them as a dependencies for you project:
+
+- `@typescript-eslint/eslint-plugin`
+- `@typescript-eslint/parser`
+- `eslint`
+- `eslint-config-prettier`
+- `eslint-plugin-prettier`
 
 ## License
 

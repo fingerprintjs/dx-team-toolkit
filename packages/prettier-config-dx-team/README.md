@@ -17,12 +17,14 @@ pnpm install @fingerprintjs/prettier-config-dx-team
 
 To use this preset in your project, add the following configuration to your project's prettier configuration file:
 
-```js
-module.exports = {
-  extends: ['@fingerprintjs/prettier-dx-team'],
-}
-
+```json
+"@fingerprintjs/prettier-config-dx-team"
 ```
+
+## Dependencies
+
+To simplify dependencies update in project this package has prettier package as a dependency.
+Please don't add it as a dependency for you project.
 
 ## License
 

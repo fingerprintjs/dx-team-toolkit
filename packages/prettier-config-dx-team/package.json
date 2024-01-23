@@ -13,7 +13,7 @@
   "files": [
     "index.js"
   ],
-  "peerDependencies": {
-    "prettier": ">=2"
+  "dependencies": {
+    "prettier": "3.2.4"
   }
 }
