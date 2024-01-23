@@ -5,7 +5,7 @@
 
 ## Reusable configurations
 
-This monorepo reusable configurations for tools like ESLint, Prettier, etc. used by the DX team at Fingerprint.
+This monorepo stores reusable configurations for tools like ESLint, Prettier, etc. used by the DX team at Fingerprint.
 
 1. Eslint: [@fingerprintjs/eslint-config-dx-team](packages/eslint-config-dx-team)
 <a href="https://www.npmjs.com/package/@fingerprintjs/eslint-config-dx-team">
