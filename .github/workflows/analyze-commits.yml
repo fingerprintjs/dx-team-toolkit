@@ -21,14 +21,31 @@ jobs:
       - uses: actions/checkout@v3
         with:
           fetch-depth: 0
+      - name: 'Determine package manager'
+        run: |
+          if [[ -f "pnpm-lock.yaml" ]]; then
+            echo "Using pnpm"
+            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
+          else
+            echo "Using yarn"
+            echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
+          fi
+      - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
+        name: 'Install pnpm'
+        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
+        with:
+          version: 8
       - name: 'Install latest node version'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.nodeVersion }}
+          cache: ${{ env.PACKAGE_MANAGER }}
+      - name: 'Install Node packages'
+        run: $PACKAGE_MANAGER install
       - uses: wagoid/commitlint-github-action@5ce82f5d814d4010519d15f0552aec4f17a1e1fe
         id: commitlint
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
-        name: Format commitlint results
+        name: 'Format commitlint results'
         id: commitlint_formatted_results
         run: |
           results='${{ steps.commitlint.outputs.results }}'
