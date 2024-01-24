@@ -25,8 +25,18 @@ jobs:
         uses: actions/setup-node@v3
         with:
           node-version: ${{ inputs.nodeVersion }}
-      - uses: wagoid/commitlint-github-action@v5
+      - uses: wagoid/commitlint-github-action@5ce82f5d814d4010519d15f0552aec4f17a1e1fe
         id: commitlint
+      - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
+        name: Format commitlint results
+        id: commitlint_formatted_results
+        run: |
+          results='${{ steps.commitlint.outputs.results }}'
+          formatted=$(echo "$results" | jq -r '.[] | select(.valid == false) | "**Commit:** \(.hash) `\(.message)`\n**Errors:**\n\(.errors | map("- " + .) | join("\n"))\n\n---"')
+          echo "formatted<<EOF" >> $GITHUB_OUTPUT
+          echo "$formatted" >> $GITHUB_OUTPUT
+          echo "EOF" >> $GITHUB_OUTPUT
+        shell: bash
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
         uses: marocchino/sticky-pull-request-comment@3d60a5b2dae89d44e0c6ddc69dd7536aec2071cd
         with:
@@ -45,6 +55,8 @@ jobs:
             ```
             
             More info you can find in [job logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
+            ### Commitlint Errors
+            ${{ steps.commitlint_formatted_results.outputs.formatted }}
       - if: ${{ success() }}
         uses: marocchino/sticky-pull-request-comment@3d60a5b2dae89d44e0c6ddc69dd7536aec2071cd
         with:
