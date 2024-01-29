@@ -18,7 +18,7 @@ jobs:
     name: Analyze Commit Messages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: 'Determine package manager'
@@ -26,9 +26,15 @@ jobs:
           if [[ -f "pnpm-lock.yaml" ]]; then
             echo "Using pnpm"
             echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
-          else
+            echo "PACKAGE_MANAGER_CACHE=" >> $GITHUB_ENV
+          elif [[ -f "yarn.lock" ]]; then
             echo "Using yarn"
             echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
+            echo "PACKAGE_MANAGER_CACHE=yarn" >> $GITHUB_ENV
+          else
+            echo "No package manager lock file found"
+            echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
+            echo "PACKAGE_MANAGER_CACHE=" >> $GITHUB_ENV
           fi
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
         name: 'Install pnpm'
@@ -39,7 +45,7 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.nodeVersion }}
-          cache: ${{ env.PACKAGE_MANAGER }}
+          cache: ${{ env.PACKAGE_MANAGER_CACHE }}
       - name: 'Install Node packages'
         run: $PACKAGE_MANAGER install
       - uses: wagoid/commitlint-github-action@5ce82f5d814d4010519d15f0552aec4f17a1e1fe
@@ -86,11 +92,11 @@ jobs:
     env:
       TEST_MESSAGE: ${{ inputs.isTest && '### ⚠️ This is a test run of the release-notes-comment action that can be found in .github/workflows/analyze-commits.yml' || ''}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: 'Install latest node version'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.nodeVersion }}
       - name: Collect semantic-release-info

@@ -32,13 +32,13 @@ jobs:
     steps:
       - name: 'Checkout project for pull_request_target trigger'
         if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: ${{ github.event.pull_request.head.sha }}
 
       - name: 'Checkout project for other scenarios'
         if: ${{ github.event_name != 'pull_request_target' }}
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
 
       - name: 'Determine package manager'
         run: |

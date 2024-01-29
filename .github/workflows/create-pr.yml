@@ -23,7 +23,7 @@ jobs:
         if: inputs.prerelease == false
         run: exit 1
       - name: Checkout rc branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: 'rc'
 
@@ -38,7 +38,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Checkout main branch
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           ref: 'main'
 
