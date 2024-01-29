@@ -40,12 +40,12 @@ jobs:
     environment: production
     steps:
       - name: 'Checkout repository'
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           persist-credentials: false
 
       - name: 'Install Java'
-        uses: actions/setup-java@v3
+        uses: actions/setup-java@v4
         with:
           distribution: 'zulu' # See 'Supported distributions' for available options
           java-version: ${{ inputs.java-version }}
@@ -53,32 +53,32 @@ jobs:
 
       - name: 'Install DotNET'
         if: ${{ inputs.language == 'dotnet' }}
-        uses: actions/setup-dotnet@v3
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ inputs.language-version }}
 
       - name: 'Install Python'
         if: ${{ inputs.language == 'python' }}
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v5
         with:
           python-version: ${{ inputs.language-version }}
 
       - name: 'Install Golang'
         if: ${{ inputs.language == 'golang' }}
-        uses: actions/setup-go@v3
+        uses: actions/setup-go@v5
         with:
           go-version: ${{ inputs.language-version }}
 
       - name: 'Install Flutter'
         if: ${{ inputs.language == 'flutter' }}
-        uses: subosito/flutter-action@0c3f14223a08fa950c8a4c00bcfb834e65744135
+        uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
         with:
           flutter-version: ${{ inputs.language-version }}
           channel: 'stable'
 
       - name: 'Install PHP'
         if: ${{ inputs.language == 'php' }}
-        uses: shivammathur/setup-php@72ae4ccbe57f82bbe08411e84e2130bd4ba1c10f
+        uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d
         with:
           php-version: ${{ inputs.language-version }}
           coverage: none

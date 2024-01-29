@@ -18,7 +18,7 @@ jobs:
     name: Analyze Commit Messages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: 'Determine package manager'
@@ -92,11 +92,11 @@ jobs:
     env:
       TEST_MESSAGE: ${{ inputs.isTest && '### ⚠️ This is a test run of the release-notes-comment action that can be found in .github/workflows/analyze-commits.yml' || ''}}
     steps:
-      - uses: actions/checkout@v3
+      - uses: actions/checkout@v4
         with:
           fetch-depth: 0
       - name: 'Install latest node version'
-        uses: actions/setup-node@v3
+        uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.nodeVersion }}
       - name: Collect semantic-release-info
