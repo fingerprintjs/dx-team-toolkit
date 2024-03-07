@@ -17,6 +17,10 @@ on:
         description: Flag that we need `dist` folder to start release process
     secrets:
       GH_RELEASE_TOKEN:
+        required: false
+      APP_ID:
+        required: true
+      APP_PRIVATE_KEY:
         required: true
       NPM_AUTH_TOKEN:
         required: false
@@ -80,6 +84,12 @@ jobs:
         run: ${{ inputs.runAfterInstall }}
         if: ${{ inputs.runAfterInstall != '' }}
 
+      - uses: actions/create-github-app-token@v1
+        id: app-token
+        with:
+          app-id: ${{ secrets.APP_ID }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: 'Semantic Release'
         uses: cycjimmy/semantic-release-action@91ab76a4a393a8d0c4739e9aea1818b56bc953ea
         with:
@@ -87,7 +97,7 @@ jobs:
             @semantic-release/exec@6.0.3
             conventional-changelog-conventionalcommits@5.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           HUSKY: 0
 
