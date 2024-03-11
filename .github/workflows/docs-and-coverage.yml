@@ -84,7 +84,7 @@ jobs:
           ${{ inputs.prepare-gh-pages-commands }}
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@8817a56e5bfec6e2b08345c81f4d422db53a2cdc
+        uses: JamesIves/github-pages-deploy-action@65b5dfd4f5bcd3a7403bbc2959c144256167464e
         with:
           branch: gh-pages
           folder: gh-pages
