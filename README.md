@@ -248,10 +248,11 @@ a semantic release.
 
 The workflow expects the following secrets to be provided:
 
-| Secret Name        | Description                                      |
-|--------------------|--------------------------------------------------|
-| `GH_RELEASE_TOKEN` | GitHub token for creating releases               |
-| `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages |
+| Secret Name        | Description                                                      |
+|--------------------|------------------------------------------------------------------|
+| `GH_RELEASE_TOKEN` | GitHub token for creating releases                               |
+| `APP_PRIVATE_KEY`  | GitHub App private key for creating GitHub token for the release |
+| `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages                 |
 
 #### Inputs
 
@@ -260,6 +261,7 @@ The workflow expects the following secrets to be provided:
 | `runAfterInstall`          | No       | String  | `""`    | Commands to run after installing dependencies.            |
 | `distFolderNeedForRelease` | No       | Boolean | `false` | Flag that we need `dist` folder to start release process. |
 | `nodeVersion`              | No       | String  | `lts/*` | Node version to use                                       |
+| `appId`                    | No       | String  | `""`    | GitHub App Id for creating GitHub token for the release   |
 
 #### Usage
 
@@ -273,8 +275,10 @@ on:
 jobs:
   release-workflow:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-typescript-project.yml@v1
+    with:
+      appId: ${{ vars.APP_ID }}
     secrets:
-      GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 ```
 
@@ -301,23 +305,24 @@ determine the next version number and generate release notes based on commit mes
 
 The workflow accepts the following input parameters:
 
-| Input Parameter                  | Required | Type   | Default | Description                                                                                                    |
-|----------------------------------|----------|--------|---------|----------------------------------------------------------------------------------------------------------------|
-| `language`                       | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, `flutter` and `php`. |
-| `language-version`               | Yes      | String | -       | Version of the programming language to set up.                                                                 |
-| `prepare-command`                | No       | String | -       | Command(s) to run for project preparation, such as installing dependencies.                                    |
-| `java-version`                   | No       | String | `11`    | Version of Java to set up.                                                                                     |
-| `semantic-release-extra-plugins` | No       | String | -       | Additional plugins to install for the semantic-release action.                                                 |
-
+| Input Parameter                  | Required | Type    | Default | Description                                                                                                 |
+|----------------------------------|----------|---------|------|----------------------------------------------------------------------------------------------------------------|
+| `language`                       | Yes      | String  | -    | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, `flutter` and `php`. |
+| `language-version`               | Yes      | String  | -    | Version of the programming language to set up.                                                                 |
+| `prepare-command`                | No       | String  | -    | Command(s) to run for project preparation, such as installing dependencies.                                    |
+| `java-version`                   | No       | String  | `11` | Version of Java to set up.                                                                                     |
+| `semantic-release-extra-plugins` | No       | String  | -    | Additional plugins to install for the semantic-release action.                                                 |
+| `appId`                          | No       | String  | -    | GitHub App Id for creating GitHub token for the release                                                        |
 #### Workflow Secrets
 
 The workflow expects the following secrets to be provided:
 
-| Secret Name        | Description                                                 | Required For    |
-|--------------------|-------------------------------------------------------------|-----------------|
-| `GH_RELEASE_TOKEN` | GitHub token used for making releases and other operations. | All projects    |
-| `PYPI_TOKEN`       | PyPI token used for publishing Python packages.             | Python projects |
-| `NUGET_API_KEY`    | NuGet API key for publishing .NET packages.                 | DotNET projects |
+| Secret Name        | Description                                                      | Required For    |
+|--------------------|------------------------------------------------------------------|-----------------|
+| `APP_PRIVATE_KEY`  | GitHub App private key for creating GitHub token for the release | All projects    |
+| `GH_RELEASE_TOKEN` | GitHub token used for making releases and other operations.      | All projects    |
+| `PYPI_TOKEN`       | PyPI token used for publishing Python packages.                  | Python projects |
+| `NUGET_API_KEY`    | NuGet API key for publishing .NET packages.                      | DotNET projects |
 
 #### Example of usage:
 
@@ -333,6 +338,7 @@ jobs:
     name: 'Publish new version'
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-server-sdk.yml@v1
     with:
+      appId: ${{ vars.APP_ID }}
       language: python
       language-version: '3.9'
       prepare-command: |
@@ -341,7 +347,7 @@ jobs:
         pip install wheel
         pip install twine
     secrets:
-      GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
 ```
 

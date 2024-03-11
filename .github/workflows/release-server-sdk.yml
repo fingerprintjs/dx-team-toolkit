@@ -23,10 +23,17 @@ on:
         description: 'Additional plugins to install for the semantic-release action.'
         required: false
         type: string
+      appId:
+        type: string
+        required: false
+        description: 'GitHub app id for release process.'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
         required: true
+      APP_PRIVATE_KEY:
+        description: 'GitHub App token to request GitHub token.'
+        required: false
       PYPI_TOKEN:
         description: 'PyPI token used for publishing Python packages. Required only for Python projects.'
         required: false

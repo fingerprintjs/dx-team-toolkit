@@ -10,21 +10,24 @@ on:
       runAfterInstall:
         type: string
         required: false
-        description: Commands to run after installing dependencies.
+        description: 'Commands to run after installing dependencies'
       distFolderNeedForRelease:
         type: boolean
         required: false
-        description: Flag that we need `dist` folder to start release process
+        description: 'Flag that we need `dist` folder to start release process'
       appId:
         type: string
         required: false
-        description: GitHub app id for release process
+        description: 'GitHub app id for release process'
     secrets:
       GH_RELEASE_TOKEN:
+        description: 'GitHub token with permissions to create releases and perform other necessary operations'
         required: false
       APP_PRIVATE_KEY:
+        description: 'GitHub App token to request GitHub token'
         required: false
       NPM_AUTH_TOKEN:
+        description: 'NPM authentication token for publishing packages'
         required: false
 
 jobs:
