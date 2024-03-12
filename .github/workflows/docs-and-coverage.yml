@@ -45,7 +45,7 @@ jobs:
 
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
         name: 'Install pnpm'
-        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
         with:
           version: 8
 
@@ -73,7 +73,7 @@ jobs:
         run: $PACKAGE_MANAGER test:coverage
 
       - name: Create Coverage Badges
-        uses: jaywcjlove/coverage-badges-cli@e07f25709cd25486855c1ba1b26da53576ff3620
+        uses: jaywcjlove/coverage-badges-cli@df58615045079f1c827de7867044bbab3ec22b43
         with:
           source: coverage/coverage-summary.json
           output: coverage/lcov-report/badges.svg
@@ -84,7 +84,7 @@ jobs:
           ${{ inputs.prepare-gh-pages-commands }}
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@8817a56e5bfec6e2b08345c81f4d422db53a2cdc
+        uses: JamesIves/github-pages-deploy-action@65b5dfd4f5bcd3a7403bbc2959c144256167464e
         with:
           branch: gh-pages
           folder: gh-pages

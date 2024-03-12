@@ -37,7 +37,7 @@ jobs:
 
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
         name: 'Install pnpm'
-        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
         with:
           version: 8
 
@@ -66,14 +66,14 @@ jobs:
 
       - name: Jest coverage comment
         id: coverage
-        uses: ArtiomTr/jest-coverage-report-action@df2b025553c31d68f84be6337843e277e2576844
+        uses: ArtiomTr/jest-coverage-report-action@c026e98ae079f4b0b027252c8e957f5ebd420610
         with:
           package-manager: ${{ env.PACKAGE_MANAGER }}
           output: report-markdown
           test-script: ${{ inputs.testScript }}
 
       - name: Add comment with coverage report
-        uses: marocchino/sticky-pull-request-comment@adca94abcaf73c10466a71cc83ae561fd66d1a56
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           message: |
             ${{ steps.coverage.outputs.report }}

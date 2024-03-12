@@ -23,10 +23,17 @@ on:
         description: 'Additional plugins to install for the semantic-release action.'
         required: false
         type: string
+      appId:
+        type: string
+        required: false
+        description: 'GitHub app id for release process.'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
         required: true
+      APP_PRIVATE_KEY:
+        description: 'GitHub App token to request GitHub token.'
+        required: false
       PYPI_TOKEN:
         description: 'PyPI token used for publishing Python packages. Required only for Python projects.'
         required: false
@@ -89,7 +96,7 @@ jobs:
         run: ${{ inputs.prepare-command }}
 
       - name: 'Semantic Release'
-        uses: cycjimmy/semantic-release-action@91ab76a4a393a8d0c4739e9aea1818b56bc953ea
+        uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4
         with:
           extra_plugins: |
             @semantic-release/exec@6.0.3

@@ -10,15 +10,24 @@ on:
       runAfterInstall:
         type: string
         required: false
-        description: Commands to run after installing dependencies.
+        description: 'Commands to run after installing dependencies'
       distFolderNeedForRelease:
         type: boolean
         required: false
-        description: Flag that we need `dist` folder to start release process
+        description: 'Flag that we need `dist` folder to start release process'
+      appId:
+        type: string
+        required: false
+        description: 'GitHub app id for release process'
     secrets:
       GH_RELEASE_TOKEN:
-        required: true
+        description: 'GitHub token with permissions to create releases and perform other necessary operations'
+        required: false
+      APP_PRIVATE_KEY:
+        description: 'GitHub App token to request GitHub token'
+        required: false
       NPM_AUTH_TOKEN:
+        description: 'NPM authentication token for publishing packages'
         required: false
 
 jobs:
@@ -54,7 +63,7 @@ jobs:
 
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
         name: 'Install pnpm'
-        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
         with:
           version: 8
 
@@ -80,14 +89,22 @@ jobs:
         run: ${{ inputs.runAfterInstall }}
         if: ${{ inputs.runAfterInstall != '' }}
 
+      - name: 'Get token for the GitHub App'
+        if: ${{ inputs.appId != '' }}
+        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        id: app-token
+        with:
+          app-id: ${{ inputs.appId }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: 'Semantic Release'
-        uses: cycjimmy/semantic-release-action@91ab76a4a393a8d0c4739e9aea1818b56bc953ea
+        uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4
         with:
           extra_plugins: |
             @semantic-release/exec@6.0.3
             conventional-changelog-conventionalcommits@5.0.0
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           HUSKY: 0
 

@@ -38,7 +38,7 @@ jobs:
           fi
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
         name: 'Install pnpm'
-        uses: pnpm/action-setup@ebcfd6995dade4b0104ac774445cef8b3b4635b0
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
         with:
           version: 8
       - name: 'Install latest node version'
@@ -61,7 +61,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
         shell: bash
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
-        uses: marocchino/sticky-pull-request-comment@3d60a5b2dae89d44e0c6ddc69dd7536aec2071cd
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: Commitlint
           recreate: true
@@ -81,7 +81,7 @@ jobs:
             ### Commitlint Errors
             ${{ steps.commitlint_formatted_results.outputs.formatted }}
       - if: ${{ success() }}
-        uses: marocchino/sticky-pull-request-comment@3d60a5b2dae89d44e0c6ddc69dd7536aec2071cd
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: Commitlint
           hide: true
@@ -104,7 +104,7 @@ jobs:
         uses: fingerprintjs/action-semantic-release-info@v1
       - if: ${{ steps.semantic_release_info.outputs.no_release == 'false' }}
         name: Add comment to the PR
-        uses: marocchino/sticky-pull-request-comment@3d60a5b2dae89d44e0c6ddc69dd7536aec2071cd
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: ReleasePreview
           recreate: true
@@ -114,7 +114,7 @@ jobs:
             ${{steps.semantic_release_info.outputs.notes}}
       - if: ${{ steps.semantic_release_info.outputs.no_release == 'true' }}
         name: Add comment to the PR
-        uses: marocchino/sticky-pull-request-comment@3d60a5b2dae89d44e0c6ddc69dd7536aec2071cd
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
           header: ReleasePreview
           recreate: true
