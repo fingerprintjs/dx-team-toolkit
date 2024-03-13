@@ -61,7 +61,7 @@ jobs:
         run: $PACKAGE_MANAGER test:coverage
 
       - name: Read coverage text report
-        uses: fingerprintjs/action-coverage-report-md@v1
+        uses: fingerprintjs/action-coverage-report-md@v2
         id: coverage-md
 
       - name: Jest coverage comment
