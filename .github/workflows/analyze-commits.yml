@@ -101,7 +101,7 @@ jobs:
           node-version: ${{ inputs.nodeVersion }}
       - name: Collect semantic-release-info
         id: semantic_release_info
-        uses: fingerprintjs/action-semantic-release-info@v1
+        uses: fingerprintjs/action-semantic-release-info@v2
       - if: ${{ steps.semantic_release_info.outputs.no_release == 'false' }}
         name: Add comment to the PR
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
