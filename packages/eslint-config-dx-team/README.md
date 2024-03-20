@@ -10,7 +10,7 @@ To install this package, use the following command:
 9
 
 ```bash
-pnpm install @fingerprintjs/eslint-config-dx-team
+pnpm install -D @fingerprintjs/eslint-config-dx-team
 ```
 
 ## Configuration
