@@ -30,7 +30,7 @@ on:
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
-        required: true
+        required: false
       APP_PRIVATE_KEY:
         description: 'GitHub App token to request GitHub token.'
         required: false
