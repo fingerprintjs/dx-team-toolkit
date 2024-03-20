@@ -222,7 +222,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/download-artifact@v4
+      - uses: actions/download-artifact@v3
         with:
           name: node-sdk-artifact
           path: ./dist
