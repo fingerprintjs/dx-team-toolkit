@@ -95,6 +95,14 @@ jobs:
         if:  ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
 
+      - name: 'Get token for the GitHub App'
+        if: ${{ inputs.appId != '' }}
+        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        id: app-token
+        with:
+          app-id: ${{ inputs.appId }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: 'Semantic Release'
         uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4
         with:
@@ -103,6 +111,6 @@ jobs:
             conventional-changelog-conventionalcommits@5.0.0
             ${{ inputs.semantic-release-extra-plugins }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
