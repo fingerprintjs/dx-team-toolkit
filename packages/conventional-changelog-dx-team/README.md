@@ -11,7 +11,7 @@ and categories for changes.
 To install this package, use the following command:
 
 ```bash
-pnpm install @fingerprintjs/conventional-changelog-dx-team
+pnpm install -D @fingerprintjs/conventional-changelog-dx-team
 ```
 
 ## Configuration
