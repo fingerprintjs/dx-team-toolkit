@@ -1,0 +1,12 @@
+name: Test Reset Prerelease Branch
+on:
+  workflow_dispatch:
+
+jobs:
+  reset-feature-branch:
+    uses: ./.github/workflows/create-prerelease-branch-and-force-push.yml
+    with:
+      branch_name: 'protected-branch'
+      appId: ${{ vars.APP_ID }}
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
