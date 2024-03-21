@@ -487,7 +487,7 @@ on:
 
 jobs:
   reset-feature-branch:
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/create-prerelease-branch-and-force-push.yml@v1
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/reset-prerelease-branch.yml@v1
     with:
       branch_name: 'test'
       appId: ${{ vars.APP_ID }}
