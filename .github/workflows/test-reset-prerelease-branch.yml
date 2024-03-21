@@ -4,7 +4,7 @@ on:
 
 jobs:
   reset-feature-branch:
-    uses: ./.github/workflows/create-prerelease-branch-and-force-push.yml
+    uses: ./.github/workflows/reset-prerelease-branch.yml
     with:
       branch_name: 'protected-branch'
       appId: ${{ vars.APP_ID }}
