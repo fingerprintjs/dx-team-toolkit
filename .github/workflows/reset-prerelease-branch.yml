@@ -22,12 +22,6 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     steps:
-      - name: Checkout repository
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
-          persist-credentials: false
-
       - name: 'Get token for the GitHub App'
         if: ${{ inputs.appId != '' }}
         uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
@@ -36,12 +30,11 @@ jobs:
           app-id: ${{ inputs.appId }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
-      - name: Configure git with App token
-        if: steps.app-token.outputs.token != ''
-        run: |
-          git config --global user.name 'github-actions[bot]'
-          git config --global user.email 'github-actions[bot]@users.noreply.github.com'
-          git config --global http.https://github.com/.extraheader "AUTHORIZATION: bearer ${{ steps.app-token.outputs.token }}"
+      - name: Checkout repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ steps.app-token.outputs.token }}
+          fetch-depth: 0
 
       - name: Create and switch to branch
         run: |
