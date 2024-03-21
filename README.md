@@ -25,6 +25,7 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 * [6. Release Server SDK](#6-release-server-sdk)
 * [7. Report Workflow Status](#7-report-workflow-status)
 * [8. Create PR to Main on Release](#8-create-pr-to-main-on-release)
+* [9. Create Prerelease Branch and Force Push](#9-create-prerelease-branch-and-force-push)
 
 ### 1. Run tests and show coverage diff
 
@@ -448,3 +449,50 @@ jobs:
        tag_name: ${{ github.event.release.tag_name }}
        prerelease: ${{ github.event.release.prerelease }}
 ```
+
+### 9. Create Prerelease Branch and Force Push
+
+This reusable workflow creates a new branch from the `main` branch and performs a force push to overwrite it. It's
+designed to reset a branch to a specific state before a release. The workflow uses a GitHub App token for
+authentication, ensuring actions are performed securely and can be traced back to the app.
+
+#### Prerequisites:
+
+1. A GitHub App installed in your repository with permissions to push to branches.
+2. The App's private key and App ID stored as secrets/vars in your GitHub repository.
+
+#### Workflow Inputs
+
+The workflow accepts the following input parameters:
+
+| Input Parameter | Required | Type   | Description                                             |
+|-----------------|----------|--------|---------------------------------------------------------|
+| `branch_name`   | Yes      | String | The name of the branch to create and force push.        |
+| `appId`         | Yes      | String | The GitHub App ID used for the release process.         |
+
+#### Workflow Secrets
+
+The workflow expects the following secret to be provided:
+
+| Secret Name       | Description                                                     |
+|-------------------|-----------------------------------------------------------------|
+| `APP_PRIVATE_KEY` | The GitHub App's private key, used to request a GitHub token.   |
+
+#### Example of Usage:
+
+```yaml
+name: Reset Prerelease Branch
+on:
+  workflow_dispatch:
+
+jobs:
+  reset-feature-branch:
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/create-prerelease-branch-and-force-push.yml@v1
+    with:
+      branch_name: 'test'
+      appId: ${{ vars.APP_ID }}
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+```
+
+Ensure you've set up the required `APP_PRIVATE_KEY` secret in your repository's settings. Adjust the values in the example as needed for your use case.
