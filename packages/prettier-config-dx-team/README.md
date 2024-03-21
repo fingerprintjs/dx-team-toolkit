@@ -10,7 +10,7 @@ To install this package, use the following command:
 9
 
 ```bash
-pnpm install @fingerprintjs/prettier-config-dx-team
+pnpm install -D @fingerprintjs/prettier-config-dx-team
 ```
 
 ## Configuration

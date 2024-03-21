@@ -9,7 +9,7 @@ for the DX team at FingerprintJS.
 To install this package, use the following command:
 
 ```bash
-pnpm install @fingerprintjs/tsconfig-dx-team
+pnpm install -D @fingerprintjs/tsconfig-dx-team
 ```
 
 ## Configuration
