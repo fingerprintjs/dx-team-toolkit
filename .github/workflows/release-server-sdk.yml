@@ -109,6 +109,7 @@ jobs:
           extra_plugins: |
             @semantic-release/exec@6.0.3
             conventional-changelog-conventionalcommits@5.0.0
+            @fingerprintjs/conventional-changelog-dx-team@0.1.0
             ${{ inputs.semantic-release-extra-plugins }}
         env:
           GITHUB_TOKEN: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
