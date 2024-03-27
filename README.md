@@ -333,6 +333,9 @@ Below is an example showcasing the workflow setup for releasing a Python SDK:
 name: 'Release Python SDK'
 on:
   push:
+    branches:
+      - main
+      - test
 
 jobs:
   release-server-sdk-python:
