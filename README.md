@@ -223,7 +223,7 @@ jobs:
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}
-      - uses: actions/download-artifact@v3
+      - uses: actions/download-artifact@v4
         with:
           name: node-sdk-artifact
           path: ./dist
@@ -333,6 +333,9 @@ Below is an example showcasing the workflow setup for releasing a Python SDK:
 name: 'Release Python SDK'
 on:
   push:
+    branches:
+      - main
+      - test
 
 jobs:
   release-server-sdk-python:
