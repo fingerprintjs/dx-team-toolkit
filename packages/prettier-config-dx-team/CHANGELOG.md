@@ -1,5 +1,11 @@
 # @fingerprintjs/prettier-config-dx-team
 
+## 0.2.0
+
+### Minor Changes
+
+- [#60](https://github.com/fingerprintjs/dx-team-toolkit/pull/60) [`74a7d5b`](https://github.com/fingerprintjs/dx-team-toolkit/commit/74a7d5b0582dde9c8ed269dc2199d46c9ca68c0a) Thanks [@JuroUhlar](https://github.com/JuroUhlar)! - Set printWidth of markdown files to 80
+
 ## 0.1.0
 
 ### Minor Changes
