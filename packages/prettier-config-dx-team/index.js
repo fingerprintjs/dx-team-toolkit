@@ -10,4 +10,12 @@ module.exports = {
   bracketSameLine: false,
   arrowParens: 'always',
   svelteSortOrder: 'options-scripts-markup-styles',
+  overrides: [
+    {
+      files: '*.md',
+      options: {
+        printWidth: 80,
+      },
+    },
+  ],
 }
