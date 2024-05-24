@@ -28,17 +28,9 @@ To use this preset in your project, add the following configuration to your proj
     // Don't forget to specify jsx for react projects - https://www.typescriptlang.org/docs/handbook/jsx.html
     "jsx": "react-jsx"
   },
-  "files": [
-    "./src/index.ts"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "**/*.test.ts"
-  ]
+  "files": ["./src/index.ts"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts"]
 }
-
-
 ```
 
 ## License

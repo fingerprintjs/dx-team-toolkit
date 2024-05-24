@@ -21,7 +21,6 @@ To use this preset in your project, add the following configuration to your proj
 module.exports = {
   extends: ['@fingerprintjs/commit-lint-dx-team'],
 }
-
 ```
 
 ## License

@@ -68,7 +68,7 @@ jobs:
           message: |
             ## Wrong commit message format detected
             We use [Semantic Commit Messages](https://gist.github.com/joshbuchea/6f47e86d2510bce28f8e7f42ae84c716) in our project.
-            
+
             > **Warning**
             > Probably you forgot to activate local git hooks.
 
@@ -76,7 +76,7 @@ jobs:
             ```sh
             sh ./install_hooks.sh
             ```
-            
+
             More info you can find in [job logs](${{ github.server_url }}/${{ github.repository }}/actions/runs/${{ github.run_id }})
             ### Commitlint Errors
             ${{ steps.commitlint_formatted_results.outputs.formatted }}
@@ -85,7 +85,7 @@ jobs:
         with:
           header: Commitlint
           hide: true
-          hide_classify: "OUTDATED"
+          hide_classify: 'OUTDATED'
   release-notes-comment:
     name: Generate release notes preview
     runs-on: ubuntu-latest

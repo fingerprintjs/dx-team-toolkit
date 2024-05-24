@@ -7,25 +7,25 @@
 
 This monorepo stores reusable configurations for tools like ESLint, Prettier, etc. used by the DX team at Fingerprint.
 
-|   | Package | Published version |
-|---|---------|-------------------|
-| 1 | Eslint: [@fingerprintjs/eslint-config-dx-team](packages/eslint-config-dx-team) | <a href="https://www.npmjs.com/package/@fingerprintjs/eslint-config-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/eslint-config-dx-team.svg" alt="Current NPM version @fingerprintjs/eslint-config-dx-team"></a> |
-| 3 | Prettier: [@fingerprintjs/prettier-config-dx-team](packages/prettier-config-dx-team) | <a href="https://www.npmjs.com/package/@fingerprintjs/prettier-config-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/prettier-config-dx-team.svg" alt="Current NPM version @fingerprintjs/prettier-config-dx-team"></a> |
-| 4 | Typescript: [@fingerprintjs/tsconfig-dx-team](packages/tsconfig-dx-team) | <a href="https://www.npmjs.com/package/@fingerprintjs/tsconfig-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/tsconfig-dx-team.svg" alt="Current NPM version @fingerprintjs/tsconfig-dx-team"></a> |
-| 5 | Conventional Commits: [@fingerprintjs/commit-lint-dx-team](packages/commit-lint-dx-team) | <a href="https://www.npmjs.com/package/@fingerprintjs/commit-lint-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/commit-lint-dx-team.svg" alt="Current NPM version @fingerprintjs/commit-lint-dx-team"></a> |
-| 6 | Commits Analyzer: [@fingerprintjs/conventional-changelog-dx-team](packages/conventional-changelog-dx-team) |<a href="https://www.npmjs.com/package/@fingerprintjs/conventional-changelog-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/conventional-changelog-dx-team.svg" alt="Current NPM version @fingerprintjs/conventional-changelog-dx-team"></a> |
+|     | Package                                                                                                    | Published version                                                                                                                                                                                                                                            |
+| --- | ---------------------------------------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
+| 1   | Eslint: [@fingerprintjs/eslint-config-dx-team](packages/eslint-config-dx-team)                             | <a href="https://www.npmjs.com/package/@fingerprintjs/eslint-config-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/eslint-config-dx-team.svg" alt="Current NPM version @fingerprintjs/eslint-config-dx-team"></a>                            |
+| 3   | Prettier: [@fingerprintjs/prettier-config-dx-team](packages/prettier-config-dx-team)                       | <a href="https://www.npmjs.com/package/@fingerprintjs/prettier-config-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/prettier-config-dx-team.svg" alt="Current NPM version @fingerprintjs/prettier-config-dx-team"></a>                      |
+| 4   | Typescript: [@fingerprintjs/tsconfig-dx-team](packages/tsconfig-dx-team)                                   | <a href="https://www.npmjs.com/package/@fingerprintjs/tsconfig-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/tsconfig-dx-team.svg" alt="Current NPM version @fingerprintjs/tsconfig-dx-team"></a>                                           |
+| 5   | Conventional Commits: [@fingerprintjs/commit-lint-dx-team](packages/commit-lint-dx-team)                   | <a href="https://www.npmjs.com/package/@fingerprintjs/commit-lint-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/commit-lint-dx-team.svg" alt="Current NPM version @fingerprintjs/commit-lint-dx-team"></a>                                  |
+| 6   | Commits Analyzer: [@fingerprintjs/conventional-changelog-dx-team](packages/conventional-changelog-dx-team) | <a href="https://www.npmjs.com/package/@fingerprintjs/conventional-changelog-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/conventional-changelog-dx-team.svg" alt="Current NPM version @fingerprintjs/conventional-changelog-dx-team"></a> |
 
 ## Reusable workflows
 
-* [1. Run tests and show coverage diff](#1-run-tests-and-show-coverage-diff)
-* [2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
-* [3. Analyze commits](#3-analyze-commits)
-* [4. Build typescript project](#4-build-typescript-project)
-* [5. Release TypeScript project](#5-release-typescript-project)
-* [6. Release Server SDK](#6-release-server-sdk)
-* [7. Report Workflow Status](#7-report-workflow-status)
-* [8. Create PR to Main on Release](#8-create-pr-to-main-on-release)
-* [9. Create Prerelease Branch and Force Push](#9-create-prerelease-branch-and-force-push)
+- [1. Run tests and show coverage diff](#1-run-tests-and-show-coverage-diff)
+- [2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
+- [3. Analyze commits](#3-analyze-commits)
+- [4. Build typescript project](#4-build-typescript-project)
+- [5. Release TypeScript project](#5-release-typescript-project)
+- [6. Release Server SDK](#6-release-server-sdk)
+- [7. Report Workflow Status](#7-report-workflow-status)
+- [8. Create PR to Main on Release](#8-create-pr-to-main-on-release)
+- [9. Create Prerelease Branch and Force Push](#9-create-prerelease-branch-and-force-push)
 
 ### 1. Run tests and show coverage diff
 
@@ -38,7 +38,7 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 #### Inputs
 
 | Input Parameter   | Required | Type   | Default    | Description                                    |
-|-------------------|----------|--------|------------|------------------------------------------------|
+| ----------------- | -------- | ------ | ---------- | ---------------------------------------------- |
 | `runAfterInstall` | No       | String | `""`       | Commands to run after installing dependencies. |
 | `testScript`      | No       | String | `npx jest` | The test script to run.                        |
 | `nodeVersion`     | No       | String | `lts/*`    | Node version to use                            |
@@ -76,7 +76,7 @@ jobs:
 #### Inputs
 
 | Input Parameter             | Required | Type    | Default                                                                      | Description                                                                                                                                                        |
-|-----------------------------|----------|---------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| --------------------------- | -------- | ------- | ---------------------------------------------------------------------------- | ------------------------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `prepare-gh-pages-commands` | No       | String  | <pre>mv docs ./gh-pages<br>mv coverage/lcov-report ./gh-pages/coverage</pre> | Commands to prepare the content of the `gh-pages` folder. The `gh-pages` folder will be created automatically. Only specify the commands for moving files into it. |
 | `skip-docs-step`            | No       | Boolean | `false`                                                                      | Skip the documentation generation step.                                                                                                                            |
 | `run-after-install`         | No       | String  | `""`                                                                         | Commands to run after installing dependencies.                                                                                                                     |
@@ -137,7 +137,7 @@ structure.
 #### Inputs
 
 | Input Parameter | Required | Type   | Default | Description         |
-|-----------------|----------|--------|---------|---------------------|
+| --------------- | -------- | ------ | ------- | ------------------- |
 | `nodeVersion`   | No       | String | `lts/*` | Node version to use |
 
 #### Example of usage:
@@ -173,7 +173,7 @@ jobs:
 #### Inputs
 
 | Input Parameter   | Required | Type   | Default    | Description                                                                                |
-|-------------------|----------|--------|------------|--------------------------------------------------------------------------------------------|
+| ----------------- | -------- | ------ | ---------- | ------------------------------------------------------------------------------------------ |
 | `yarnFlags`       | No       | String | `""`       | Additional flags for the `yarn install` command.                                           |
 | `artifactName`    | No       | String | `""`       | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
 | `artifactPath`    | No       | String | `"./dist"` | Path of the files to upload as artifact.                                                   |
@@ -215,7 +215,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [ 10, 12, 14, 16, 17, 18, 19, 20 ]
+        node-version: [10, 12, 14, 16, 17, 18, 19, 20]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -250,7 +250,7 @@ a semantic release.
 The workflow expects the following secrets to be provided:
 
 | Secret Name        | Description                                                      |
-|--------------------|------------------------------------------------------------------|
+| ------------------ | ---------------------------------------------------------------- |
 | `GH_RELEASE_TOKEN` | GitHub token for creating releases                               |
 | `APP_PRIVATE_KEY`  | GitHub App private key for creating GitHub token for the release |
 | `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages                 |
@@ -258,7 +258,7 @@ The workflow expects the following secrets to be provided:
 #### Inputs
 
 | Input Parameter            | Required | Type    | Default | Description                                               |
-|----------------------------|----------|---------|---------|-----------------------------------------------------------|
+| -------------------------- | -------- | ------- | ------- | --------------------------------------------------------- |
 | `runAfterInstall`          | No       | String  | `""`    | Commands to run after installing dependencies.            |
 | `distFolderNeedForRelease` | No       | Boolean | `false` | Flag that we need `dist` folder to start release process. |
 | `nodeVersion`              | No       | String  | `lts/*` | Node version to use                                       |
@@ -306,20 +306,21 @@ determine the next version number and generate release notes based on commit mes
 
 The workflow accepts the following input parameters:
 
-| Input Parameter                  | Required | Type    | Default | Description                                                                                                 |
-|----------------------------------|----------|---------|------|----------------------------------------------------------------------------------------------------------------|
-| `language`                       | Yes      | String  | -    | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, `flutter` and `php`. |
-| `language-version`               | Yes      | String  | -    | Version of the programming language to set up.                                                                 |
-| `prepare-command`                | No       | String  | -    | Command(s) to run for project preparation, such as installing dependencies.                                    |
-| `java-version`                   | No       | String  | `11` | Version of Java to set up.                                                                                     |
-| `semantic-release-extra-plugins` | No       | String  | -    | Additional plugins to install for the semantic-release action.                                                 |
-| `appId`                          | No       | String  | -    | GitHub App Id for creating GitHub token for the release                                                        |
+| Input Parameter                  | Required | Type   | Default | Description                                                                                                    |
+| -------------------------------- | -------- | ------ | ------- | -------------------------------------------------------------------------------------------------------------- |
+| `language`                       | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, `flutter` and `php`. |
+| `language-version`               | Yes      | String | -       | Version of the programming language to set up.                                                                 |
+| `prepare-command`                | No       | String | -       | Command(s) to run for project preparation, such as installing dependencies.                                    |
+| `java-version`                   | No       | String | `11`    | Version of Java to set up.                                                                                     |
+| `semantic-release-extra-plugins` | No       | String | -       | Additional plugins to install for the semantic-release action.                                                 |
+| `appId`                          | No       | String | -       | GitHub App Id for creating GitHub token for the release                                                        |
+
 #### Workflow Secrets
 
 The workflow expects the following secrets to be provided:
 
 | Secret Name        | Description                                                      | Required For    |
-|--------------------|------------------------------------------------------------------|-----------------|
+| ------------------ | ---------------------------------------------------------------- | --------------- |
 | `APP_PRIVATE_KEY`  | GitHub App private key for creating GitHub token for the release | All projects    |
 | `GH_RELEASE_TOKEN` | GitHub token used for making releases and other operations.      | All projects    |
 | `PYPI_TOKEN`       | PyPI token used for publishing Python packages.                  | Python projects |
@@ -373,7 +374,7 @@ notification title to be provided as inputs.
 The workflow accepts the following input parameters:
 
 | Input Parameter      | Required | Type   | Description                                                             |
-|----------------------|----------|--------|-------------------------------------------------------------------------|
+| -------------------- | -------- | ------ | ----------------------------------------------------------------------- |
 | `job_status`         | Yes      | String | The status of the job. Valid values: 'success', 'failure', 'cancelled'. |
 | `notification_title` | Yes      | String | The title of the notification message to be sent to Slack.              |
 
@@ -382,7 +383,7 @@ The workflow accepts the following input parameters:
 The workflow expects the following secrets to be provided:
 
 | Secret Name         | Description                                                            |
-|---------------------|------------------------------------------------------------------------|
+| ------------------- | ---------------------------------------------------------------------- |
 | `SLACK_WEBHOOK_URL` | Slack webhook URL. This secret is used to send notifications to Slack. |
 
 #### Example of usage:
@@ -409,7 +410,6 @@ jobs:
       job_status: ${{ needs.test-job.result }}
     secrets:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
-
 ```
 
 Make sure you've set up the required `SLACK_WEBHOOK_URL` secret in your repository's settings. Adjust the values in the
@@ -428,7 +428,7 @@ to another specified branch.
 #### Inputs
 
 | Input Parameter | Required | Type    | Default | Description                            |
-|-----------------|----------|---------|---------|----------------------------------------|
+| --------------- | -------- | ------- | ------- | -------------------------------------- |
 | `target_branch` | Yes      | String  | -       | The branch for which the PR is created |
 | `tag_name`      | No       | String  | -       | The name of the release tag            |
 | `prerelease`    | No       | Boolean | `false` | Whether the release is a pre-release   |
@@ -439,18 +439,18 @@ to another specified branch.
 name: Create PR
 
 on:
-   release:
-      types:
-         - published
+  release:
+    types:
+      - published
 
 jobs:
   create-pr:
     name: Create PR
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/create-pr.yml@v1
     with:
-       target_branch: ${{ github.event.release.prerelease && 'main' || 'rc' }}
-       tag_name: ${{ github.event.release.tag_name }}
-       prerelease: ${{ github.event.release.prerelease }}
+      target_branch: ${{ github.event.release.prerelease && 'main' || 'rc' }}
+      tag_name: ${{ github.event.release.tag_name }}
+      prerelease: ${{ github.event.release.prerelease }}
 ```
 
 ### 9. Create Prerelease Branch and Force Push
@@ -468,18 +468,18 @@ authentication, ensuring actions are performed securely and can be traced back t
 
 The workflow accepts the following input parameters:
 
-| Input Parameter | Required | Type   | Description                                             |
-|-----------------|----------|--------|---------------------------------------------------------|
-| `branch_name`   | Yes      | String | The name of the branch to create and force push.        |
-| `appId`         | Yes      | String | The GitHub App ID used for the release process.         |
+| Input Parameter | Required | Type   | Description                                      |
+| --------------- | -------- | ------ | ------------------------------------------------ |
+| `branch_name`   | Yes      | String | The name of the branch to create and force push. |
+| `appId`         | Yes      | String | The GitHub App ID used for the release process.  |
 
 #### Workflow Secrets
 
 The workflow expects the following secret to be provided:
 
-| Secret Name       | Description                                                     |
-|-------------------|-----------------------------------------------------------------|
-| `APP_PRIVATE_KEY` | The GitHub App's private key, used to request a GitHub token.   |
+| Secret Name       | Description                                                   |
+| ----------------- | ------------------------------------------------------------- |
+| `APP_PRIVATE_KEY` | The GitHub App's private key, used to request a GitHub token. |
 
 #### Example of Usage:
 

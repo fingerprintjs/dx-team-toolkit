@@ -6,12 +6,6 @@
     "moduleResolution": "node",
     "target": "es2020"
   },
-  "files": [
-    "./src/index.ts"
-  ],
-  "exclude": [
-    "dist",
-    "node_modules",
-    "**/*.test.ts"
-  ]
+  "files": ["./src/index.ts"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts"]
 }
