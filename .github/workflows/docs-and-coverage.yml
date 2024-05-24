@@ -24,7 +24,7 @@ on:
         required: false
         default: false
         type: boolean
-        description: "Skip the documentation generation step."
+        description: 'Skip the documentation generation step.'
 
 jobs:
   generate-docs-and-coverage:

@@ -24,18 +24,19 @@ module.exports = {
     [
       '@semantic-release/commit-analyzer',
       {
-        'config': '@fingerprintjs/conventional-changelog-dx-team',
-        'releaseRules': '@fingerprintjs/conventional-changelog-dx-team/release-rules'
-      }
+        config: '@fingerprintjs/conventional-changelog-dx-team',
+        releaseRules:
+          '@fingerprintjs/conventional-changelog-dx-team/release-rules',
+      },
     ],
     [
       '@semantic-release/release-notes-generator',
       {
-        'config': '@fingerprintjs/conventional-changelog-dx-team',
-      }
+        config: '@fingerprintjs/conventional-changelog-dx-team',
+      },
     ],
-  ]
-};
+  ],
+}
 ```
 
 ## Commit Examples
@@ -53,7 +54,7 @@ module.exports = {
 #### Breaking change (major)
 
 ```
-feat: upgrade runtime to Node 20 
+feat: upgrade runtime to Node 20
 
 BREAKING CHANGE: use node 20
 ```

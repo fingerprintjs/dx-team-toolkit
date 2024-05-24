@@ -92,7 +92,7 @@ jobs:
           tools: composer:v2
 
       - name: 'Prepare project'
-        if:  ${{ inputs.prepare-command != '' }}
+        if: ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
 
       - name: 'Get token for the GitHub App'

@@ -6,7 +6,7 @@ on:
       target_branch:
         required: true
         type: string
-        description: "Branch to create a pr for"
+        description: 'Branch to create a pr for'
       tag_name:
         required: false
         type: string

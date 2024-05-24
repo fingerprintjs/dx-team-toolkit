@@ -1,31 +1,31 @@
 module.exports = {
-  "dryRun": true,
-  "branches": [
-    "main",
+  dryRun: true,
+  branches: [
+    'main',
     {
-      "name": "release-*",
-      "prerelease": true,
+      name: 'release-*',
+      prerelease: true,
     },
   ],
-  "plugins": [
+  plugins: [
     [
-      "@semantic-release/commit-analyzer",
+      '@semantic-release/commit-analyzer',
       {
-        "config": "@fingerprintjs/conventional-changelog-dx-team",
-        "releaseRules": "@fingerprintjs/conventional-changelog-dx-team/release-rules"
-      }
+        config: '@fingerprintjs/conventional-changelog-dx-team',
+        releaseRules: '@fingerprintjs/conventional-changelog-dx-team/release-rules',
+      },
     ],
     [
-      "@semantic-release/release-notes-generator",
+      '@semantic-release/release-notes-generator',
       {
-        "config": "@fingerprintjs/conventional-changelog-dx-team",
-      }
+        config: '@fingerprintjs/conventional-changelog-dx-team',
+      },
     ],
     [
-      "@semantic-release/exec",
+      '@semantic-release/exec',
       {
-        "prepareCmd": "echo \"Prepare to release ${nextRelease.version}\""
-      }
+        prepareCmd: 'echo "Prepare to release ${nextRelease.version}"',
+      },
     ],
-  ]
+  ],
 }
