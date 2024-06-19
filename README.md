@@ -136,9 +136,10 @@ structure.
 
 #### Inputs
 
-| Input Parameter | Required | Type   | Default | Description         |
-| --------------- | -------- | ------ | ------- | ------------------- |
-| `nodeVersion`   | No       | String | `lts/*` | Node version to use |
+| Input Parameter                 | Required | Type   | Default | Description                                                                                                                                      |
+|---------------------------------|----------|--------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| `nodeVersion`                   | No       | String | `lts/*` | Node version to use                                                                                                                              |
+| `installSharedCommitLintConfig` | No       | Bool   | `false` | Whether to install our shared commit lint config. If set to `true` it will run `npm i @fingerprintjs/commit-lint-dx-team@latest` before linting. |
 
 #### Example of usage:
 
