@@ -12,6 +12,11 @@ on:
         required: false
         type: string
         default: 'lts/*'
+      installSharedCommitLintConfig:
+        description: 'Whether to install the shared commitlint config'
+        type: boolean
+        default: true
+        required: false
 
 jobs:
   commitlint:
@@ -48,6 +53,8 @@ jobs:
           cache: ${{ env.PACKAGE_MANAGER_CACHE }}
       - name: 'Install Node packages'
         run: $PACKAGE_MANAGER install
+      - name: 'Install commit lint config'
+        run: npm i @fingerprintjs/commit-lint-dx-team@latest
       - uses: wagoid/commitlint-github-action@5ce82f5d814d4010519d15f0552aec4f17a1e1fe
         id: commitlint
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
