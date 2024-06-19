@@ -38,7 +38,7 @@ jobs:
             echo "PACKAGE_MANAGER_CACHE=yarn" >> $GITHUB_ENV
           else
             echo "No package manager lock file found"
-            echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
+            echo "PACKAGE_MANAGER=npm" >> $GITHUB_ENV
             echo "PACKAGE_MANAGER_CACHE=" >> $GITHUB_ENV
           fi
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
@@ -54,7 +54,8 @@ jobs:
       - name: 'Install Node packages'
         run: $PACKAGE_MANAGER install
       - name: 'Install commit lint config'
-        run: npm i @fingerprintjs/commit-lint-dx-team@latest
+        if: ${{ inputs.installSharedCommitLintConfig }}
+        run: $PACKAGE_MANAGER install @fingerprintjs/commit-lint-dx-team@latest
       - uses: wagoid/commitlint-github-action@5ce82f5d814d4010519d15f0552aec4f17a1e1fe
         id: commitlint
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
