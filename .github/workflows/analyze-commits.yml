@@ -51,6 +51,9 @@ jobs:
         with:
           node-version: ${{ inputs.nodeVersion }}
           cache: ${{ env.PACKAGE_MANAGER_CACHE }}
+      - name: Init package for non-JS project
+        if: ${{ hashFiles('package.json') == '' }}
+        run: npm init -y
       - name: 'Install Node packages'
         run: $PACKAGE_MANAGER install
       - name: 'Install commit lint config'
