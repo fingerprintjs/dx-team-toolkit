@@ -11,4 +11,4 @@ jobs:
     uses: ./.github/workflows/analyze-commits.yml
     with:
       isTest: true
-      installSharedCommitLintConfig: false
+      installSharedCommitLintConfig: true

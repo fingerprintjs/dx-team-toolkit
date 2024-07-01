@@ -31,17 +31,14 @@ jobs:
           if [[ -f "pnpm-lock.yaml" ]]; then
             echo "Using pnpm"
             echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
-            echo "PACKAGE_MANAGER_ADD_COMMAND=install" >> $GITHUB_ENV
             echo "PACKAGE_MANAGER_CACHE=" >> $GITHUB_ENV
           elif [[ -f "yarn.lock" ]]; then
             echo "Using yarn"
             echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
-            echo "PACKAGE_MANAGER_ADD_COMMAND=add" >> $GITHUB_ENV
             echo "PACKAGE_MANAGER_CACHE=yarn" >> $GITHUB_ENV
           else
             echo "No package manager lock file found"
             echo "PACKAGE_MANAGER=npm" >> $GITHUB_ENV
-            echo "PACKAGE_MANAGER_ADD_COMMAND=install" >> $GITHUB_ENV
             echo "PACKAGE_MANAGER_CACHE=" >> $GITHUB_ENV
           fi
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
@@ -61,7 +58,7 @@ jobs:
         run: $PACKAGE_MANAGER install
       - name: 'Install commit lint config'
         if: ${{ inputs.installSharedCommitLintConfig }}
-        run: $PACKAGE_MANAGER $PACKAGE_MANAGER_ADD_COMMAND @fingerprintjs/commit-lint-dx-team@latest --frozen-lockfile
+        run: $PACKAGE_MANAGER add @fingerprintjs/commit-lint-dx-team@latest --ignore-workspace-root-check
       - uses: wagoid/commitlint-github-action@5ce82f5d814d4010519d15f0552aec4f17a1e1fe
         id: commitlint
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
