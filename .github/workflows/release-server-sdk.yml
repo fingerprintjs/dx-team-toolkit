@@ -91,6 +91,12 @@ jobs:
           coverage: none
           tools: composer:v2
 
+      - name: 'Install Terraform'
+        if: ${{ inputs.language == 'terraform' }}
+        uses: hashicorp/setup-terraform@v3
+        with:
+          terraform_version: ${{ inputs.language-version }}
+
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
