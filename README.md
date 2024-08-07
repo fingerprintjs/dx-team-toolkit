@@ -519,7 +519,6 @@ The workflow accepts the following input parameters:
 | Input Parameter   | Required | Type   | Description                                                                 |
 |-------------------|----------|--------|-----------------------------------------------------------------------------|
 | `prepare-command` | No       | String | Command(s) to run for project preparation, such as installing dependencies. |
-| `appId`           | Yes      | String | The GitHub App ID used for the release process.                             |
 
 #### Workflow Secrets
 
@@ -527,7 +526,6 @@ The workflow expects the following secret to be provided:
 
 | Secret Name        | Description                                                   |
 |--------------------|---------------------------------------------------------------|
-| `APP_PRIVATE_KEY`  | The GitHub App's private key, used to request a GitHub token. |
 | `GH_RELEASE_TOKEN` | GitHub token for creating releases                            |
 
 #### Example of Usage:
@@ -540,11 +538,6 @@ on:
 jobs:
   release:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-sdk-changesets.yml@v1
-    with:
-      appId: ${{ vars.APP_ID }}
     secrets:
-      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
       GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
 ```
-
-Ensure you've set up the required `APP_PRIVATE_KEY` secret in your repository's settings. Adjust the values in the example as needed for your use case.

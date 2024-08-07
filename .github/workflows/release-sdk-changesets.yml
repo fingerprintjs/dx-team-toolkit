@@ -6,16 +6,9 @@ on:
         description: 'Command to run for project preparation (e.g., installing dependencies).'
         required: false
         type: string
-      appId:
-        type: string
-        required: false
-        description: 'GitHub app id for release process.'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
-        required: false
-      APP_PRIVATE_KEY:
-        description: 'GitHub App token to request GitHub token.'
         required: false
 
 jobs:
@@ -47,4 +40,4 @@ jobs:
           commit: 'chore(release): changeset created a new release'
           title: 'Release [changeset]'
         env:
-          GITHUB_TOKEN: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
