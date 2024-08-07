@@ -26,6 +26,7 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 - [7. Report Workflow Status](#7-report-workflow-status)
 - [8. Create PR to Main on Release](#8-create-pr-to-main-on-release)
 - [9. Create Prerelease Branch and Force Push](#9-create-prerelease-branch-and-force-push)
+- [10. Release SDKs using changesets](#10-release-sdks-using-changesets)
 
 ### 1. Run tests and show coverage diff
 
@@ -500,3 +501,43 @@ jobs:
 ```
 
 Ensure you've set up the required `APP_PRIVATE_KEY` secret in your repository's settings. Adjust the values in the example as needed for your use case.
+
+
+### 10. Release SDKs using changesets
+
+This reusable workflow handles release process using [changesets](https://github.com/changesets/changesets)
+
+#### Prerequisites:
+
+1. A GitHub App installed in your repository with permissions to push to branches.
+2. The App's private key and App ID stored as secrets/vars in your GitHub repository.
+
+#### Workflow Inputs
+
+The workflow accepts the following input parameters:
+
+| Input Parameter   | Required | Type   | Description                                                                 |
+|-------------------|----------|--------|-----------------------------------------------------------------------------|
+| `prepare-command` | No       | String | Command(s) to run for project preparation, such as installing dependencies. |
+
+#### Workflow Secrets
+
+The workflow expects the following secret to be provided:
+
+| Secret Name        | Description                                                   |
+|--------------------|---------------------------------------------------------------|
+| `GH_RELEASE_TOKEN` | GitHub token for creating releases                            |
+
+#### Example of Usage:
+
+```yaml
+name: Release
+on:
+  workflow_dispatch:
+
+jobs:
+  release:
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-sdk-changesets.yml@v1
+    secrets:
+      GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+```
