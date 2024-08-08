@@ -554,16 +554,16 @@ It is meant to be triggered by OpenAPI tag creation via `repository-dispatch` tr
 
 The workflow accepts the following input parameters:
 
-| Input Parameter    | Required | Type   | Default | Description                                                                                         |
-| ------------------ | -------- | ------ | ------- | --------------------------------------------------------------------------------------------------- |
-| `language`         | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang` and `php`. |
-| `language-version` | Yes      | String | -       | Version of the programming language to set up.                                                      |
-| `prepare-command`  | No       | String | -       | Command(s) to run for project preparation, such as installing dependencies.                         |
-| `java-version`     | No       | String | `11`    | Version of Java to set up.                                                                          |
-| `generate-command` | Yes      | String | -       | Command for generating code from OpenAPI schema.                                                    |
-| `tag`              | Yes      | String |         | Tag of the OpenAPI release.                                                                         |
-| `schema-path`      | Yes      | String |         | Path to yaml file with OpenAPI schema in the SDK repository                                         |
-| `examples-path`    | Yes      | String |         | Path to directory with examples.                                                                    |
+| Input Parameter    | Required | Type   | Default | Description                                                                                                 |
+| ------------------ | -------- | ------ | ------- | ----------------------------------------------------------------------------------------------------------- |
+| `language`         | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `node`, `python`, `golang` and `php`. |
+| `language-version` | Yes      | String | -       | Version of the programming language to set up.                                                              |
+| `prepare-command`  | No       | String | -       | Command(s) to run for project preparation, such as installing dependencies.                                 |
+| `java-version`     | No       | String | `11`    | Version of Java to set up.                                                                                  |
+| `generate-command` | Yes      | String | -       | Command for generating code from OpenAPI schema.                                                            |
+| `tag`              | Yes      | String |         | Tag of the OpenAPI release.                                                                                 |
+| `schema-path`      | Yes      | String |         | Path to yaml file with OpenAPI schema in the SDK repository                                                 |
+| `examples-path`    | Yes      | String |         | Path to directory with examples.                                                                            |
 
 #### Workflow Secrets
 
