@@ -1,4 +1,4 @@
-name: 'Release Server SDK'
+name: 'Update server-side SDK schema'
 on:
   repository_dispatch:
     types: [schema-released]
