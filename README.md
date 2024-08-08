@@ -1,7 +1,8 @@
 # DX Team Toolkit
 
 > **Note**
-> This repository isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support from Fingerprint. We warmly welcome community contributions.
+> This repository isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support
+> from Fingerprint. We warmly welcome community contributions.
 
 ## Reusable configurations
 
@@ -18,7 +19,8 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 ## Reusable workflows
 
 - [1. Run tests and show coverage diff](#1-run-tests-and-show-coverage-diff)
-- [2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
+- [2. Generate docs and coverage report and publish to the Github Pages using
+  `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
 - [3. Analyze commits](#3-analyze-commits)
 - [4. Build typescript project](#4-build-typescript-project)
 - [5. Release TypeScript project](#5-release-typescript-project)
@@ -138,7 +140,7 @@ structure.
 #### Inputs
 
 | Input Parameter                 | Required | Type   | Default | Description                                                                                                                                      |
-|---------------------------------|----------|--------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------|
+| ------------------------------- | -------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `nodeVersion`                   | No       | String | `lts/*` | Node version to use                                                                                                                              |
 | `installSharedCommitLintConfig` | No       | Bool   | `true`  | Whether to install our shared commit lint config. If set to `true` it will run `npm i @fingerprintjs/commit-lint-dx-team@latest` before linting. |
 
@@ -358,7 +360,8 @@ jobs:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
 ```
 
-**Note**: Ensure you've configured the appropriate environment and secrets based on the programming language of your project. For a Python project, for instance, the `PYPI_TOKEN` must be available.
+**Note**: Ensure you've configured the appropriate environment and secrets based on the programming language of your
+project. For a Python project, for instance, the `PYPI_TOKEN` must be available.
 
 ### 7. Report Workflow Status
 
@@ -500,8 +503,8 @@ jobs:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
-Ensure you've set up the required `APP_PRIVATE_KEY` secret in your repository's settings. Adjust the values in the example as needed for your use case.
-
+Ensure you've set up the required `APP_PRIVATE_KEY` secret in your repository's settings. Adjust the values in the
+example as needed for your use case.
 
 ### 10. Release SDKs using changesets
 
@@ -517,16 +520,16 @@ This reusable workflow handles release process using [changesets](https://github
 The workflow accepts the following input parameters:
 
 | Input Parameter   | Required | Type   | Description                                                                 |
-|-------------------|----------|--------|-----------------------------------------------------------------------------|
+| ----------------- | -------- | ------ | --------------------------------------------------------------------------- |
 | `prepare-command` | No       | String | Command(s) to run for project preparation, such as installing dependencies. |
 
 #### Workflow Secrets
 
 The workflow expects the following secret to be provided:
 
-| Secret Name        | Description                                                   |
-|--------------------|---------------------------------------------------------------|
-| `GH_RELEASE_TOKEN` | GitHub token for creating releases                            |
+| Secret Name        | Description                        |
+| ------------------ | ---------------------------------- |
+| `GH_RELEASE_TOKEN` | GitHub token for creating releases |
 
 #### Example of Usage:
 
@@ -540,4 +543,54 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-sdk-changesets.yml@v1
     secrets:
       GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+```
+
+### 11. Sync server-side SDK schema with OpenAPI release
+
+This workflow handles release of OpenAPI schema and syncs it with given server-side SDK.
+It is meant to be triggered by OpenAPI tag creation via `repository-dispatch` trigger.
+
+#### Workflow Inputs
+
+The workflow accepts the following input parameters:
+
+| Input Parameter    | Required | Type   | Default | Description                                                                                         |
+| ------------------ | -------- | ------ | ------- | --------------------------------------------------------------------------------------------------- |
+| `language`         | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang` and `php`. |
+| `language-version` | Yes      | String | -       | Version of the programming language to set up.                                                      |
+| `prepare-command`  | No       | String | -       | Command(s) to run for project preparation, such as installing dependencies.                         |
+| `java-version`     | No       | String | `11`    | Version of Java to set up.                                                                          |
+| `generate-command` | Yes      | String | -       | Command for generating code from OpenAPI schema.                                                    |
+| `tag`              | Yes      | String |         | Tag of the OpenAPI release.                                                                         |
+| `schema-path`      | Yes      | String |         | Path to yaml file with OpenAPI schema in the SDK repository                                         |
+| `examples-path`    | Yes      | String |         | Path to directory with examples.                                                                    |
+
+#### Workflow Secrets
+
+The workflow expects the following secret to be provided:
+
+| Secret Name        | Description                        |
+| ------------------ | ---------------------------------- |
+| `GH_RELEASE_TOKEN` | GitHub token for creating releases |
+
+#### Example of Usage:
+
+```yaml
+name: Sync schema
+on:
+  repository_dispatch:
+    types: [schema-released]
+
+jobs:
+  release:
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/update-server-side-sdk-schema.yml@v1
+    with:
+      tag: ${{ github.event.client_payload.version }}
+      language: golang
+      language-version: 1.22
+      generate-command: 'go run generate.go'
+      schema-path: resources/fingerprint-server-api.yaml
+      examples-path: examples
+    secrets:
+      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 ```
