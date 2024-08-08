@@ -29,6 +29,7 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 - [8. Create PR to Main on Release](#8-create-pr-to-main-on-release)
 - [9. Create Prerelease Branch and Force Push](#9-create-prerelease-branch-and-force-push)
 - [10. Release SDKs using changesets](#10-release-sdks-using-changesets)
+- [11. Sync server-side SDK schema with OpenAPI release](#11-sync-server-side-sdk-schema-with-openapi-release)
 
 ### 1. Run tests and show coverage diff
 
