@@ -39,7 +39,7 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
+      GH_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
         required: false
 jobs:
@@ -54,7 +54,7 @@ jobs:
         with:
           repository: 'fingerprintjs/dx-team-toolkit'
           path: 'dx-team-toolkit'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: 'Install Java'
         uses: actions/setup-java@v4
@@ -117,7 +117,7 @@ jobs:
         working-directory: dx-team-toolkit
 
       - name: Update schema
-        run: node dx-team-toolkit/scripts/update-schema.mjs ${{ inputs.schema-path }} ${{ inputs.examples-path }} ${{ inputs.generate-command }} ${{ inputs.tag }} ${{ secrets.GITHUB_TOKEN }}
+        run: node dx-team-toolkit/scripts/update-schema.mjs ${{ inputs.schema-path }} ${{ inputs.examples-path }} ${{ inputs.generate-command }} ${{ inputs.tag }} ${{ secrets.GH_TOKEN }}
 
       - name: Push changes
         run: |
