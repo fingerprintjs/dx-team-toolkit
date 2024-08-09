@@ -129,10 +129,11 @@ jobs:
           add: '.'
           github_token: ${{ secrets.GH_TOKEN }}
           message: 'feat: update OpenAPI schema'
+          push: false
 
       - name: Push changes
         run: |
-          git push origin feat/open-api-${{ inputs.tag }}
+          git push --set-upstream origin feat/open-api-${{ inputs.tag }}
 
       - name: Open PR
         run: |
