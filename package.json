@@ -22,7 +22,9 @@
     "@fingerprintjs/eslint-config-dx-team": "workspace:local",
     "@fingerprintjs/prettier-config-dx-team": "workspace:local",
     "@fingerprintjs/tsconfig-dx-team": "workspace:local",
+    "@octokit/rest": "^21.0.1",
     "@types/jest": "^29.5.12",
+    "@types/unzipper": "^0.10.10",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
     "eslint": "^8.57.0",
@@ -32,6 +34,7 @@
     "jest": "^29.7.0",
     "prettier": "^2.8.8",
     "ts-jest": "^29.1.2",
-    "typescript": "^5.4.2"
+    "typescript": "^5.4.2",
+    "unzipper": "^0.12.3"
   }
 }
