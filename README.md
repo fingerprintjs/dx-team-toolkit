@@ -570,9 +570,9 @@ The workflow accepts the following input parameters:
 
 The workflow expects the following secret to be provided:
 
-| Secret Name        | Description                        |
-| ------------------ | ---------------------------------- |
-| `GH_RELEASE_TOKEN` | GitHub token for creating releases |
+| Secret Name | Description                                                                                                                                      |
+| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
+| `GH_TOKEN`  | GitHub token for with permissions to push and create pull requests in the repository. It also needs to have access to OpenAPI schema repository. |
 
 #### Example of Usage:
 
@@ -593,5 +593,5 @@ jobs:
       schema-path: resources/fingerprint-server-api.yaml
       examples-path: examples
     secrets:
-      GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```

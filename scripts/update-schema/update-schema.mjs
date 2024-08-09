@@ -5,8 +5,8 @@ import * as path from 'path'
 import { createChangeset } from './changeset.mjs'
 import * as cp from 'child_process'
 
-const OWNER = 'fingerprintjs'
-const REPO = 'fingerprint-pro-server-api-openapi'
+const OWNER = process.env.GITHUB_OWNER || 'fingerprintjs'
+const REPO = process.env.GITHUB_REPO || 'fingerprint-pro-server-api-openapi'
 const SCHEMA_FILE = 'fingerprint-server-api-schema-for-sdks.yaml'
 const RELEASE_NOTES = 'release-notes.json'
 const EXAMPLES_FILE = 'examples.zip'
@@ -132,10 +132,3 @@ for (const changesGroup of releaseNotes) {
   }
 }
 console.info('Changesets generated')
-
-console.info('Commiting schema changes')
-cp.execSync(`git add ${schemaPath}`)
-cp.execSync(`git add ${examplesPath}`)
-cp.execSync(`git add ${CHANGESETS_PATH}`)
-cp.execSync('git commit -m "chore: update schema"')
-console.info('Changes commited')

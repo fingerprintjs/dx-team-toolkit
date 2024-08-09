@@ -1,8 +1,5 @@
 name: 'Update server-side SDK schema'
 on:
-  repository_dispatch:
-    types: [schema-released]
-
   workflow_call:
     inputs:
       language:
@@ -39,7 +36,7 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
+      GH_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
         required: false
 jobs:
@@ -48,13 +45,18 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: 'Checkout DX toolkit repository'
         uses: actions/checkout@v4
         with:
           repository: 'fingerprintjs/dx-team-toolkit'
           path: 'dx-team-toolkit'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
+          # TODO Remove
+          ref: feature/changesets-action
+          persist-credentials: false
 
       - name: 'Install Java'
         uses: actions/setup-java@v4
@@ -94,7 +96,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.language-version }}
-          cache: 'pnpm'
 
       - name: 'Setup pnpm'
         if: ${{ inputs.language == 'node' }}
@@ -116,15 +117,30 @@ jobs:
         run: pnpm install
         working-directory: dx-team-toolkit
 
-      - name: Update schema
-        run: node dx-team-toolkit/scripts/update-schema.mjs ${{ inputs.schema-path }} ${{ inputs.examples-path }} ${{ inputs.generate-command }} ${{ inputs.tag }} ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Push changes
+      - name: Set git config
         run: |
-          git push origin feat/open-api-${{ inputs.tag }}
+          git config --global --add --bool push.autoSetupRemote true
+          git config --global user.name "fingerprint-dx-team"
+
+
+      - name: Update schema
+        run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ secrets.GH_TOKEN }}
+        env:
+          # TODO Remove
+          GITHUB_OWNER: TheUnderScorer
+          GITHUB_REPO: fingerprint-pro-server-api-openapi
+
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
+        with:
+          add: '.'
+          github_token: ${{ secrets.GH_TOKEN }}
+          message: 'feat: update OpenAPI schema'
 
       - name: Open PR
         run: |
           gh pr create --base main --head feat/open-api-${{ inputs.tag }} --fill
-          
-          
+        env:
+          GITHUB_TOKEN: ${{ secrets.GH_TOKEN }}
+
+
