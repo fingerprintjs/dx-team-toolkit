@@ -116,6 +116,10 @@ jobs:
         run: pnpm install
         working-directory: dx-team-toolkit
 
+      - name: Set git config
+        run:
+          git config --global --add --bool push.autoSetupRemote true
+
       - name: Update schema
         run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ secrets.GH_TOKEN }}
         env:
@@ -129,7 +133,6 @@ jobs:
           add: '.'
           github_token: ${{ secrets.GH_TOKEN }}
           message: 'feat: update OpenAPI schema'
-          push: '--set-upstream'
 
       - name: Open PR
         run: |
