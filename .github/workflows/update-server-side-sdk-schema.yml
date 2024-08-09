@@ -120,6 +120,8 @@ jobs:
       - name: Set git config
         run:
           git config --global --add --bool push.autoSetupRemote true
+          git config --local user.name "fingerprint-dx-team"
+
 
       - name: Update schema
         run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ secrets.GH_TOKEN }}
