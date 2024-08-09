@@ -118,7 +118,7 @@ jobs:
         working-directory: dx-team-toolkit
 
       - name: Set git config
-        run:
+        run: |
           git config --global --add --bool push.autoSetupRemote true
           git config --local user.name "fingerprint-dx-team"
 
