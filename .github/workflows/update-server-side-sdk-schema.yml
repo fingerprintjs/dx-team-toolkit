@@ -1,8 +1,5 @@
 name: 'Update server-side SDK schema'
 on:
-  repository_dispatch:
-    types: [schema-released]
-
   workflow_call:
     inputs:
       language:
@@ -48,6 +45,8 @@ jobs:
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
+        with:
+          persist-credentials: false
 
       - name: 'Checkout DX toolkit repository'
         uses: actions/checkout@v4
@@ -55,6 +54,8 @@ jobs:
           repository: 'fingerprintjs/dx-team-toolkit'
           path: 'dx-team-toolkit'
           token: ${{ secrets.GH_TOKEN }}
+          # TODO Remove
+          ref: feature/changesets-action
 
       - name: 'Install Java'
         uses: actions/setup-java@v4
@@ -94,7 +95,6 @@ jobs:
         uses: actions/setup-node@v4
         with:
           node-version: ${{ inputs.language-version }}
-          cache: 'pnpm'
 
       - name: 'Setup pnpm'
         if: ${{ inputs.language == 'node' }}
@@ -117,7 +117,18 @@ jobs:
         working-directory: dx-team-toolkit
 
       - name: Update schema
-        run: node dx-team-toolkit/scripts/update-schema.mjs ${{ inputs.schema-path }} ${{ inputs.examples-path }} ${{ inputs.generate-command }} ${{ inputs.tag }} ${{ secrets.GH_TOKEN }}
+        run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ secrets.GH_TOKEN }}
+        env:
+          # TODO Remove
+          GITHUB_OWNER: TheUnderScorer
+          GITHUB_REPO: fingerprint-pro-server-api-openapi
+
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
+        with:
+          add: '.'
+          github_token: ${{ secrets.GH_TOKEN }}
+          message: 'feat: update OpenAPI schema'
 
       - name: Push changes
         run: |
