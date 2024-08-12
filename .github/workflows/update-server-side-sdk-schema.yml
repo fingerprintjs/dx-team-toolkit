@@ -46,7 +46,7 @@ jobs:
       - name: 'Checkout'
         uses: actions/checkout@v4
         with:
-          persist-credentials: false
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: 'Checkout DX toolkit repository'
         uses: actions/checkout@v4
@@ -120,7 +120,6 @@ jobs:
       - name: Set git config
         run: |
           git config --global --add --bool push.autoSetupRemote true
-          git config --global user.name "fingerprint-dx-team"
 
 
       - name: Update schema
