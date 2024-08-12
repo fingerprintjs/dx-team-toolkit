@@ -1,0 +1,26 @@
+name: 'Update Schema'
+description: 'Run schema updates using Node.js'
+inputs:
+  schemaPath:
+    description: 'Path to the schema file'
+    required: true
+  examplesPath:
+    description: 'Path to the examples directory'
+    required: true
+  generateCommand:
+    description: 'Command to generate schemas'
+    required: true
+  tag:
+    description: 'Tag for the operation'
+    required: true
+  appId:
+    description: 'Application ID if applicable'
+    required: false
+  githubToken:
+    description: 'GitHub Token for authentication'
+    required: false
+    default: '${{ secrets.GH_TOKEN }}'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

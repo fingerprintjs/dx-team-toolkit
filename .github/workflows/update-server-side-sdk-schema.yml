@@ -132,7 +132,13 @@ jobs:
           git config --global --add --bool push.autoSetupRemote true
 
       - name: Update schema
-        run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
+        uses: ./.github/actions/update-sdk-schema
+        with:
+          schemaPath: ${{ inputs.schema-path }}
+          examplesPath: ${{ inputs.examples-path }}
+          generateCommand: ${{ inputs.generate-command }}
+          tag: ${{ inputs.tag }}
+          githubToken: '${{ secrets.GH_TOKEN }}'
 
       - name: Remove DX toolkit directory
         run: rm -rf dx-team-toolkit
