@@ -124,6 +124,9 @@ jobs:
           GITHUB_OWNER: TheUnderScorer
           GITHUB_REPO: fingerprint-pro-server-api-openapi
 
+      - name: Remove DX toolkit directory
+        run: rm -rf dx-team-toolkit
+
       - name: Add & Commit
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
         with:
