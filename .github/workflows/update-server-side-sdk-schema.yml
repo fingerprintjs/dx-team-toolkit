@@ -35,25 +35,41 @@ on:
         description: 'Path to the OpenAPI examples.'
         required: true
         type: string
+      appId:
+        type: string
+        required: false
+        description: 'GitHub app id for release process.'
     secrets:
       GH_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
         required: false
+      APP_PRIVATE_KEY:
+        description: 'GitHub App token to request GitHub token.'
+        required: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
+      - name: 'Get token for the GitHub App'
+        if: ${{ inputs.appId != '' }}
+        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        id: app-token
+        with:
+          app-id: ${{ inputs.appId }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - name: 'Checkout'
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
 
       - name: 'Checkout DX toolkit repository'
         uses: actions/checkout@v4
         with:
           repository: 'fingerprintjs/dx-team-toolkit'
           path: 'dx-team-toolkit'
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
           # TODO Remove
           ref: feature/changesets-action
           persist-credentials: false
@@ -118,7 +134,7 @@ jobs:
           git config --global --add --bool push.autoSetupRemote true
 
       - name: Update schema
-        run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ secrets.GH_TOKEN }}
+        run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
         env:
           # TODO Remove
           GITHUB_OWNER: TheUnderScorer
@@ -131,7 +147,7 @@ jobs:
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
         with:
           add: '.'
-          github_token: ${{ secrets.GH_TOKEN }}
+          github_token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
           message: 'feat: update OpenAPI schema'
           push: 'false'
 
@@ -139,6 +155,6 @@ jobs:
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
         with:
           title: 'OpenAPI schema sync'
-          token: ${{ secrets.GH_TOKEN }}
+          token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
           branch: feat/open-api-${{ inputs.tag }}
 
