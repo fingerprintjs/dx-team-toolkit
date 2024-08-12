@@ -13,9 +13,6 @@ inputs:
   tag:
     description: 'Tag for the operation'
     required: true
-  appId:
-    description: 'Application ID if applicable'
-    required: false
   githubToken:
     description: 'GitHub Token for authentication'
     required: false
