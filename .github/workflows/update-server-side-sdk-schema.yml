@@ -109,10 +109,6 @@ jobs:
         env:
           CI: true
 
-      - name: 'Create branch'
-        run: |
-          git checkout -b feat/open-api-${{ inputs.tag }}
-
       - name: 'Install dependencies'
         run: pnpm install
         working-directory: dx-team-toolkit
@@ -120,7 +116,6 @@ jobs:
       - name: Set git config
         run: |
           git config --global --add --bool push.autoSetupRemote true
-
 
       - name: Update schema
         run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ secrets.GH_TOKEN }}
@@ -135,6 +130,7 @@ jobs:
           add: '.'
           github_token: ${{ secrets.GH_TOKEN }}
           message: 'feat: update OpenAPI schema'
+          push: 'false'
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
@@ -142,6 +138,4 @@ jobs:
           title: 'OpenAPI schema sync'
           token: ${{ secrets.GH_TOKEN }}
           branch: feat/open-api-${{ inputs.tag }}
-          base: main
-
 
