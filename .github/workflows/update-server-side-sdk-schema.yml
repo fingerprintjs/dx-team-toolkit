@@ -70,8 +70,6 @@ jobs:
           repository: 'fingerprintjs/dx-team-toolkit'
           path: 'dx-team-toolkit'
           token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
-          # TODO Remove
-          ref: feature/changesets-action
           persist-credentials: false
 
       - name: 'Install Java'
@@ -135,10 +133,6 @@ jobs:
 
       - name: Update schema
         run: node dx-team-toolkit/scripts/update-schema/update-schema.mjs "${{ inputs.schema-path }}" "${{ inputs.examples-path }}" "${{ inputs.generate-command }}" ${{ inputs.tag }} ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
-        env:
-          # TODO Remove
-          GITHUB_OWNER: TheUnderScorer
-          GITHUB_REPO: fingerprint-pro-server-api-openapi
 
       - name: Remove DX toolkit directory
         run: rm -rf dx-team-toolkit
