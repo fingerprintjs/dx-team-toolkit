@@ -35,42 +35,19 @@ on:
         description: 'Path to the OpenAPI examples.'
         required: true
         type: string
-      appId:
-        type: string
-        required: false
-        description: 'GitHub app id for release process.'
     secrets:
       GH_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
-        required: false
-      APP_PRIVATE_KEY:
-        description: 'GitHub App token to request GitHub token.'
         required: false
 
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
-      - name: 'Get token for the GitHub App'
-        if: ${{ inputs.appId != '' }}
-        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
-        id: app-token
-        with:
-          app-id: ${{ inputs.appId }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
       - name: 'Checkout'
         uses: actions/checkout@v4
         with:
-          token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
-
-      - name: 'Checkout DX toolkit repository'
-        uses: actions/checkout@v4
-        with:
-          repository: 'fingerprintjs/dx-team-toolkit'
-          path: 'dx-team-toolkit'
-          token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
-          persist-credentials: false
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: 'Install Java'
         uses: actions/setup-java@v4
@@ -123,10 +100,6 @@ jobs:
         env:
           CI: true
 
-      - name: 'Install dependencies'
-        run: pnpm install
-        working-directory: dx-team-toolkit
-
       - name: Set git config
         run: |
           git config --global --add --bool push.autoSetupRemote true
@@ -140,14 +113,11 @@ jobs:
           tag: ${{ inputs.tag }}
           githubToken: '${{ secrets.GH_TOKEN }}'
 
-      - name: Remove DX toolkit directory
-        run: rm -rf dx-team-toolkit
-
       - name: Add & Commit
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
         with:
           add: '.'
-          github_token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
+          github_token: ${{ secrets.GH_TOKEN }}
           message: 'feat: update OpenAPI schema'
           push: 'false'
 
@@ -155,6 +125,6 @@ jobs:
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
         with:
           title: 'OpenAPI schema sync'
-          token: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
           branch: feat/open-api-${{ inputs.tag }}
 
