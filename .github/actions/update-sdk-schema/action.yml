@@ -15,8 +15,10 @@ inputs:
     required: true
   githubToken:
     description: 'GitHub Token for authentication'
-    required: false
-    default: '${{ secrets.GH_TOKEN }}'
+    required: true
+  openApiRepository:
+    description: 'OpenAPI repository in format of owner/repo'
+    default: 'fingerprintjs/fingerprint-pro-server-api-openapi'
 
 runs:
   using: 'node20'
