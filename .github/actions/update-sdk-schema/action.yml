@@ -15,8 +15,7 @@ inputs:
     required: true
   githubToken:
     description: 'GitHub Token for authentication'
-    required: false
-    default: '${{ secrets.GH_TOKEN }}'
+    required: true
 
 runs:
   using: 'node20'
