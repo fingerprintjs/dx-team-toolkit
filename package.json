@@ -6,6 +6,7 @@
   "scripts": {
     "prepare": "husky install",
     "build": "echo \"Build\"",
+    "build:actions": "ncc build .github/actions/update-sdk-schema/update-schema.ts -o .github/actions/update-sdk-schema/dist",
     "test": "jest",
     "test:coverage": "jest --coverage",
     "docs": "mkdir docs && cp README.md ./docs/README.md",
@@ -27,6 +28,7 @@
     "@types/unzipper": "^0.10.10",
     "@typescript-eslint/eslint-plugin": "^6.21.0",
     "@typescript-eslint/parser": "^6.21.0",
+    "@vercel/ncc": "^0.38.1",
     "eslint": "^8.57.0",
     "eslint-config-prettier": "^8.10.0",
     "eslint-plugin-prettier": "^4.2.1",
@@ -36,5 +38,8 @@
     "ts-jest": "^29.1.2",
     "typescript": "^5.4.2",
     "unzipper": "^0.12.3"
+  },
+  "dependencies": {
+    "@actions/core": "^1.10.1"
   }
 }

@@ -25,6 +25,16 @@ jobs:
         if: ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
 
+      - name: 'Install changesets cli'
+        run: npm install -g @changesets/cli
+
+      - name: 'Output ref'
+        run: echo ${{ github.ref }}
+
+      - name: 'Enter pre-release mode on test branch'
+        if: {{ github.ref == 'refs/heads/test }}
+        run: changeset pre enter test
+
       - name: Create Release
         uses: changesets/action@f13b1baaa620fde937751f5d2c3572b9da32af23
         with:

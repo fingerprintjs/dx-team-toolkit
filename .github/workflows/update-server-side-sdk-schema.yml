@@ -1,8 +1,5 @@
 name: 'Update server-side SDK schema'
 on:
-  repository_dispatch:
-    types: [schema-released]
-
   workflow_call:
     inputs:
       language:
@@ -39,22 +36,18 @@ on:
         required: true
         type: string
     secrets:
-      GITHUB_TOKEN:
+      GH_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
         required: false
+
 jobs:
   update:
     runs-on: ubuntu-latest
     steps:
       - name: 'Checkout'
         uses: actions/checkout@v4
-
-      - name: 'Checkout DX toolkit repository'
-        uses: actions/checkout@v4
         with:
-          repository: 'fingerprintjs/dx-team-toolkit'
-          path: 'dx-team-toolkit'
-          token: ${{ secrets.GITHUB_TOKEN }}
+          token: ${{ secrets.GH_TOKEN }}
 
       - name: 'Install Java'
         uses: actions/setup-java@v4
@@ -89,6 +82,12 @@ jobs:
           coverage: none
           tools: composer:v2
 
+      - name: 'Setup pnpm'
+        if: ${{ inputs.language == 'node' }}
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        with:
+          version: 9
+
       - name: 'Install Node'
         if: ${{ inputs.language == 'node' }}
         uses: actions/setup-node@v4
@@ -96,35 +95,37 @@ jobs:
           node-version: ${{ inputs.language-version }}
           cache: 'pnpm'
 
-      - name: 'Setup pnpm'
-        if: ${{ inputs.language == 'node' }}
-        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
-        with:
-          version: 9
-
       - name: Install Dependencies for Node SDK
         if: ${{ inputs.language == 'node' }}
         run: pnpm install
         env:
           CI: true
 
-      - name: 'Create branch'
+      - name: Set git config
         run: |
-          git checkout -b feat/open-api-${{ inputs.tag }}
-
-      - name: 'Install dependencies'
-        run: pnpm install
-        working-directory: dx-team-toolkit
+          git config --global --add --bool push.autoSetupRemote true
 
       - name: Update schema
-        run: node dx-team-toolkit/scripts/update-schema.mjs ${{ inputs.schema-path }} ${{ inputs.examples-path }} ${{ inputs.generate-command }} ${{ inputs.tag }} ${{ secrets.GITHUB_TOKEN }}
+        uses: ./.github/actions/update-sdk-schema
+        with:
+          schemaPath: ${{ inputs.schema-path }}
+          examplesPath: ${{ inputs.examples-path }}
+          generateCommand: ${{ inputs.generate-command }}
+          tag: ${{ inputs.tag }}
+          githubToken: '${{ secrets.GH_TOKEN }}'
 
-      - name: Push changes
-        run: |
-          git push origin feat/open-api-${{ inputs.tag }}
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
+        with:
+          add: '.'
+          github_token: ${{ secrets.GH_TOKEN }}
+          message: 'feat: update OpenAPI schema'
+          push: 'false'
 
-      - name: Open PR
-        run: |
-          gh pr create --base main --head feat/open-api-${{ inputs.tag }} --fill
-          
-          
+      - name: Create Pull Request
+        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
+        with:
+          title: 'OpenAPI schema sync'
+          token: ${{ secrets.GH_TOKEN }}
+          branch: feat/open-api-${{ inputs.tag }}
+
