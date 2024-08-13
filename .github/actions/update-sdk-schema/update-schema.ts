@@ -5,6 +5,7 @@ import unzipper from 'unzipper'
 import path from 'path'
 import cp from 'child_process'
 import * as core from '@actions/core'
+import { getOctokit } from '@actions/github'
 
 const SCHEMA_FILE = 'fingerprint-server-api-schema-for-sdks.yaml'
 const RELEASE_NOTES = 'release-notes.json'
@@ -51,9 +52,9 @@ async function main() {
   const githubToken = core.getInput('githubToken')
   const [owner, repo] = core.getInput('openApiRepository').split('/')
 
-  const octokit = new Octokit({ auth: githubToken })
+  const octokit = getOctokit(githubToken)
 
-  const release = await octokit.repos.getReleaseByTag({
+  const release = await octokit.rest.repos.getReleaseByTag({
     owner: owner,
     repo: repo,
     tag,
