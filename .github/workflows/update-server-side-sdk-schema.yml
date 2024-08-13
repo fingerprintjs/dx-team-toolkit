@@ -106,16 +106,13 @@ jobs:
           git config --global --add --bool push.autoSetupRemote true
 
       - name: Update schema
-        # TODO Use @v1
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/update-sdk-schema@bugfix/action-path-tmp
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/update-sdk-schema@v1
         with:
           schemaPath: ${{ inputs.schema-path }}
           examplesPath: ${{ inputs.examples-path }}
           generateCommand: ${{ inputs.generate-command }}
           tag: ${{ inputs.tag }}
           githubToken: '${{ secrets.GH_TOKEN }}'
-          # TODO Remove
-          openApiRepository: 'TheUnderScorer/fingerprint-pro-server-api-openapi'
 
       - name: Add & Commit
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
