@@ -106,7 +106,7 @@ jobs:
           git config --global --add --bool push.autoSetupRemote true
 
       - name: Update schema
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/update-sdk-schema@v1
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/update-sdk-schema@bugfix/action-path-tmp
         with:
           schemaPath: ${{ inputs.schema-path }}
           examplesPath: ${{ inputs.examples-path }}
