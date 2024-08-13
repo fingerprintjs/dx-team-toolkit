@@ -43812,7 +43812,6 @@ const external_child_process_namespaceObject = require("child_process");
 var external_child_process_default = /*#__PURE__*/__nccwpck_require__.n(external_child_process_namespaceObject);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(9093);
-var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema.ts
 
 
@@ -43850,11 +43849,11 @@ async function downloadAsset(url) {
 }
 async function main() {
     const packageJson = JSON.parse(external_fs_default().readFileSync(external_path_default().join('./package.json'), 'utf-8'));
-    const schemaPath = core_default().getInput('schemaPath');
-    const examplesPath = core_default().getInput('examplesPath');
-    const generateCommand = core_default().getInput('generateCommand');
-    const tag = core_default().getInput('tag');
-    const githubToken = core_default().getInput('githubToken');
+    const schemaPath = core.getInput('schemaPath');
+    const examplesPath = core.getInput('examplesPath');
+    const generateCommand = core.getInput('generateCommand');
+    const tag = core.getInput('tag');
+    const githubToken = core.getInput('githubToken');
     const octokit = new dist_src_Octokit({ auth: githubToken });
     const release = await octokit.repos.getReleaseByTag({
         owner: OWNER,
@@ -43929,7 +43928,7 @@ async function main() {
     console.info('Changesets generated');
 }
 main().catch((err) => {
-    core_default().setFailed(err);
+    core.setFailed(err);
 });
 
 })();

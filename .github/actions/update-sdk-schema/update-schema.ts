@@ -4,7 +4,7 @@ import fs from 'fs'
 import unzipper from 'unzipper'
 import path from 'path'
 import cp from 'child_process'
-import core from '@actions/core'
+import * as core from '@actions/core'
 
 const OWNER = process.env.GITHUB_OWNER || 'fingerprintjs'
 const REPO = process.env.GITHUB_REPO || 'fingerprint-pro-server-api-openapi'
