@@ -565,14 +565,15 @@ The workflow accepts the following input parameters:
 | `tag`              | Yes      | String |         | Tag of the OpenAPI release.                                                                                 |
 | `schema-path`      | Yes      | String |         | Path to yaml file with OpenAPI schema in the SDK repository                                                 |
 | `examples-path`    | Yes      | String |         | Path to directory with examples.                                                                            |
+| `app-id`           | Yes      | String |         | GitHub App Id for creating GitHub token for the release                                                     |
 
 #### Workflow Secrets
 
 The workflow expects the following secret to be provided:
 
-| Secret Name | Description                                                                                                                                      |
-| ----------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
-| `GH_TOKEN`  | GitHub token for with permissions to push and create pull requests in the repository. It also needs to have access to OpenAPI schema repository. |
+| Secret Name       | Description                                                   |
+| ----------------- | ------------------------------------------------------------- |
+| `APP_PRIVATE_KEY` | The GitHub App's private key, used to request a GitHub token. |
 
 #### Example of Usage:
 
