@@ -565,7 +565,7 @@ The workflow accepts the following input parameters:
 | `tag`              | Yes      | String |         | Tag of the OpenAPI release.                                                                                 |
 | `schema-path`      | Yes      | String |         | Path to yaml file with OpenAPI schema in the SDK repository                                                 |
 | `examples-path`    | Yes      | String |         | Path to directory with examples.                                                                            |
-| `app-id`           | No       | String | `""`    | GitHub App Id for creating GitHub token for the release                                                     |
+| `app-id`           | Yes      | String |         | GitHub App Id for creating GitHub token for the release                                                     |
 
 #### Workflow Secrets
 
