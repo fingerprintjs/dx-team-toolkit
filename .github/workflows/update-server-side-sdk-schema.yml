@@ -39,6 +39,14 @@ on:
         type: string
         required: true
         description: 'GitHub app id for release process'
+      repository:
+        type: string
+        required: true
+        description: 'Name of the repository in format'
+      owner:
+        type: string
+        required: true
+        description: 'Owner of the repository'
     secrets:
       APP_PRIVATE_KEY:
         description: 'GitHub App token to request GitHub token'
@@ -55,11 +63,14 @@ jobs:
         with:
           app-id: ${{ inputs.app-id }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          repositories: '${{ inputs.repository }}'
+          owner: '${{ inputs.owner }}'
 
       - name: 'Checkout'
         uses: actions/checkout@v4
         with:
           token: ${{ steps.app-token.outputs.token }}
+          repository: ${{ inputs.owner }}/${{ inputs.repository }}
 
       - name: 'Install Java'
         uses: actions/setup-java@v4
@@ -133,6 +144,7 @@ jobs:
           github_token: ${{ steps.app-token.outputs.token }}
           message: 'feat: update OpenAPI schema'
           push: 'false'
+
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
