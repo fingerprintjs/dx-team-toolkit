@@ -45,8 +45,9 @@ on:
         description: 'Name of the repository in format'
       owner:
         type: string
-        required: true
+        required: false
         description: 'Owner of the repository'
+        default: fingerprintjs
     secrets:
       APP_PRIVATE_KEY:
         description: 'GitHub App token to request GitHub token'
