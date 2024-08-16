@@ -39,6 +39,7 @@ jobs:
         uses: changesets/action@f13b1baaa620fde937751f5d2c3572b9da32af23
         with:
           publish: npx changeset publish
+          version: npx changeset version
           commit: 'chore(release): changeset created a new release'
           title: 'Release [changeset]'
         env:
