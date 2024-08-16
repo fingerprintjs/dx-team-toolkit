@@ -10,6 +10,9 @@ on:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
         required: false
+      NPM_AUTH_TOKEN:
+        description: 'NPM authentication token for publishing packages.'
+        required: false
 
 jobs:
   release:
@@ -34,10 +37,6 @@ jobs:
       - name: 'Output ref'
         run: echo ${{ github.ref }}
 
-      - name: 'Enter pre-release mode on test branch'
-        if: github.ref == 'refs/heads/test' && hashFiles('.changeset/pre.json') == ''
-        run: pnpm exec changeset pre enter test
-
       - name: Create Release
         uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9
         with:
@@ -47,3 +46,4 @@ jobs:
           title: 'Release [changeset]'
         env:
           GITHUB_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
