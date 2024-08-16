@@ -25,8 +25,11 @@ jobs:
         if: ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
 
-      - name: 'Install changesets cli'
-        run: npm install -g @changesets/cli @changesets/changelog-git && ln -s /usr/local/lib/node_modules/ node_modules
+      - name: 'Setup pnpm'
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        with:
+          version: 9
+          run_install: 'true'
 
       - name: 'Output ref'
         run: echo ${{ github.ref }}
