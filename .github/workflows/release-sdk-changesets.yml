@@ -26,7 +26,7 @@ jobs:
         run: ${{ inputs.prepare-command }}
 
       - name: 'Install changesets cli'
-        run: npm install -g @changesets/cli @changesets/changelog-git
+        run: npm install -g @changesets/cli @changesets/changelog-git && ln -s /usr/local/lib/node_modules/ node_modules
 
       - name: 'Output ref'
         run: echo ${{ github.ref }}
