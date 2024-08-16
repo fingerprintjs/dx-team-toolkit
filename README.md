@@ -523,7 +523,6 @@ The workflow accepts the following input parameters:
 | Input Parameter   | Required | Type   | Description                                                                 |
 | ----------------- | -------- | ------ | --------------------------------------------------------------------------- |
 | `prepare-command` | No       | String | Command(s) to run for project preparation, such as installing dependencies. |
-| `source-branch`   | Yes      | String | Branch on which this workflow was triggered.                                |
 
 #### Workflow Secrets
 
