@@ -34,8 +34,8 @@ jobs:
           version: 9
           run_install: 'true'
 
-      - name: 'Output ref'
-        run: echo ${{ github.ref }}
+      - name: 'Install changeset'
+        run: 'pnpm install @changesets/cli --global'
 
       - name: Create Release
         uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9
