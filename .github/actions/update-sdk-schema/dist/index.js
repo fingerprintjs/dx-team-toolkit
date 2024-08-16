@@ -44531,7 +44531,43 @@ var external_child_process_default = /*#__PURE__*/__nccwpck_require__.n(external
 var core = __nccwpck_require__(9093);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@6.0.0/node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5942);
+;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/changesets.ts
+
+
+function createChangeset(project, version, description) {
+    return `
+---
+'${project}': ${version}
+---
+
+${description}
+
+  `.trim();
+}
+const PRE_JSON_PATH = '.changeset/pre.json';
+function startPreRelease() {
+    if (external_fs_default().existsSync(PRE_JSON_PATH)) {
+        console.info('Pre release already started');
+        return;
+    }
+    external_child_process_default().execSync('changeset pre enter test', { stdio: 'inherit' });
+}
+function addPreReleaseNotes(noteFileNames) {
+    if (!external_fs_default().existsSync(PRE_JSON_PATH)) {
+        console.info('Pre release not started');
+        return;
+    }
+    const contents = JSON.parse(external_fs_default().readFileSync(PRE_JSON_PATH, 'utf-8'));
+    if (!contents.changesets) {
+        contents.changesets = [];
+    }
+    contents.changesets.push(...noteFileNames.map((note) => note.replace('.md', '')));
+    console.info('writing pre.json', contents);
+    external_fs_default().writeFileSync(PRE_JSON_PATH, JSON.stringify(contents, null, 2));
+}
+
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema.ts
+
 
 
 
@@ -44550,16 +44586,6 @@ function findAsset(name, release) {
     }
     return result;
 }
-function createChangeset(project, version, description) {
-    return `
----
-'${project}': ${version}
----
-
-${description}
-
-  `.trim();
-}
 async function downloadAsset(url) {
     const response = await fetch(url);
     return Buffer.from(await response.arrayBuffer());
@@ -44571,6 +44597,7 @@ async function main() {
     const generateCommand = core.getInput('generateCommand');
     const tag = core.getInput('tag');
     const githubToken = core.getInput('githubToken');
+    const preRelease = core.getInput('preRelease') === 'true';
     const [owner, repo] = core.getInput('openApiRepository').split('/');
     const octokit = (0,github.getOctokit)(githubToken);
     const release = await octokit.rest.repos.getReleaseByTag({
@@ -44622,12 +44649,16 @@ async function main() {
     });
     console.info('Code generated');
     console.info('Generating changesets');
+    if (preRelease) {
+        startPreRelease();
+    }
     const VERSION_MAP = {
         features: 'minor',
         'bug-fixes': 'patch',
         'breaking-changes': 'major',
         'build-system': 'patch',
     };
+    const noteFiles = [];
     for (const changesGroup of releaseNotes) {
         const version = VERSION_MAP[changesGroup.type];
         if (!version) {
@@ -44641,7 +44672,11 @@ async function main() {
                 .concat('.md');
             const fileName = external_path_default().join(CHANGESETS_PATH, changesetName);
             external_fs_default().writeFileSync(fileName, changeset);
+            noteFiles.push(fileName);
         }
+    }
+    if (preRelease) {
+        addPreReleaseNotes(noteFiles);
     }
     console.info('Changesets generated');
 }

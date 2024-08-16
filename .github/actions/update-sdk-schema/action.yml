@@ -19,7 +19,9 @@ inputs:
   openApiRepository:
     description: 'OpenAPI repository in format of owner/repo'
     default: 'fingerprintjs/fingerprint-pro-server-api-openapi'
-
+  preRelease:
+    description: 'Enable pre-release mode'
+    default: false
 runs:
   using: 'node20'
   main: 'dist/index.js'
