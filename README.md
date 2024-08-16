@@ -528,10 +528,9 @@ The workflow accepts the following input parameters:
 
 The workflow expects the following secret to be provided:
 
-| Secret Name        | Description                                       |
-| ------------------ | ------------------------------------------------- |
-| `GH_RELEASE_TOKEN` | GitHub token for creating releases                |
-| `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages. |
+| Secret Name        | Description                        |
+| ------------------ | ---------------------------------- |
+| `GH_RELEASE_TOKEN` | GitHub token for creating releases |
 
 #### Example of Usage:
 
