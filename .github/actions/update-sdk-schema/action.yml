@@ -21,7 +21,7 @@ inputs:
     default: 'fingerprintjs/fingerprint-pro-server-api-openapi'
   preRelease:
     description: 'Enable pre-release mode'
-    default: false
+    default: "false"
 runs:
   using: 'node20'
   main: 'dist/index.js'
