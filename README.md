@@ -144,6 +144,7 @@ structure.
 | ------------------------------- | -------- | ------ | ------- | ------------------------------------------------------------------------------------------------------------------------------------------------ |
 | `nodeVersion`                   | No       | String | `lts/*` | Node version to use                                                                                                                              |
 | `installSharedCommitLintConfig` | No       | Bool   | `true`  | Whether to install our shared commit lint config. If set to `true` it will run `npm i @fingerprintjs/commit-lint-dx-team@latest` before linting. |
+| `previewNotes`                  | No       | Bool   | `true`  | Whether to generate preview of the release notes                                                                                                 |
 
 #### Example of usage:
 
@@ -528,9 +529,10 @@ The workflow accepts the following input parameters:
 
 The workflow expects the following secret to be provided:
 
-| Secret Name        | Description                        |
-| ------------------ | ---------------------------------- |
-| `GH_RELEASE_TOKEN` | GitHub token for creating releases |
+| Secret Name        | Description                                       |
+| ------------------ | ------------------------------------------------- |
+| `GH_RELEASE_TOKEN` | GitHub token for creating releases                |
+| `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages. |
 
 #### Example of Usage:
 
