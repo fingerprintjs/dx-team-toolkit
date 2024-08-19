@@ -17,6 +17,11 @@ on:
         type: boolean
         default: true
         required: false
+      previewNotes:
+        description: 'Whether to generate preview of the release notes'
+        type: boolean
+        default: true
+        required: false
 
 jobs:
   commitlint:
@@ -100,6 +105,7 @@ jobs:
   release-notes-comment:
     name: Generate release notes preview
     runs-on: ubuntu-latest
+    if: ${{ inputs.previewNotes }}
     env:
       TEST_MESSAGE: ${{ inputs.isTest && '### ⚠️ This is a test run of the release-notes-comment action that can be found in .github/workflows/analyze-commits.yml' || ''}}
     steps:
