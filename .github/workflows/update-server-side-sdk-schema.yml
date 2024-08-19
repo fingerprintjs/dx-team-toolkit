@@ -48,6 +48,12 @@ on:
         required: false
         description: 'Owner of the repository'
         default: fingerprintjs
+      pre-release:
+        type: boolean
+        required: false
+        description: 'Whether to start a pre-release changeset flow'
+        default: false
+
     secrets:
       APP_PRIVATE_KEY:
         description: 'GitHub App token to request GitHub token'
@@ -137,6 +143,7 @@ jobs:
           generateCommand: ${{ inputs.generate-command }}
           tag: ${{ inputs.tag }}
           githubToken: '${{ steps.app-token.outputs.token }}'
+          preRelease: '${{ inputs.pre-release }}'
 
       - name: Add & Commit
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5

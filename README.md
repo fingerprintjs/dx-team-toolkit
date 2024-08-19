@@ -570,6 +570,7 @@ The workflow accepts the following input parameters:
 | `app-id`           | Yes      | String |                 | GitHub App Id for creating GitHub token for the release                                                     |
 | `repository`       | Yes      | String |                 | Name of the repository                                                                                      |
 | `owner`            | No       | String | `fingerprintjs` | Owner of the repository                                                                                     |
+| `pre-release`      | No       | Bool   | `false`         | Whether to start a pre-release changeset flow                                                               |
 
 #### Workflow Secrets
 
