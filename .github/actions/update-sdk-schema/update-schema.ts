@@ -6,6 +6,7 @@ import path from 'path'
 import cp from 'child_process'
 import * as core from '@actions/core'
 import { getOctokit } from '@actions/github'
+import { addPreReleaseNotes, createChangeset, startPreRelease } from './changesets'
 
 const SCHEMA_FILE = 'fingerprint-server-api-schema-for-sdks.yaml'
 const RELEASE_NOTES = 'release-notes.json'
@@ -25,17 +26,6 @@ function findAsset(name: string, release: Release) {
   return result
 }
 
-function createChangeset(project: string, version: string, description: string) {
-  return `
----
-'${project}': ${version}
----
-
-${description}
-
-  `.trim()
-}
-
 async function downloadAsset(url: string) {
   const response = await fetch(url)
 
@@ -50,6 +40,7 @@ async function main() {
   const generateCommand = core.getInput('generateCommand')
   const tag = core.getInput('tag')
   const githubToken = core.getInput('githubToken')
+  const preRelease = core.getInput('preRelease') === 'true'
   const [owner, repo] = core.getInput('openApiRepository').split('/')
 
   const octokit = getOctokit(githubToken)
@@ -119,12 +110,19 @@ async function main() {
   console.info('Code generated')
 
   console.info('Generating changesets')
+
+  if (preRelease) {
+    startPreRelease()
+  }
+
   const VERSION_MAP = {
     features: 'minor',
     'bug-fixes': 'patch',
     'breaking-changes': 'major',
     'build-system': 'patch',
   } as const
+
+  const changesetsFiles: string[] = []
 
   for (const changesGroup of releaseNotes) {
     const version = VERSION_MAP[changesGroup.type as keyof typeof VERSION_MAP]
@@ -141,8 +139,15 @@ async function main() {
 
       const fileName = path.join(CHANGESETS_PATH, changesetName)
       fs.writeFileSync(fileName, changeset)
+
+      changesetsFiles.push(changesetName)
     }
   }
+
+  if (preRelease) {
+    addPreReleaseNotes(changesetsFiles)
+  }
+
   console.info('Changesets generated')
 }
 
