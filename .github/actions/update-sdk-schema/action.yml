@@ -22,6 +22,9 @@ inputs:
   preRelease:
     description: 'Enable pre-release mode'
     default: "false"
+  ignoredScopes:
+    description: "List of change scopes to ignore, comma separated"
+    default: ""
 runs:
   using: 'node20'
   main: 'dist/index.js'
