@@ -1,9 +1,9 @@
 import { Octokit } from '@octokit/rest'
 
-import fs from 'fs'
-import unzipper from 'unzipper'
-import path from 'path'
-import cp from 'child_process'
+import * as fs from 'fs'
+import * as unzipper from 'unzipper'
+import * as path from 'path'
+import * as cp from 'child_process'
 import * as core from '@actions/core'
 import { getOctokit } from '@actions/github'
 import { addPreReleaseNotes, createChangeset, startPreRelease } from './changesets'
@@ -15,6 +15,7 @@ const EXAMPLE_PATH_TO_REPLACE = 'examples/'
 const CHANGESETS_PATH = '.changeset'
 
 type Release = Awaited<ReturnType<Octokit['repos']['getReleaseByTag']>>['data']
+type ReleaseAsset = Release['assets'][number]
 
 function findAsset(name: string, release: Release) {
   const result = release.assets.find((asset) => asset.name === name)
@@ -32,6 +33,22 @@ async function downloadAsset(url: string) {
   return Buffer.from(await response.arrayBuffer())
 }
 
+async function getReleaseNotes(releaseNotesAsset: ReleaseAsset, ignoredScopes: string[]) {
+  let releaseNotes: Array<{
+    type: string
+    notes: Array<{ note: string; scope: string | null }>
+  }> = JSON.parse((await downloadAsset(releaseNotesAsset.browser_download_url)).toString('utf-8'))
+
+  if (ignoredScopes.length > 0) {
+    releaseNotes = releaseNotes.map((notes) => ({
+      ...notes,
+      notes: notes.notes.filter((note) => !note.scope || !ignoredScopes.includes(note.scope)),
+    }))
+  }
+
+  return releaseNotes
+}
+
 async function main() {
   const packageJson = JSON.parse(fs.readFileSync(path.join('./package.json'), 'utf-8'))
 
@@ -42,6 +59,7 @@ async function main() {
   const githubToken = core.getInput('githubToken')
   const preRelease = core.getInput('preRelease') === 'true'
   const [owner, repo] = core.getInput('openApiRepository').split('/')
+  const ignoredScopes = core.getInput('ignoredScopes').split(',').filter(Boolean)
 
   const octokit = getOctokit(githubToken)
 
@@ -55,12 +73,13 @@ async function main() {
   const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data)
   const examplesAsset = findAsset(EXAMPLES_FILE, release.data)
 
-  const releaseNotes: Array<{
-    type: string
-    notes: Array<{ note: string }>
-  }> = JSON.parse((await downloadAsset(releaseNotesAsset.browser_download_url)).toString('utf-8'))
+  const releaseNotes = await getReleaseNotes(releaseNotesAsset, ignoredScopes)
 
-  // Update schema file
+  if (!releaseNotes.length) {
+    console.info('No changes found')
+    return
+  }
+
   const schema = await downloadAsset(schemaAsset.browser_download_url)
   fs.writeFileSync(schemaPath, schema)
 

@@ -1,5 +1,5 @@
-import cp from 'child_process'
-import fs from 'fs'
+import * as cp from 'child_process'
+import * as fs from 'fs'
 
 export function createChangeset(project: string, version: string, description: string) {
   return `

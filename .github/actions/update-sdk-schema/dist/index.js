@@ -44464,35 +44464,6 @@ module.exports = parseParams
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/define property getters */
-/******/ 	(() => {
-/******/ 		// define getter functions for harmony exports
-/******/ 		__nccwpck_require__.d = (exports, definition) => {
-/******/ 			for(var key in definition) {
-/******/ 				if(__nccwpck_require__.o(definition, key) && !__nccwpck_require__.o(exports, key)) {
-/******/ 					Object.defineProperty(exports, key, { enumerable: true, get: definition[key] });
-/******/ 				}
-/******/ 			}
-/******/ 		};
-/******/ 	})();
-/******/ 	
-/******/ 	/* webpack/runtime/hasOwnProperty shorthand */
-/******/ 	(() => {
-/******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -44518,15 +44489,12 @@ __nccwpck_require__.r(__webpack_exports__);
 
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(7147);
-var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 // EXTERNAL MODULE: ./node_modules/.pnpm/unzipper@0.12.3/node_modules/unzipper/unzip.js
 var unzip = __nccwpck_require__(479);
 // EXTERNAL MODULE: external "path"
 var external_path_ = __nccwpck_require__(1017);
-var external_path_default = /*#__PURE__*/__nccwpck_require__.n(external_path_);
 ;// CONCATENATED MODULE: external "child_process"
 const external_child_process_namespaceObject = require("child_process");
-var external_child_process_default = /*#__PURE__*/__nccwpck_require__.n(external_child_process_namespaceObject);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(9093);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@6.0.0/node_modules/@actions/github/lib/github.js
@@ -44546,24 +44514,24 @@ ${description}
 }
 const PRE_JSON_PATH = '.changeset/pre.json';
 function startPreRelease() {
-    if (external_fs_default().existsSync(PRE_JSON_PATH)) {
+    if (external_fs_.existsSync(PRE_JSON_PATH)) {
         console.info('Pre release already started');
         return;
     }
-    external_child_process_default().execSync('changeset pre enter test', { stdio: 'inherit' });
+    external_child_process_namespaceObject.execSync('changeset pre enter test', { stdio: 'inherit' });
 }
-function addPreReleaseNotes(noteFileNames) {
-    if (!external_fs_default().existsSync(PRE_JSON_PATH)) {
-        console.info('Pre release not started');
+function addPreReleaseNotes(changesetsFileNames) {
+    if (!external_fs_.existsSync(PRE_JSON_PATH)) {
+        console.warn('Pre release not started');
         return;
     }
-    const contents = JSON.parse(external_fs_default().readFileSync(PRE_JSON_PATH, 'utf-8'));
-    if (!contents.changesets) {
+    const contents = JSON.parse(external_fs_.readFileSync(PRE_JSON_PATH, 'utf-8'));
+    if (!Array.isArray(contents.changesets)) {
         contents.changesets = [];
     }
-    contents.changesets.push(...noteFileNames.map((note) => note.replace('.md', '')));
+    contents.changesets.push(...changesetsFileNames.map((note) => note.replace('.md', '')));
     console.info('writing pre.json', contents);
-    external_fs_default().writeFileSync(PRE_JSON_PATH, JSON.stringify(contents, null, 2));
+    external_fs_.writeFileSync(PRE_JSON_PATH, JSON.stringify(contents, null, 2));
 }
 
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema.ts
@@ -44591,7 +44559,7 @@ async function downloadAsset(url) {
     return Buffer.from(await response.arrayBuffer());
 }
 async function main() {
-    const packageJson = JSON.parse(external_fs_default().readFileSync(external_path_default().join('./package.json'), 'utf-8'));
+    const packageJson = JSON.parse(external_fs_.readFileSync(external_path_.join('./package.json'), 'utf-8'));
     const schemaPath = core.getInput('schemaPath');
     const examplesPath = core.getInput('examplesPath');
     const generateCommand = core.getInput('generateCommand');
@@ -44599,6 +44567,7 @@ async function main() {
     const githubToken = core.getInput('githubToken');
     const preRelease = core.getInput('preRelease') === 'true';
     const [owner, repo] = core.getInput('openApiRepository').split('/');
+    const ignoredScopes = core.getInput('ignoredScopes').split(',').filter(Boolean);
     const octokit = (0,github.getOctokit)(githubToken);
     const release = await octokit.rest.repos.getReleaseByTag({
         owner: owner,
@@ -44608,25 +44577,35 @@ async function main() {
     const schemaAsset = findAsset(SCHEMA_FILE, release.data);
     const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data);
     const examplesAsset = findAsset(EXAMPLES_FILE, release.data);
-    const releaseNotes = JSON.parse((await downloadAsset(releaseNotesAsset.browser_download_url)).toString('utf-8'));
+    let releaseNotes = JSON.parse((await downloadAsset(releaseNotesAsset.browser_download_url)).toString('utf-8'));
+    if (ignoredScopes.length > 0) {
+        releaseNotes = releaseNotes.map((notes) => ({
+            ...notes,
+            notes: notes.notes.filter((note) => !note.scope || !ignoredScopes.includes(note.scope)),
+        }));
+    }
+    if (!releaseNotes.length) {
+        console.info('No changes found');
+        return;
+    }
     // Update schema file
     const schema = await downloadAsset(schemaAsset.browser_download_url);
-    external_fs_default().writeFileSync(schemaPath, schema);
+    external_fs_.writeFileSync(schemaPath, schema);
     const examplesZip = await downloadAsset(examplesAsset.browser_download_url);
     const examples = await unzip.Open.buffer(examplesZip);
     // Empty examples directory
-    if (external_fs_default().existsSync(examplesPath)) {
+    if (external_fs_.existsSync(examplesPath)) {
         console.info(`Cleaning ${examplesPath}`);
-        external_fs_default().rmSync(examplesPath, { recursive: true, force: true });
+        external_fs_.rmSync(examplesPath, { recursive: true, force: true });
     }
-    external_fs_default().mkdirSync(examplesPath);
+    external_fs_.mkdirSync(examplesPath);
     console.info('Writing examples');
     await Promise.all(examples.files.map(async (file) => {
         if (file.type === 'Directory') {
             if (file.path !== EXAMPLE_PATH_TO_REPLACE) {
-                const dirPath = external_path_default().join(examplesPath, file.path.replace(EXAMPLE_PATH_TO_REPLACE, ''));
+                const dirPath = external_path_.join(examplesPath, file.path.replace(EXAMPLE_PATH_TO_REPLACE, ''));
                 try {
-                    external_fs_default().mkdirSync(dirPath);
+                    external_fs_.mkdirSync(dirPath);
                 }
                 catch (e) {
                     console.error(`failed to create directory ${dirPath}`, e);
@@ -44634,9 +44613,9 @@ async function main() {
             }
             return;
         }
-        const filePath = external_path_default().join(examplesPath, file.path.replace(EXAMPLE_PATH_TO_REPLACE, ''));
+        const filePath = external_path_.join(examplesPath, file.path.replace(EXAMPLE_PATH_TO_REPLACE, ''));
         try {
-            external_fs_default().writeFileSync(filePath, await file.buffer());
+            external_fs_.writeFileSync(filePath, await file.buffer());
         }
         catch (e) {
             console.error(`failed to write file ${filePath}`, e);
@@ -44644,7 +44623,7 @@ async function main() {
     }));
     console.info('Examples written');
     console.info('Generating code');
-    external_child_process_default().execSync(generateCommand, {
+    external_child_process_namespaceObject.execSync(generateCommand, {
         stdio: 'pipe',
     });
     console.info('Code generated');
@@ -44658,7 +44637,7 @@ async function main() {
         'breaking-changes': 'major',
         'build-system': 'patch',
     };
-    const noteFiles = [];
+    const changesetsFiles = [];
     for (const changesGroup of releaseNotes) {
         const version = VERSION_MAP[changesGroup.type];
         if (!version) {
@@ -44670,13 +44649,13 @@ async function main() {
                 .replace(/\s+/g, '-')
                 .replace(/[^\w-]+/g, '')
                 .concat('.md');
-            const fileName = external_path_default().join(CHANGESETS_PATH, changesetName);
-            external_fs_default().writeFileSync(fileName, changeset);
-            noteFiles.push(fileName);
+            const fileName = external_path_.join(CHANGESETS_PATH, changesetName);
+            external_fs_.writeFileSync(fileName, changeset);
+            changesetsFiles.push(changesetName);
         }
     }
     if (preRelease) {
-        addPreReleaseNotes(noteFiles);
+        addPreReleaseNotes(changesetsFiles);
     }
     console.info('Changesets generated');
 }

@@ -53,6 +53,11 @@ on:
         required: false
         description: 'Whether to start a pre-release changeset flow'
         default: false
+      ignored-scopes:
+        description: "List of change scopes to ignore, comma separated"
+        required: false
+        type: string
+        default: ""
 
     secrets:
       APP_PRIVATE_KEY:
@@ -144,6 +149,7 @@ jobs:
           tag: ${{ inputs.tag }}
           githubToken: '${{ steps.app-token.outputs.token }}'
           preRelease: '${{ inputs.pre-release }}'
+          ignoredScopes: ${{ inputs.ignored-scopes }}
 
       - name: Add & Commit
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
