@@ -79,39 +79,13 @@ jobs:
           token: ${{ steps.app-token.outputs.token }}
           repository: ${{ inputs.owner }}/${{ inputs.repository }}
 
-      - name: 'Install Java'
-        uses: actions/setup-java@v4
+      - name: Setup language
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
+          language: ${{ inputs.language }}
+          language-version: ${{ inputs.language-version }}
           java-version: ${{ inputs.java-version }}
-          cache: ${{ inputs.language == 'java' && 'gradle' || '' }}
-
-      - name: 'Install DotNET'
-        if: ${{ inputs.language == 'dotnet' }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ inputs.language-version }}
-
-      - name: 'Install Python'
-        if: ${{ inputs.language == 'python' }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ inputs.language-version }}
-
-      - name: 'Install Golang'
-        if: ${{ inputs.language == 'golang' }}
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ inputs.language-version }}
-
-      - name: 'Install PHP'
-        if: ${{ inputs.language == 'php' }}
-        uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d
-        with:
-          php-version: ${{ inputs.language-version }}
-          coverage: none
-          tools: composer:v2
-
+        
       - name: 'Setup pnpm'
         if: ${{ inputs.language == 'node' }}
         uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
