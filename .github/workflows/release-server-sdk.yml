@@ -52,7 +52,7 @@ jobs:
           persist-credentials: false
 
       - name: Setup language
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@feature/custom-changeset-commands
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
         with:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
