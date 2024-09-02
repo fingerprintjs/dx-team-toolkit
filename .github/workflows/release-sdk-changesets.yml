@@ -14,6 +14,19 @@ on:
         description: 'Command to run for project publishing'
         default: pnpm exec changeset publish
         type: string
+      language:
+        description: 'Programming language for the project. Supported values are "java", "dotnet", "python", "golang", "flutter" and "php".'
+        required: true
+        type: string
+      language-version:
+        description: 'Version of the programming language to setup.'
+        required: true
+        type: string
+      java-version:
+        description: 'Version of Java to setup.'
+        required: false
+        type: string
+        default: '11'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
@@ -31,6 +44,13 @@ jobs:
         uses: actions/checkout@v4
         with:
           persist-credentials: false
+
+      - name: Setup language
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        with:
+          language: ${{ inputs.language }}
+          language-version: ${{ inputs.language-version }}
+          java-version: ${{ inputs.java-version }}
 
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}

@@ -521,11 +521,15 @@ This reusable workflow handles release process using [changesets](https://github
 
 The workflow accepts the following input parameters:
 
-| Input Parameter   | Required | Type   | Description                                                                 |
-| ----------------- | -------- | ------ | --------------------------------------------------------------------------- |
-| `prepare-command` | No       | String | Command(s) to run for project preparation, such as installing dependencies. |
-| `version-command` | No       | String | Command to run for project versioning                                       |
-| `publish-command` | No       | String | Command to run for project publishing                                       |
+| Input Parameter    | Required | Type   | Description                                                                                                 |
+| ------------------ | -------- | ------ | ----------------------------------------------------------------------------------------------------------- |
+| `prepare-command`  | No       | String | Command(s) to run for project preparation, such as installing dependencies.                                 |
+| `version-command`  | No       | String | Command to run for project versioning                                                                       |
+| `publish-command`  | No       | String | Command to run for project publishing                                                                       |
+| `language`         | Yes      | String | Programming language for the project. Supported are `java`, `dotnet`, `node`, `python`, `golang` and `php`. |
+| `language-version` | Yes      | String | Version of the programming language to set up.                                                              |
+| `prepare-command`  | No       | String | Command(s) to run for project preparation, such as installing dependencies.                                 |
+| `java-version`     | No       | String | Version of Java to set up.                                                                                  |
 
 #### Workflow Secrets
 
@@ -546,6 +550,10 @@ on:
 jobs:
   release:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-sdk-changesets.yml@v1
+    with:
+      language: node
+      language-version: 21.x
+      prepare-command: pnpm run build
     secrets:
       GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
 ```
