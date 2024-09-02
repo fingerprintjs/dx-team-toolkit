@@ -6,6 +6,14 @@ on:
         description: 'Command to run for project preparation (e.g., installing dependencies).'
         required: false
         type: string
+      version-command:
+        description: 'Command to run for project versioning'
+        default: pnpm exec changeset version
+        type: string
+      publish-command:
+        description: 'Command to run for project publishing'
+        default: pnpm exec changeset publish
+        type: string
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
@@ -40,8 +48,8 @@ jobs:
       - name: Create Release
         uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9
         with:
-          publish: pnpm exec changeset publish
-          version: pnpm exec changeset version
+          publish: ${{ inputs.publish-command }}
+          version: ${{ inputs.version-command }}
           commit: 'chore(release): changeset created a new release'
           title: 'Release [changeset]'
         env:
