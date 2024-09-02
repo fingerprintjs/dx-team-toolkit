@@ -80,7 +80,7 @@ jobs:
           repository: ${{ inputs.owner }}/${{ inputs.repository }}
 
       - name: Setup language
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@feature/custom-changeset-commands
         with:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
