@@ -1,0 +1,78 @@
+name: Setup language
+description: 'Setups language'
+inputs:
+  language:
+    description: 'Programming language for the project. Supported values are "java", "dotnet", "python", "golang", "flutter" and "php".'
+    required: true
+    type: string
+  language-version:
+    description: 'Version of the programming language to setup.'
+    required: true
+    type: string
+  java-version:
+    description: 'Version of Java to setup.'
+    required: false
+    type: string
+    default: '11'
+runs:
+  using: "composite"
+  steps:
+    - name: 'Install Java'
+      uses: actions/setup-java@v4
+      with:
+        distribution: 'zulu' # See 'Supported distributions' for available options
+        java-version: ${{ inputs.java-version }}
+        cache: ${{ inputs.language == 'java' && 'gradle' || '' }}
+
+    - name: 'Install DotNET'
+      if: ${{ inputs.language == 'dotnet' }}
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ inputs.language-version }}
+
+    - name: 'Install Python'
+      if: ${{ inputs.language == 'python' }}
+      uses: actions/setup-python@v5
+      with:
+        python-version: ${{ inputs.language-version }}
+
+    - name: 'Install Golang'
+      if: ${{ inputs.language == 'golang' }}
+      uses: actions/setup-go@v5
+      with:
+        go-version: ${{ inputs.language-version }}
+
+    - name: 'Install Flutter'
+      if: ${{ inputs.language == 'flutter' }}
+      uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      with:
+        flutter-version: ${{ inputs.language-version }}
+        channel: 'stable'
+
+    - name: 'Install PHP'
+      if: ${{ inputs.language == 'php' }}
+      uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d
+      with:
+        php-version: ${{ inputs.language-version }}
+        coverage: none
+        tools: composer:v2
+
+    - name: 'Install Terraform'
+      if: ${{ inputs.language == 'terraform' }}
+      uses: hashicorp/setup-terraform@651471c36a6092792c552e8b1bef71e592b462d8
+      with:
+        terraform_version: ${{ inputs.language-version }}
+
+    - name: 'Install Node'
+      if: ${{ inputs.language == 'node' }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ inputs.language-version }}
+
+    - name: 'Setup pnpm'
+      if: ${{ inputs.language == 'node' }}
+      uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+      with:
+        version: 9
+        run_install: 'true'
+

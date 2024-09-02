@@ -6,6 +6,27 @@ on:
         description: 'Command to run for project preparation (e.g., installing dependencies).'
         required: false
         type: string
+      version-command:
+        description: 'Command to run for project versioning'
+        default: pnpm exec changeset version
+        type: string
+      publish-command:
+        description: 'Command to run for project publishing'
+        default: pnpm exec changeset publish
+        type: string
+      language:
+        description: 'Programming language for the project. Supported values are "java", "dotnet", "python", "golang", "flutter" and "php".'
+        required: true
+        type: string
+      language-version:
+        description: 'Version of the programming language to setup.'
+        required: true
+        type: string
+      java-version:
+        description: 'Version of Java to setup.'
+        required: false
+        type: string
+        default: '11'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
@@ -24,6 +45,13 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: Setup language
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        with:
+          language: ${{ inputs.language }}
+          language-version: ${{ inputs.language-version }}
+          java-version: ${{ inputs.java-version }}
+
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
@@ -40,8 +68,8 @@ jobs:
       - name: Create Release
         uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9
         with:
-          publish: pnpm exec changeset publish
-          version: pnpm exec changeset version
+          publish: ${{ inputs.publish-command }}
+          version: ${{ inputs.version-command }}
           commit: 'chore(release): changeset created a new release'
           title: 'Release [changeset]'
         env:

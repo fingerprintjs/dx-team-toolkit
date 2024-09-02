@@ -51,51 +51,12 @@ jobs:
         with:
           persist-credentials: false
 
-      - name: 'Install Java'
-        uses: actions/setup-java@v4
+      - name: Setup language
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
         with:
-          distribution: 'zulu' # See 'Supported distributions' for available options
+          language: ${{ inputs.language }}
+          language-version: ${{ inputs.language-version }}
           java-version: ${{ inputs.java-version }}
-          cache: ${{ inputs.language == 'java' && 'gradle' || '' }}
-
-      - name: 'Install DotNET'
-        if: ${{ inputs.language == 'dotnet' }}
-        uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ inputs.language-version }}
-
-      - name: 'Install Python'
-        if: ${{ inputs.language == 'python' }}
-        uses: actions/setup-python@v5
-        with:
-          python-version: ${{ inputs.language-version }}
-
-      - name: 'Install Golang'
-        if: ${{ inputs.language == 'golang' }}
-        uses: actions/setup-go@v5
-        with:
-          go-version: ${{ inputs.language-version }}
-
-      - name: 'Install Flutter'
-        if: ${{ inputs.language == 'flutter' }}
-        uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
-        with:
-          flutter-version: ${{ inputs.language-version }}
-          channel: 'stable'
-
-      - name: 'Install PHP'
-        if: ${{ inputs.language == 'php' }}
-        uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d
-        with:
-          php-version: ${{ inputs.language-version }}
-          coverage: none
-          tools: composer:v2
-
-      - name: 'Install Terraform'
-        if: ${{ inputs.language == 'terraform' }}
-        uses: hashicorp/setup-terraform@651471c36a6092792c552e8b1bef71e592b462d8
-        with:
-          terraform_version: ${{ inputs.language-version }}
 
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}
