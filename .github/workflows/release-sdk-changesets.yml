@@ -56,7 +56,9 @@ jobs:
         if: ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
 
+      # Setup PNPM for other projects than node to install changeset globally
       - name: 'Setup pnpm'
+        if: ${{ inputs.language != 'node' }}
         uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
         with:
           version: 9
