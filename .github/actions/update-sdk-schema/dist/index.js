@@ -44502,16 +44502,6 @@ var github = __nccwpck_require__(5942);
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/changesets.ts
 
 
-function createChangeset(project, version, description) {
-    return `
----
-'${project}': ${version}
----
-
-${description}
-
-  `.trim();
-}
 const PRE_JSON_PATH = '.changeset/pre.json';
 function startPreRelease() {
     if (external_fs_.existsSync(PRE_JSON_PATH)) {
@@ -44533,20 +44523,27 @@ function addPreReleaseNotes(changesetsFileNames) {
     console.info('writing pre.json', contents);
     external_fs_.writeFileSync(PRE_JSON_PATH, JSON.stringify(contents, null, 2));
 }
+function getChangesetScope(changeset) {
+    const regex = /\*\*(\w.+)\*\*:/;
+    const matches = regex.exec(changeset);
+    if (matches?.[1]) {
+        return matches[1];
+    }
+    return null;
+}
+function replacePackageName(changeset, name) {
+    const regex = /---\n'(.*)':/;
+    const match = regex.exec(changeset);
+    if (!match) {
+        return changeset;
+    }
+    return changeset.replace(match[1], name);
+}
 
-;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema.ts
+;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/github.ts
 
 
 
-
-
-
-
-const SCHEMA_FILE = 'fingerprint-server-api-schema-for-sdks.yaml';
-const RELEASE_NOTES = 'release-notes.json';
-const EXAMPLES_FILE = 'examples.zip';
-const EXAMPLE_PATH_TO_REPLACE = 'examples/';
-const CHANGESETS_PATH = '.changeset';
 function findAsset(name, release) {
     const result = release.assets.find((asset) => asset.name === name);
     if (!result) {
@@ -44558,6 +44555,37 @@ async function downloadAsset(url) {
     const response = await fetch(url);
     return Buffer.from(await response.arrayBuffer());
 }
+async function getReleaseNotes(releaseNotesAsset, ignoredScopes, packageName) {
+    // Map of changeset file name and contents
+    const changesets = new Map();
+    const releaseNotesZip = await downloadAsset(releaseNotesAsset.browser_download_url);
+    const contents = await unzip.Open.buffer(releaseNotesZip);
+    for (const file of contents.files) {
+        const content = await file.buffer();
+        const str = content.toString('utf-8');
+        const scope = getChangesetScope(str);
+        if (!scope || !ignoredScopes.includes(scope)) {
+            const fileName = external_path_.basename(file.path);
+            changesets.set(fileName, replacePackageName(str, packageName));
+        }
+    }
+    return changesets;
+}
+
+;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema.ts
+
+
+
+
+
+
+
+
+const SCHEMA_FILE = 'fingerprint-server-api-schema-for-sdks.yaml';
+const RELEASE_NOTES = 'changesets.zip';
+const EXAMPLES_FILE = 'examples.zip';
+const EXAMPLE_PATH_TO_REPLACE = 'examples/';
+const CHANGESETS_PATH = '.changeset';
 async function main() {
     const packageJson = JSON.parse(external_fs_.readFileSync(external_path_.join('./package.json'), 'utf-8'));
     const schemaPath = core.getInput('schemaPath');
@@ -44577,18 +44605,11 @@ async function main() {
     const schemaAsset = findAsset(SCHEMA_FILE, release.data);
     const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data);
     const examplesAsset = findAsset(EXAMPLES_FILE, release.data);
-    let releaseNotes = JSON.parse((await downloadAsset(releaseNotesAsset.browser_download_url)).toString('utf-8'));
-    if (ignoredScopes.length > 0) {
-        releaseNotes = releaseNotes.map((notes) => ({
-            ...notes,
-            notes: notes.notes.filter((note) => !note.scope || !ignoredScopes.includes(note.scope)),
-        }));
-    }
-    if (!releaseNotes.length) {
+    const changesets = await getReleaseNotes(releaseNotesAsset, ignoredScopes, packageJson.name);
+    if (!changesets.size) {
         console.info('No changes found');
         return;
     }
-    // Update schema file
     const schema = await downloadAsset(schemaAsset.browser_download_url);
     external_fs_.writeFileSync(schemaPath, schema);
     const examplesZip = await downloadAsset(examplesAsset.browser_download_url);
@@ -44631,31 +44652,12 @@ async function main() {
     if (preRelease) {
         startPreRelease();
     }
-    const VERSION_MAP = {
-        features: 'minor',
-        'bug-fixes': 'patch',
-        'breaking-changes': 'major',
-        'build-system': 'patch',
-    };
-    const changesetsFiles = [];
-    for (const changesGroup of releaseNotes) {
-        const version = VERSION_MAP[changesGroup.type];
-        if (!version) {
-            continue;
-        }
-        for (const note of changesGroup.notes) {
-            const changeset = createChangeset(packageJson.name, version, note.note);
-            const changesetName = `${changesGroup.type}${note.note}`
-                .replace(/\s+/g, '-')
-                .replace(/[^\w-]+/g, '')
-                .concat('.md');
-            const fileName = external_path_.join(CHANGESETS_PATH, changesetName);
-            external_fs_.writeFileSync(fileName, changeset);
-            changesetsFiles.push(changesetName);
-        }
+    for (const [fileName, changeset] of changesets) {
+        const filePath = external_path_.join(CHANGESETS_PATH, fileName);
+        external_fs_.writeFileSync(filePath, changeset);
     }
     if (preRelease) {
-        addPreReleaseNotes(changesetsFiles);
+        addPreReleaseNotes(Array.from(changesets.keys()));
     }
     console.info('Changesets generated');
 }

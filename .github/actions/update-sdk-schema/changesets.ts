@@ -1,17 +1,6 @@
 import * as cp from 'child_process'
 import * as fs from 'fs'
 
-export function createChangeset(project: string, version: string, description: string) {
-  return `
----
-'${project}': ${version}
----
-
-${description}
-
-  `.trim()
-}
-
 const PRE_JSON_PATH = '.changeset/pre.json'
 
 export function startPreRelease() {
@@ -44,4 +33,27 @@ export function addPreReleaseNotes(changesetsFileNames: string[]) {
   console.info('writing pre.json', contents)
 
   fs.writeFileSync(PRE_JSON_PATH, JSON.stringify(contents, null, 2))
+}
+
+export function getChangesetScope(changeset: string) {
+  const regex = /\*\*(\w.+)\*\*:/
+
+  const matches = regex.exec(changeset)
+
+  if (matches?.[1]) {
+    return matches[1]
+  }
+
+  return null
+}
+
+export function replacePackageName(changeset: string, name: string) {
+  const regex = /---\n'(.*)':/
+  const match = regex.exec(changeset)
+
+  if (!match) {
+    return changeset
+  }
+
+  return changeset.replace(match[1], name)
 }
