@@ -1,53 +1,17 @@
-import { Octokit } from '@octokit/rest'
-
 import * as fs from 'fs'
 import * as unzipper from 'unzipper'
 import * as path from 'path'
 import * as cp from 'child_process'
 import * as core from '@actions/core'
 import { getOctokit } from '@actions/github'
-import { addPreReleaseNotes, createChangeset, startPreRelease } from './changesets'
+import { addPreReleaseNotes, startPreRelease } from './changesets'
+import { downloadAsset, findAsset, getReleaseNotes } from './github'
 
 const SCHEMA_FILE = 'fingerprint-server-api-schema-for-sdks.yaml'
-const RELEASE_NOTES = 'release-notes.json'
+const RELEASE_NOTES = 'changesets.zip'
 const EXAMPLES_FILE = 'examples.zip'
 const EXAMPLE_PATH_TO_REPLACE = 'examples/'
 const CHANGESETS_PATH = '.changeset'
-
-type Release = Awaited<ReturnType<Octokit['repos']['getReleaseByTag']>>['data']
-type ReleaseAsset = Release['assets'][number]
-
-function findAsset(name: string, release: Release) {
-  const result = release.assets.find((asset) => asset.name === name)
-
-  if (!result) {
-    throw new Error(`Cannot find ${name} in the release`)
-  }
-
-  return result
-}
-
-async function downloadAsset(url: string) {
-  const response = await fetch(url)
-
-  return Buffer.from(await response.arrayBuffer())
-}
-
-async function getReleaseNotes(releaseNotesAsset: ReleaseAsset, ignoredScopes: string[]) {
-  let releaseNotes: Array<{
-    type: string
-    notes: Array<{ note: string; scope: string | null }>
-  }> = JSON.parse((await downloadAsset(releaseNotesAsset.browser_download_url)).toString('utf-8'))
-
-  if (ignoredScopes.length > 0) {
-    releaseNotes = releaseNotes.map((notes) => ({
-      ...notes,
-      notes: notes.notes.filter((note) => !note.scope || !ignoredScopes.includes(note.scope)),
-    }))
-  }
-
-  return releaseNotes
-}
 
 async function main() {
   const packageJson = JSON.parse(fs.readFileSync(path.join('./package.json'), 'utf-8'))
@@ -73,9 +37,9 @@ async function main() {
   const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data)
   const examplesAsset = findAsset(EXAMPLES_FILE, release.data)
 
-  const releaseNotes = await getReleaseNotes(releaseNotesAsset, ignoredScopes)
+  const changesets = await getReleaseNotes(releaseNotesAsset, ignoredScopes, packageJson.name)
 
-  if (!releaseNotes.length) {
+  if (!changesets.size) {
     console.info('No changes found')
     return
   }
@@ -134,37 +98,14 @@ async function main() {
     startPreRelease()
   }
 
-  const VERSION_MAP = {
-    features: 'minor',
-    'bug-fixes': 'patch',
-    'breaking-changes': 'major',
-    'build-system': 'patch',
-  } as const
+  for (const [fileName, changeset] of changesets) {
+    const filePath = path.join(CHANGESETS_PATH, fileName)
 
-  const changesetsFiles: string[] = []
-
-  for (const changesGroup of releaseNotes) {
-    const version = VERSION_MAP[changesGroup.type as keyof typeof VERSION_MAP]
-    if (!version) {
-      continue
-    }
-
-    for (const note of changesGroup.notes) {
-      const changeset = createChangeset(packageJson.name, version, note.note)
-      const changesetName = `${changesGroup.type}${note.note}`
-        .replace(/\s+/g, '-')
-        .replace(/[^\w-]+/g, '')
-        .concat('.md')
-
-      const fileName = path.join(CHANGESETS_PATH, changesetName)
-      fs.writeFileSync(fileName, changeset)
-
-      changesetsFiles.push(changesetName)
-    }
+    fs.writeFileSync(filePath, changeset)
   }
 
   if (preRelease) {
-    addPreReleaseNotes(changesetsFiles)
+    addPreReleaseNotes(Array.from(changesets.keys()))
   }
 
   console.info('Changesets generated')
