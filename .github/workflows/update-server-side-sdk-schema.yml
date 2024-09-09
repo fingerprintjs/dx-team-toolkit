@@ -90,7 +90,7 @@ jobs:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
           java-version: ${{ inputs.java-version }}
-        
+
       - name: 'Setup pnpm'
         if: ${{ inputs.language == 'node' }}
         uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
