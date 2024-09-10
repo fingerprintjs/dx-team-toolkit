@@ -530,15 +530,16 @@ The workflow accepts the following input parameters:
 | `language-version` | Yes      | String | Version of the programming language to set up.                                                              |
 | `prepare-command`  | No       | String | Command(s) to run for project preparation, such as installing dependencies.                                 |
 | `java-version`     | No       | String | Version of Java to set up.                                                                                  |
+| `appId`            | No       | String | GitHub App Id for creating GitHub token for the release                                                     |
 
 #### Workflow Secrets
 
 The workflow expects the following secret to be provided:
 
-| Secret Name        | Description                                       |
-| ------------------ | ------------------------------------------------- |
-| `GH_RELEASE_TOKEN` | GitHub token for creating releases                |
-| `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages. |
+| Secret Name       | Description                                                      |
+| ----------------- | ---------------------------------------------------------------- |
+| `APP_PRIVATE_KEY` | GitHub App private key for creating GitHub token for the release |
+| `NPM_AUTH_TOKEN`  | NPM authentication token for publishing packages.                |
 
 #### Example of Usage:
 
