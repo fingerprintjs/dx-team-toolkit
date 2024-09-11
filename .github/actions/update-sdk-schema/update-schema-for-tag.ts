@@ -6,6 +6,7 @@ import * as unzipper from 'unzipper'
 import path from 'path'
 import cp from 'child_process'
 import { addPreReleaseNotes } from './changesets'
+import {filterSchema} from "./filter-schema";
 
 export async function updateSchemaForTag(
   tag: string,
@@ -31,7 +32,8 @@ export async function updateSchemaForTag(
   }
 
   const schema = await downloadAsset(schemaAsset.browser_download_url)
-  fs.writeFileSync(schemaPath, schema)
+  const filteredSchema = filterSchema(schema.toString(), ignoredScopes);
+  fs.writeFileSync(schemaPath, filteredSchema)
 
   const examplesZip = await downloadAsset(examplesAsset.browser_download_url)
   const examples = await unzipper.Open.buffer(examplesZip)
