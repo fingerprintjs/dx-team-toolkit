@@ -8,7 +8,7 @@ export interface Config {
   preRelease: boolean
   owner: string
   repo: string
-  ignoredScopes: string[]
+  allowedScopes: string[]
 }
 
 export function getConfig(): Config {
@@ -22,6 +22,6 @@ export function getConfig(): Config {
     preRelease: core.getInput('preRelease') === 'true',
     owner,
     repo,
-    ignoredScopes: core.getInput('ignoredScopes').split(',').filter(Boolean),
+    allowedScopes: core.getInput('allowedScopes').split(',').filter(Boolean),
   }
 }

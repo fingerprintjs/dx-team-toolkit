@@ -582,7 +582,7 @@ The workflow accepts the following input parameters:
 | `repository`       | Yes      | String |                 | Name of the repository                                                                                      |
 | `owner`            | No       | String | `fingerprintjs` | Owner of the repository                                                                                     |
 | `pre-release`      | No       | Bool   | `false`         | Whether to start a pre-release changeset flow                                                               |
-| `ignored-scopes`   | No       | String | ""              | List of change scopes to ignore, comma separated                                                            |
+| `allowed-scopes`   | No       | String | ""              | List of change scopes to allow, comma separated. If left empty, all scopes are allowed.                     |
 
 #### Workflow Secrets
 

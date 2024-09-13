@@ -22,8 +22,8 @@ inputs:
   preRelease:
     description: 'Enable pre-release mode'
     default: "false"
-  ignoredScopes:
-    description: "List of change scopes to ignore, comma separated"
+  allowedScopes:
+    description: "List of change scopes to allow, comma separated. If left empty, all scopes are allowed."
     default: ""
 runs:
   using: 'node20'

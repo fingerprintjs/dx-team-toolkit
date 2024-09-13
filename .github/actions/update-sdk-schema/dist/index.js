@@ -47131,7 +47131,7 @@ function getConfig() {
         preRelease: core.getInput('preRelease') === 'true',
         owner,
         repo,
-        ignoredScopes: core.getInput('ignoredScopes').split(',').filter(Boolean),
+        allowedScopes: core.getInput('allowedScopes').split(',').filter(Boolean),
     };
 }
 
@@ -47184,7 +47184,7 @@ async function listReleasesBetween(octokit, config, fromTag, toTag) {
     console.info(`Found ${releases.length} releases that match following criteria: from ${fromTag} to ${toTag}`);
     return releases;
 }
-async function getReleaseNotes(releaseNotesAsset, ignoredScopes, packageName) {
+async function getReleaseNotes(releaseNotesAsset, allowedScopes, packageName) {
     // Map of changeset file name and contents
     const changesets = new Map();
     const releaseNotesZip = await downloadAsset(releaseNotesAsset.browser_download_url);
@@ -47193,7 +47193,7 @@ async function getReleaseNotes(releaseNotesAsset, ignoredScopes, packageName) {
         const content = await file.buffer();
         const str = content.toString('utf-8');
         const scope = getChangesetScope(str);
-        if (!scope || !ignoredScopes.includes(scope)) {
+        if (!scope || !allowedScopes.length || allowedScopes.includes(scope)) {
             const fileName = external_path_.basename(file.path);
             changesets.set(fileName, replacePackageName(str, packageName));
         }
@@ -47216,7 +47216,7 @@ const CHANGESETS_PATH = '.changeset';
 
 
 
-async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examplesPath, repo, preRelease, owner, ignoredScopes, generateCommand }) {
+async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examplesPath, repo, preRelease, owner, allowedScopes, generateCommand }) {
     const release = await octokit.rest.repos.getReleaseByTag({
         owner: owner,
         repo: repo,
@@ -47225,7 +47225,7 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examp
     const schemaAsset = findAsset(SCHEMA_FILE, release.data);
     const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data);
     const examplesAsset = findAsset(EXAMPLES_FILE, release.data);
-    const changesets = await getReleaseNotes(releaseNotesAsset, ignoredScopes, packageName);
+    const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName);
     if (!changesets.size) {
         console.info('No changes found');
         return;
