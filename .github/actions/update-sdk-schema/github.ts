@@ -70,7 +70,7 @@ export async function listReleasesBetween(
 
 export async function getReleaseNotes(
   releaseNotesAsset: ReleaseAsset,
-  ignoredScopes: string[],
+  allowedScopes: string[],
   packageName: string
 ): Promise<Map<string, string>> {
   // Map of changeset file name and contents
@@ -84,7 +84,7 @@ export async function getReleaseNotes(
     const str = content.toString('utf-8')
     const scope = getChangesetScope(str)
 
-    if (!scope || !ignoredScopes.includes(scope)) {
+    if (!scope || !allowedScopes.length || allowedScopes.includes(scope)) {
       const fileName = path.basename(file.path)
 
       changesets.set(fileName, replacePackageName(str, packageName))

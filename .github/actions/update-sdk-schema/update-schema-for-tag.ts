@@ -11,7 +11,7 @@ export async function updateSchemaForTag(
   tag: string,
   octokit: GitHubClient,
   packageName: string,
-  { schemaPath, examplesPath, repo, preRelease, owner, ignoredScopes, generateCommand }: Config
+  { schemaPath, examplesPath, repo, preRelease, owner, allowedScopes, generateCommand }: Config
 ) {
   const release = await octokit.rest.repos.getReleaseByTag({
     owner: owner,
@@ -23,7 +23,7 @@ export async function updateSchemaForTag(
   const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data)
   const examplesAsset = findAsset(EXAMPLES_FILE, release.data)
 
-  const changesets = await getReleaseNotes(releaseNotesAsset, ignoredScopes, packageName)
+  const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName)
 
   if (!changesets.size) {
     console.info('No changes found')
