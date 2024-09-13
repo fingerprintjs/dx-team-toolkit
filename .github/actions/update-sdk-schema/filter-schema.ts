@@ -1,34 +1,31 @@
 import * as yaml from 'js-yaml';
+import { ScopesMap } from './scopes'
 
-const scopes = {
-    'related-visitors': {
-        path: '/related-visitors',
-        methods: ['get'],
-    }
-} as const;
-
-type scopeName = keyof typeof scopes;
-
-export function filterSchema(schemaYaml: string, ignoredScopes: string[]): string {
+export function filterSchema(schemaYaml: string, scopes: ScopesMap, allowedScopes: string[]): string {
     const schema = yaml.load(schemaYaml) as Record<string, any>;
-    for (const scope of ignoredScopes as scopeName[]) {
+    const allowedMethods = new Map<string, Set<string>>();
+    for (const scope of allowedScopes) {
         if (!scopes.hasOwnProperty(scope)) {
             console.error(`Scope ${scope} did not found in the configuration`);
             continue;
         }
         const {path, methods} = scopes[scope];
-        if (schema.paths.hasOwnProperty(path)) {
-            for (const method of methods) {
-                if (schema.paths[path].hasOwnProperty(method)) {
+        allowedMethods.set(path, new Set(methods));
+    }
+
+    for (const path in schema.paths) {
+        if (!allowedMethods.has(path)) {
+            delete schema.paths[path];
+        } else {
+            const allowedMethodsForPath = allowedMethods.get(path) as Set<string>;
+            for (const method in schema.paths[path]) {
+                if (!allowedMethodsForPath.has(method)) {
                     delete schema.paths[path][method];
                 }
             }
-            console.log(schema.paths[path])
-            if (Object.keys(schema.paths[path]).length === 0) {
-                delete schema.paths[path];
-            }
         }
     }
+
     removeUnusedSchemas(schema);
     return yaml.dump(schema);
 }

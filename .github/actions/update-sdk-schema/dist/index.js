@@ -9673,28 +9673,28 @@ __nccwpck_require__(5437)(Promise, apiRejection, tryConvertToPromise, createCont
 __nccwpck_require__(9104)(Promise);
 __nccwpck_require__(6484)(Promise, INTERNAL);
 __nccwpck_require__(460)(Promise, INTERNAL);
-
-    util.toFastProperties(Promise);
-    util.toFastProperties(Promise.prototype);
-    function fillTypes(value) {
-        var p = new Promise(INTERNAL);
-        p._fulfillmentHandler0 = value;
-        p._rejectionHandler0 = value;
-        p._promise0 = value;
-        p._receiver0 = value;
-    }
-    // Complete slack tracking, opt out of field-type tracking and
-    // stabilize map
-    fillTypes({a: 1});
-    fillTypes({b: 2});
-    fillTypes({c: 3});
-    fillTypes(1);
-    fillTypes(function(){});
-    fillTypes(undefined);
-    fillTypes(false);
-    fillTypes(new Promise(INTERNAL));
-    debug.setBounds(Async.firstLineError, util.lastLineError);
-    return Promise;
+                                                         
+    util.toFastProperties(Promise);                                          
+    util.toFastProperties(Promise.prototype);                                
+    function fillTypes(value) {                                              
+        var p = new Promise(INTERNAL);                                       
+        p._fulfillmentHandler0 = value;                                      
+        p._rejectionHandler0 = value;                                        
+        p._promise0 = value;                                                 
+        p._receiver0 = value;                                                
+    }                                                                        
+    // Complete slack tracking, opt out of field-type tracking and           
+    // stabilize map                                                         
+    fillTypes({a: 1});                                                       
+    fillTypes({b: 2});                                                       
+    fillTypes({c: 3});                                                       
+    fillTypes(1);                                                            
+    fillTypes(function(){});                                                 
+    fillTypes(undefined);                                                    
+    fillTypes(false);                                                        
+    fillTypes(new Promise(INTERNAL));                                        
+    debug.setBounds(Async.firstLineError, util.lastLineError);               
+    return Promise;                                                          
 
 };
 
@@ -46984,7 +46984,7 @@ module.exports = parseParams
 /************************************************************************/
 /******/ 	// The module cache
 /******/ 	var __webpack_module_cache__ = {};
-/******/
+/******/ 	
 /******/ 	// The require function
 /******/ 	function __nccwpck_require__(moduleId) {
 /******/ 		// Check if module is in cache
@@ -46998,7 +46998,7 @@ module.exports = parseParams
 /******/ 			// no module.loaded needed
 /******/ 			exports: {}
 /******/ 		};
-/******/
+/******/ 	
 /******/ 		// Execute the module function
 /******/ 		var threw = true;
 /******/ 		try {
@@ -47007,11 +47007,11 @@ module.exports = parseParams
 /******/ 		} finally {
 /******/ 			if(threw) delete __webpack_module_cache__[moduleId];
 /******/ 		}
-/******/
+/******/ 	
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
+/******/ 	
 /************************************************************************/
 /******/ 	/* webpack/runtime/compat get default export */
 /******/ 	(() => {
@@ -47024,7 +47024,7 @@ module.exports = parseParams
 /******/ 			return getter;
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -47036,12 +47036,12 @@ module.exports = parseParams
 /******/ 			}
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/hasOwnProperty shorthand */
 /******/ 	(() => {
 /******/ 		__nccwpck_require__.o = (obj, prop) => (Object.prototype.hasOwnProperty.call(obj, prop))
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/make namespace object */
 /******/ 	(() => {
 /******/ 		// define __esModule on exports
@@ -47052,11 +47052,11 @@ module.exports = parseParams
 /******/ 			Object.defineProperty(exports, '__esModule', { value: true });
 /******/ 		};
 /******/ 	})();
-/******/
+/******/ 	
 /******/ 	/* webpack/runtime/compat */
-/******/
+/******/ 	
 /******/ 	if (typeof __nccwpck_require__ !== 'undefined') __nccwpck_require__.ab = __dirname + "/";
-/******/
+/******/ 	
 /************************************************************************/
 var __webpack_exports__ = {};
 // This entry need to be wrapped in an IIFE because it need to be in strict mode.
@@ -47210,6 +47210,7 @@ const RELEASE_NOTES = 'changesets.zip';
 const EXAMPLES_FILE = 'examples.zip';
 const EXAMPLE_PATH_TO_REPLACE = 'examples/';
 const CHANGESETS_PATH = '.changeset';
+const SCOPES_FILE = 'scopes.yaml';
 
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/js-yaml@4.1.0/node_modules/js-yaml/dist/js-yaml.mjs
 
@@ -51066,29 +51067,27 @@ var jsYaml = {
 
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/filter-schema.ts
 
-const scopes = {
-    'related-visitors': {
-        path: '/related-visitors',
-        methods: ['get'],
-    }
-};
-function filterSchema(schemaYaml, ignoredScopes) {
+function filterSchema(schemaYaml, scopes, allowedScopes) {
     const schema = load(schemaYaml);
-    for (const scope of ignoredScopes) {
+    const allowedMethods = new Map();
+    for (const scope of allowedScopes) {
         if (!scopes.hasOwnProperty(scope)) {
             console.error(`Scope ${scope} did not found in the configuration`);
             continue;
         }
         const { path, methods } = scopes[scope];
-        if (schema.paths.hasOwnProperty(path)) {
-            for (const method of methods) {
-                if (schema.paths[path].hasOwnProperty(method)) {
+        allowedMethods.set(path, new Set(methods));
+    }
+    for (const path in schema.paths) {
+        if (!allowedMethods.has(path)) {
+            delete schema.paths[path];
+        }
+        else {
+            const allowedMethodsForPath = allowedMethods.get(path);
+            for (const method in schema.paths[path]) {
+                if (!allowedMethodsForPath.has(method)) {
                     delete schema.paths[path][method];
                 }
-            }
-            console.log(schema.paths[path]);
-            if (Object.keys(schema.paths[path]).length === 0) {
-                delete schema.paths[path];
             }
         }
     }
@@ -51119,7 +51118,15 @@ function walkJson(json, key, callback) {
     });
 }
 
+;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/scopes.ts
+
+function loadScopes(scopesYaml) {
+    return load(scopesYaml);
+}
+
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema-for-tag.ts
+
+
 
 
 
@@ -51136,13 +51143,15 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examp
     const schemaAsset = findAsset(SCHEMA_FILE, release.data);
     const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data);
     const examplesAsset = findAsset(EXAMPLES_FILE, release.data);
+    const scopesAsset = findAsset(SCOPES_FILE, release.data);
     const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName);
     if (!changesets.size) {
         console.info('No changes found');
         return;
     }
     const schema = await downloadAsset(schemaAsset.browser_download_url);
-    const filteredSchema = filterSchema(schema.toString(), ignoredScopes);
+    const scopes = await downloadAsset(scopesAsset.browser_download_url);
+    const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes);
     external_fs_default().writeFileSync(schemaPath, filteredSchema);
     const examplesZip = await downloadAsset(examplesAsset.browser_download_url);
     const examples = await unzip.Open.buffer(examplesZip);
