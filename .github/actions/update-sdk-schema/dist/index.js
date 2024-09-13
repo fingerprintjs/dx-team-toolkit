@@ -47131,7 +47131,10 @@ function getConfig() {
         preRelease: core.getInput('preRelease') === 'true',
         owner,
         repo,
-        allowedScopes: core.getInput('allowedScopes').split(',').filter(Boolean),
+        allowedScopes: core.getInput('allowedScopes')
+            .split(',')
+            .map((v) => v.trim())
+            .filter(Boolean),
     };
 }
 
