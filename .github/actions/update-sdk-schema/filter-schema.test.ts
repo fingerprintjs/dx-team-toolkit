@@ -1,5 +1,5 @@
-import {filterSchema} from "./filter-schema";
-import {loadScopes} from "./scopes";
+import { filterSchema } from './filter-schema'
+import { loadScopes } from './scopes'
 
 const scopes = loadScopes(`
 events:
@@ -22,8 +22,7 @@ related-visitors:
     - get
 `)
 
-const schemaWithVisits =
-`openapi: 3.0.0
+const schemaWithVisits = `openapi: 3.0.0
 info:
   title: Test,
   version: 1.0.0
@@ -56,10 +55,9 @@ components:
         - visitorId
         - visits
       title: Response
-`;
+`
 
-const schemaWithRelatedVisitors =
-`openapi: 3.0.0
+const schemaWithRelatedVisitors = `openapi: 3.0.0
 info:
   title: Test,
   version: 1.0.0
@@ -121,15 +119,15 @@ components:
             $ref: '#/components/schemas/RelatedVisitor'
       required:
         - relatedVisitors
-`;
+`
 describe('filterSchema', () => {
-    it('do nothing', () => {
-        const result = filterSchema(schemaWithVisits, scopes, ['visitors', 'events'])
-        expect(result).toBe(schemaWithVisits)
-    })
+  it('do nothing', () => {
+    const result = filterSchema(schemaWithVisits, scopes, ['visitors', 'events'])
+    expect(result).toBe(schemaWithVisits)
+  })
 
-    it('remove relatedVisitors', () => {
-        const result = filterSchema(schemaWithRelatedVisitors, scopes, ['visitors', 'events', 'webhook'])
-        expect(result).toBe(schemaWithVisits)
-    })
-});
+  it('remove relatedVisitors', () => {
+    const result = filterSchema(schemaWithRelatedVisitors, scopes, ['visitors', 'events', 'webhook'])
+    expect(result).toBe(schemaWithVisits)
+  })
+})

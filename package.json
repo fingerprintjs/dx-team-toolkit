@@ -10,8 +10,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "docs": "mkdir docs && cp README.md ./docs/README.md",
-    "lint:fix": "eslint --fix --ext .ts,.js .",
-    "lint": "eslint --ext .ts,.js ."
+    "lint:fix": "pnpm run lint --fix",
+    "lint": "eslint --ext .ts,.js --ignore-path .gitignore --max-warnings 0 . .github/actions"
   },
   "prettier": "@fingerprintjs/prettier-config-dx-team",
   "devDependencies": {

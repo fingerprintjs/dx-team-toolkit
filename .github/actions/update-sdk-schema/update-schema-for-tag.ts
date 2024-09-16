@@ -1,13 +1,20 @@
 import { Config } from './config'
 import { downloadAsset, findAsset, getReleaseNotes, GitHubClient } from './github'
-import { CHANGESETS_PATH, EXAMPLE_PATH_TO_REPLACE, EXAMPLES_FILE, RELEASE_NOTES, SCHEMA_FILE, SCOPES_FILE } from './const'
+import {
+  CHANGESETS_PATH,
+  EXAMPLE_PATH_TO_REPLACE,
+  EXAMPLES_FILE,
+  RELEASE_NOTES,
+  SCHEMA_FILE,
+  SCOPES_FILE,
+} from './const'
 import fs from 'fs'
 import * as unzipper from 'unzipper'
 import path from 'path'
 import cp from 'child_process'
 import { addPreReleaseNotes } from './changesets'
-import { filterSchema } from './filter-schema';
-import { loadScopes } from './scopes';
+import { filterSchema } from './filter-schema'
+import { loadScopes } from './scopes'
 
 export async function updateSchemaForTag(
   tag: string,
