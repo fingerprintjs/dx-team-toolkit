@@ -13,7 +13,7 @@
     "dist/index.js"
   ],
   "scripts": {
-    "build": "tsup index.ts"
+    "build": "tsup index.ts --sourcemap"
   },
   "dependencies": {
     "@changesets/types": "^6.0.0"

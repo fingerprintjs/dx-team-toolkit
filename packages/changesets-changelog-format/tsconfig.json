@@ -1,12 +1,13 @@
 {
   "extends": "@fingerprintjs/tsconfig-dx-team/tsconfig.json",
   "compilerOptions": {
-    "outDir": "dist/src",
+    "outDir": "dist",
     "module": "es6",
     "moduleResolution": "node",
     "target": "es2020",
+    "sourceMap": true
   },
 
-  "files": ["./src/index.ts"],
+  "files": ["index.ts"],
   "exclude": ["dist", "node_modules", "**/*.test.ts"]
 }
