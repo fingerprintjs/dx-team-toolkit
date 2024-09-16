@@ -5,7 +5,7 @@
   "description": "DX Team shared code and configurations like GitHub Actions reusable workflows.",
   "scripts": {
     "prepare": "husky install",
-    "build": "echo \"Build\"",
+    "build": "pnpm run -r build",
     "build:actions": "ncc build .github/actions/update-sdk-schema/update-schema.ts -o .github/actions/update-sdk-schema/dist",
     "test": "jest",
     "test:coverage": "jest --coverage",
