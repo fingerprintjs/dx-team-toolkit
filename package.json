@@ -10,8 +10,8 @@
     "test": "jest",
     "test:coverage": "jest --coverage",
     "docs": "mkdir docs && cp README.md ./docs/README.md",
-    "lint:fix": "eslint --fix --ext .ts,.js .",
-    "lint": "eslint --ext .ts,.js ."
+    "lint:fix": "pnpm run lint --fix",
+    "lint": "eslint --ext .ts,.js --ignore-path .gitignore --max-warnings 0 . .github/actions"
   },
   "prettier": "@fingerprintjs/prettier-config-dx-team",
   "devDependencies": {
@@ -42,7 +42,9 @@
   "dependencies": {
     "@actions/core": "^1.10.1",
     "@actions/github": "^6.0.0",
+    "@types/js-yaml": "^4.0.9",
     "@types/semver": "^7.5.8",
+    "js-yaml": "^4.1.0",
     "semver": "^7.6.3"
   }
 }

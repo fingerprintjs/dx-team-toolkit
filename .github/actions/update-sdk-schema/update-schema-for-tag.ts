@@ -1,11 +1,20 @@
 import { Config } from './config'
 import { downloadAsset, findAsset, getReleaseNotes, GitHubClient } from './github'
-import { CHANGESETS_PATH, EXAMPLE_PATH_TO_REPLACE, EXAMPLES_FILE, RELEASE_NOTES, SCHEMA_FILE } from './const'
+import {
+  CHANGESETS_PATH,
+  EXAMPLE_PATH_TO_REPLACE,
+  EXAMPLES_FILE,
+  RELEASE_NOTES,
+  SCHEMA_FILE,
+  SCOPES_FILE,
+} from './const'
 import fs from 'fs'
 import * as unzipper from 'unzipper'
 import path from 'path'
 import cp from 'child_process'
 import { addPreReleaseNotes } from './changesets'
+import { filterSchema } from './filter-schema'
+import { loadScopes } from './scopes'
 
 export async function updateSchemaForTag(
   tag: string,
@@ -22,6 +31,7 @@ export async function updateSchemaForTag(
   const schemaAsset = findAsset(SCHEMA_FILE, release.data)
   const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data)
   const examplesAsset = findAsset(EXAMPLES_FILE, release.data)
+  const scopesAsset = findAsset(SCOPES_FILE, release.data)
 
   const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName)
 
@@ -31,7 +41,9 @@ export async function updateSchemaForTag(
   }
 
   const schema = await downloadAsset(schemaAsset.browser_download_url)
-  fs.writeFileSync(schemaPath, schema)
+  const scopes = await downloadAsset(scopesAsset.browser_download_url)
+  const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes)
+  fs.writeFileSync(schemaPath, filteredSchema)
 
   const examplesZip = await downloadAsset(examplesAsset.browser_download_url)
   const examples = await unzipper.Open.buffer(examplesZip)
