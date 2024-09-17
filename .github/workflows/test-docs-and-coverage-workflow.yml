@@ -7,6 +7,7 @@ jobs:
     name: Generate docs and coverage report
     uses: ./.github/workflows/docs-and-coverage.yml
     with:
+      run-after-install: git config --global user.email "test@example.com" && git config --global user.name "Test User"
       prepare-gh-pages-commands: |
         mv docs/* ./gh-pages
         mv coverage/lcov-report ./gh-pages/coverage

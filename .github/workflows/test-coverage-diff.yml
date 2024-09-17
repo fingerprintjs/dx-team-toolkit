@@ -10,3 +10,5 @@ jobs:
       checks: write
       pull-requests: write
     uses: ./.github/workflows/coverage-diff.yml
+    with:
+      runAfterInstall: git config --global user.email "test@example.com" && git config --global user.name "Test User"

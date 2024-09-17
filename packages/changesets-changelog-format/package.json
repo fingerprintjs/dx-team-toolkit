@@ -1,0 +1,21 @@
+{
+  "name": "@fingerprintjs/changesets-changelog-format",
+  "version": "0.0.1",
+  "description": "Custom changelog format for changesets",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fingerprintjs/dx-team-toolkit"
+  },
+  "author": "FingerprintJS, Inc (https://fingerprint.com)",
+  "license": "MIT",
+  "main": "dist/index.js",
+  "files": [
+    "dist/index.js"
+  ],
+  "scripts": {
+    "build": "tsup index.ts --sourcemap"
+  },
+  "dependencies": {
+    "@changesets/types": "^6.0.0"
+  }
+}
