@@ -13,11 +13,14 @@ function exec(command: string) {
 }
 
 function doCommit(message: string) {
-  const result = exec(`git add . && git commit -m "${message}" && git rev-parse HEAD`).toString('utf-8')
+  exec(`git add . && git commit -m "${message}"`)
 
-  const branchWithSha = result.match(/\[.*? ([a-f0-9]{7})]/)
+  const result = exec('git rev-parse HEAD').toString('utf-8').trim()
 
-  return branchWithSha?.[1]
+  return {
+    long: result,
+    short: result.slice(0, 7),
+  }
 }
 
 function initTestPackage() {
@@ -32,7 +35,12 @@ function initTestPackage() {
 
   const changesetConfigPath = path.join(TEST_PACKAGE_PATH, '.changeset/config.json')
   const changesetConfig = JSON.parse(fs.readFileSync(changesetConfigPath, 'utf-8'))
-  changesetConfig.changelog = path.join(__dirname, 'dist/index.js')
+  changesetConfig.changelog = [
+    path.join(__dirname, 'dist/index.js'),
+    {
+      repo: 'test-owner/test-repo',
+    },
+  ]
   fs.writeFileSync(changesetConfigPath, JSON.stringify(changesetConfig, null, 2))
 
   const testPkgJson = JSON.parse(fs.readFileSync(path.join(TEST_PACKAGE_PATH, 'package.json'), 'utf-8')) as PackageJSON
@@ -90,21 +98,23 @@ describe('Changeset changelog format', () => {
 
     const changelog = readChangelog()
 
-    expect(changelog).toEqual(`# test-pkg
+    const expected = `# test-pkg
 
 ## 2.0.0
 
 ### Major Changes
 
-- **visitors**: New major change (${majorSha})
+- **visitors**: New major change ([${majorSha.short}](https://github.com/test-owner/test-repo/commit/${majorSha.long}))
 
 ### Minor Changes
 
-- **identification**: New feature (${minorSha})
+- **identification**: New feature ([${minorSha.short}](https://github.com/test-owner/test-repo/commit/${minorSha.long}))
 
 ### Patch Changes
 
-- **events**: Test fix (${patchSha})
-`)
+- **events**: Test fix ([${patchSha.short}](https://github.com/test-owner/test-repo/commit/${patchSha.long}))
+`
+
+    expect(changelog).toBe(expected)
   })
 })
