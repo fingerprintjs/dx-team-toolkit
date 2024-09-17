@@ -1,6 +1,6 @@
 {
   "name": "@fingerprintjs/changesets-changelog-format",
-  "version": "0.0.1",
+  "version": "0.1.0",
   "description": "Custom changelog format for changesets",
   "repository": {
     "type": "git",
