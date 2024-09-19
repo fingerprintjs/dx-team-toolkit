@@ -58194,7 +58194,7 @@ function getChangesForVersion(version, changelog) {
                 break;
             }
         }
-        if (currentVersion === version && (trimmedLine.startsWith('###') || trimmedLine.startsWith('-'))) {
+        if (currentVersion === version) {
             changes += `${line}\n`;
         }
     }

@@ -105,7 +105,7 @@ export function getChangesForVersion(version: string, changelog: string): string
       }
     }
 
-    if (currentVersion === version && (trimmedLine.startsWith('###') || trimmedLine.startsWith('-'))) {
+    if (currentVersion === version) {
       changes += `${line}\n`
     }
   }
