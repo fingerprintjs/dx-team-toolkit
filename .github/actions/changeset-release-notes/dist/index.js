@@ -58126,22 +58126,36 @@ glob.glob = glob;
 
 
 function listProjects(changesets) {
-    const ids = new Set(...changesets.map((c) => c.id));
+    const ids = new Set(...changesets.map((c) => {
+        return c.releases.map((r) => {
+            return r.name;
+        });
+    }));
+    console.info('Project names', Array.from(ids));
     const packageJsons = sync('**/package.json', {
         ignore: ['**/node_modules/**'],
     });
+    console.info('Packages', packageJsons);
     const projects = new Map();
     packageJsons.forEach((packageJsonPath) => {
-        const packageJson = JSON.parse(external_fs_.readFileSync(packageJsonPath, 'utf-8'));
-        if (!ids.has(packageJson.name)) {
-            return;
+        try {
+            const packageJson = JSON.parse(external_fs_.readFileSync(packageJsonPath, 'utf-8'));
+            if (!ids.has(packageJson.name)) {
+                return;
+            }
+            console.info(`Found ${packageJson.name} in ${packageJsonPath}`);
+            const rootPath = external_path_.dirname(packageJsonPath);
+            const changelogPath = external_path_.join(rootPath, 'CHANGELOG.md');
+            if (external_fs_.existsSync(changelogPath)) {
+                projects.set(packageJson.name, {
+                    version: packageJson.version,
+                    changelogPath: changelogPath,
+                    rootPath,
+                });
+            }
         }
-        const changelogPath = external_path_.join(external_path_.dirname(packageJsonPath), 'CHANGELOG.md');
-        if (external_fs_.existsSync(changelogPath)) {
-            projects.set(packageJson.name, {
-                version: packageJson.version,
-                changelogPath: changelogPath,
-            });
+        catch (e) {
+            console.error(`Failed to get project info for ${packageJsonPath}`, e);
         }
     });
     return projects;
@@ -58162,14 +58176,13 @@ function listChangesForAllProjects(changesets) {
 function getChangesForVersion(version, changelog) {
     // Split the changelog into lines for easier processing
     const lines = changelog.split('\n');
-    // Initialize variables to track the current version and changes
     let currentVersion = '';
-    let changeType = '';
-    const changes = [];
+    let changes = '';
     for (let i = 0; i < lines.length; i++) {
-        const line = lines[i].trim();
+        const line = lines[i];
+        const trimmedLine = line.trim();
         // Check for a version line (e.g., "## 1.1.0")
-        const versionMatch = line.match(/^## (\d+\.\d+\.\d+)/);
+        const versionMatch = trimmedLine.match(/^## (\d+\.\d+\.\d+)/);
         if (versionMatch) {
             currentVersion = versionMatch[1];
             // If the current version matches the requested version, continue processing
@@ -58181,15 +58194,8 @@ function getChangesForVersion(version, changelog) {
                 break;
             }
         }
-        // Check for a change type line (e.g., "### Minor Changes")
-        if (currentVersion === version && line.startsWith('###')) {
-            changeType = line.replace(/^###\s*/, '');
-            changes.push({ type: changeType, changes: [] });
-        }
-        // Collect changes under the current change type
-        if (currentVersion === version && line.startsWith('-')) {
-            // Add the change to the last changeType entry
-            changes[changes.length - 1].changes.push(line.slice(2).trim());
+        if (currentVersion === version && (trimmedLine.startsWith('###') || trimmedLine.startsWith('-'))) {
+            changes += `${line}\n`;
         }
     }
     return changes;
@@ -58202,12 +58208,7 @@ function getReleaseNotes(changesets) {
     const changes = listChangesForAllProjects(changesets);
     changes.forEach((change) => {
         result += `## ${change.projectName}@${change.currentVersion}\n\n`;
-        change.changes.forEach((change) => {
-            result += `### ${change.type}`;
-            change.changes.forEach((description) => {
-                result += `\n- ${description}`;
-            });
-        });
+        result += `${change.changes}\n\n`;
     });
     return result;
 }
@@ -58219,24 +58220,33 @@ function getReleaseNotes(changesets) {
 
 
 
-function getCurrentVersion() {
-    const pkg = JSON.parse(external_fs_.readFileSync(__nccwpck_require__.ab + "package.json", 'utf-8'));
+
+function getCurrentVersion(project) {
+    const pkg = JSON.parse(external_fs_.readFileSync(external_path_.join(project.rootPath, 'package.json'), 'utf-8'));
     return pkg.version;
 }
-function doVersion() {
-    const lastVersion = getCurrentVersion();
+function doVersion(projects) {
+    const oldVersions = projects.map((project) => getCurrentVersion(project));
     external_child_process_.execSync('pnpm exec changeset version');
-    const nextVersion = getCurrentVersion();
-    return lastVersion !== nextVersion;
+    return projects.some((project, i) => {
+        const lastVersion = oldVersions[i];
+        const nextVersion = getCurrentVersion(project);
+        return lastVersion !== nextVersion;
+    });
 }
 async function main() {
     const changesets = await (0,changesets_read_cjs_default._default)(process.cwd());
     if (!changesets.length) {
         return;
     }
-    if (!doVersion()) {
+    console.info('Found changesets', JSON.stringify(changesets, null, 2));
+    const projects = Array.from(listProjects(changesets).values());
+    console.info('Found projects', JSON.stringify(projects, null, 2));
+    if (!doVersion(projects)) {
+        console.info('No changes found for all projects');
         return;
     }
+    console.info('Changelogs generated successfully');
     const notes = getReleaseNotes(changesets);
     if (notes) {
         core.setOutput('release-notes', notes);

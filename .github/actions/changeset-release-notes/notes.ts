@@ -8,14 +8,7 @@ export function getReleaseNotes(changesets: NewChangeset[]) {
 
   changes.forEach((change) => {
     result += `## ${change.projectName}@${change.currentVersion}\n\n`
-
-    change.changes.forEach((change) => {
-      result += `### ${change.type}`
-
-      change.changes.forEach((description) => {
-        result += `\n- ${description}`
-      })
-    })
+    result += `${change.changes}\n\n`
   })
 
   return result

@@ -8,37 +8,54 @@ export type ChangeLogEntry = {
   changes: string[]
 }
 
-type Project = {
+export type Project = {
   version: string
   changelogPath: string
+  rootPath: string
 }
 
 export type ReleaseNotes = {
   projectName: string
-  changes: Changes[]
+  changes: string
   currentVersion: string
 }
 
-function listProjects(changesets: NewChangeset[]) {
-  const ids = new Set<string>(...changesets.map((c) => c.id))
+export function listProjects(changesets: NewChangeset[]) {
+  const ids = new Set<string>(
+    ...changesets.map((c) => {
+      return c.releases.map((r) => {
+        return r.name
+      })
+    })
+  )
+  console.info('Project names', Array.from(ids))
   const packageJsons = globSync('**/package.json', {
     ignore: ['**/node_modules/**'],
   })
+  console.info('Packages', packageJsons)
 
   const projects = new Map<string, Project>()
 
   packageJsons.forEach((packageJsonPath) => {
-    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as PackageJSON
-    if (!ids.has(packageJson.name)) {
-      return
-    }
+    try {
+      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as PackageJSON
+      if (!ids.has(packageJson.name)) {
+        return
+      }
 
-    const changelogPath = path.join(path.dirname(packageJsonPath), 'CHANGELOG.md')
-    if (fs.existsSync(changelogPath)) {
-      projects.set(packageJson.name, {
-        version: packageJson.version,
-        changelogPath: changelogPath,
-      })
+      console.info(`Found ${packageJson.name} in ${packageJsonPath}`)
+
+      const rootPath = path.dirname(packageJsonPath)
+      const changelogPath = path.join(rootPath, 'CHANGELOG.md')
+      if (fs.existsSync(changelogPath)) {
+        projects.set(packageJson.name, {
+          version: packageJson.version,
+          changelogPath: changelogPath,
+          rootPath,
+        })
+      }
+    } catch (e) {
+      console.error(`Failed to get project info for ${packageJsonPath}`, e)
     }
   })
 
@@ -64,20 +81,19 @@ export function listChangesForAllProjects(changesets: NewChangeset[]) {
 
 export type Changes = { type: string; changes: string[] }
 
-export function getChangesForVersion(version: string, changelog: string): Changes[] {
+export function getChangesForVersion(version: string, changelog: string): string {
   // Split the changelog into lines for easier processing
   const lines = changelog.split('\n')
 
-  // Initialize variables to track the current version and changes
   let currentVersion = ''
-  let changeType = ''
-  const changes: Changes[] = []
+  let changes: string = ''
 
   for (let i = 0; i < lines.length; i++) {
-    const line = lines[i].trim()
+    const line = lines[i]
+    const trimmedLine = line.trim()
 
     // Check for a version line (e.g., "## 1.1.0")
-    const versionMatch = line.match(/^## (\d+\.\d+\.\d+)/)
+    const versionMatch = trimmedLine.match(/^## (\d+\.\d+\.\d+)/)
     if (versionMatch) {
       currentVersion = versionMatch[1]
       // If the current version matches the requested version, continue processing
@@ -89,16 +105,8 @@ export function getChangesForVersion(version: string, changelog: string): Change
       }
     }
 
-    // Check for a change type line (e.g., "### Minor Changes")
-    if (currentVersion === version && line.startsWith('###')) {
-      changeType = line.replace(/^###\s*/, '')
-      changes.push({ type: changeType, changes: [] })
-    }
-
-    // Collect changes under the current change type
-    if (currentVersion === version && line.startsWith('-')) {
-      // Add the change to the last changeType entry
-      changes[changes.length - 1].changes.push(line.slice(2).trim())
+    if (currentVersion === version && (trimmedLine.startsWith('###') || trimmedLine.startsWith('-'))) {
+      changes += `${line}\n`
     }
   }
 

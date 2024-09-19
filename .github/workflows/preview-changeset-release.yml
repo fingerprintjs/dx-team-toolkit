@@ -20,6 +20,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
+      - name: Install pnpm
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        with:
+          version: 9
+          run_install: true
+
       - name: 'Install latest node version'
         uses: actions/setup-node@v4
         with:
@@ -29,6 +35,8 @@ jobs:
         id: notes
         # TODO Replace with v1
         uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-release-notes@feature/INTER-908-changeset-preview
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
 
       - name: 'Add comment to PR'
         if: steps.notes.outputs.release-notes != ''
@@ -36,7 +44,13 @@ jobs:
         with:
           header: Release notes
           recreate: true
-          message: ${{ steps.notes.outputs.release-notes }}
+          message: |
+            <details>
+              <summary>🚀 Following releases will be created using changesets from this PR:</summary>
+            
+              ${{ steps.notes.outputs.release-notes }}
+            
+            </details>
 
       - name: 'Add release notes preview to the job summary'
         if: steps.notes.outputs.release-notes != ''
