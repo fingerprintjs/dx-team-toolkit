@@ -1,0 +1,45 @@
+name: 'Preview changeset release'
+on:
+  workflow_call:
+    inputs:
+      pr-title:
+        description: Title of created PR
+        required: true
+        type: string
+      node-version:
+        description: 'Node version to use'
+        required: false
+        type: string
+        default: 'lts/*'
+
+jobs:
+  preview:
+    name: Generate release notes
+    runs-on: ubuntu-latest
+    if: ${{ !contains('[changeset] ', inputs.pr-title) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: 'Install latest node version'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: 'Get release notes'
+        id: notes
+        # TODO Replace with v1
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-release-notes@feature/INTER-908-changeset-preview
+
+      - name: 'Add comment to PR'
+        if: steps.notes.outputs.release-notes != ''
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          header: Release notes
+          recreate: true
+          message: ${{ steps.notes.outputs.release-notes }}
+
+      - name: 'Add release notes preview to the job summary'
+        if: steps.notes.outputs.release-notes != ''
+        run: |
+          echo "${{ steps.notes.outputs.release-notes }}" >> $GITHUB_STEP_SUMMARY
+

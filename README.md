@@ -30,6 +30,7 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 - [9. Create Prerelease Branch and Force Push](#9-create-prerelease-branch-and-force-push)
 - [10. Release SDKs using changesets](#10-release-sdks-using-changesets)
 - [11. Sync server-side SDK schema with OpenAPI release](#11-sync-server-side-sdk-schema-with-openapi-release)
+- [12. Preview changeset release](#12-preview-changeset-release)
 
 ### 1. Run tests and show coverage diff
 
@@ -612,4 +613,29 @@ jobs:
       examples-path: examples
     secrets:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
+```
+
+### 12. Preview changeset release
+
+This reusable workflow processes parsed [changesets](https://github.com/changesets/changesets) and generates preview of release notes.
+
+#### Prerequisites:
+
+1. Project is properly configured to release using changesets.
+
+#### Example of usage:
+
+```yaml
+name: 'Preview changeset release'
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+  contents: write
+
+jobs:
+  preview:
+    name: Preview changeset release
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/preview-changeset-release.yml@1
 ```
