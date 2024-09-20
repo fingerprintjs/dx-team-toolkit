@@ -48,6 +48,15 @@ jobs:
             
             ${{ steps.notes.outputs.release-notes }}
 
+      - name: 'Add comment to PR'
+        if: steps.notes.outputs.release-notes == ''
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          header: Release notes
+          recreate: true
+          message: |
+            ⚠️ This PR will not create a new release.
+
       - name: 'Add release notes preview to the job summary'
         if: steps.notes.outputs.release-notes != ''
         run: |
