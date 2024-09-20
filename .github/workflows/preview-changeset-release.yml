@@ -33,8 +33,7 @@ jobs:
 
       - name: 'Get release notes'
         id: notes
-        # TODO Replace with v1
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-release-notes@feature/INTER-908-changeset-preview
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-release-notes@v1
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
