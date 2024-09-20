@@ -50350,6 +50350,18 @@ module.exports = parseParams
 /******/ 	}
 /******/ 	
 /************************************************************************/
+/******/ 	/* webpack/runtime/compat get default export */
+/******/ 	(() => {
+/******/ 		// getDefaultExport function for compatibility with non-harmony modules
+/******/ 		__nccwpck_require__.n = (module) => {
+/******/ 			var getter = module && module.__esModule ?
+/******/ 				() => (module['default']) :
+/******/ 				() => (module);
+/******/ 			__nccwpck_require__.d(getter, { a: getter });
+/******/ 			return getter;
+/******/ 		};
+/******/ 	})();
+/******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
 /******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
@@ -50420,14 +50432,8 @@ var __webpack_exports__ = {};
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
 
-// EXTERNAL MODULE: external "fs"
-var external_fs_ = __nccwpck_require__(7147);
-// EXTERNAL MODULE: external "path"
-var external_path_ = __nccwpck_require__(1017);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(9093);
-// EXTERNAL MODULE: external "child_process"
-var external_child_process_ = __nccwpck_require__(2081);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@changesets+read@0.6.1/node_modules/@changesets/read/dist/changesets-read.cjs.js
 var changesets_read_cjs = __nccwpck_require__(5477);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@changesets+read@0.6.1/node_modules/@changesets/read/dist/changesets-read.cjs.default.js
@@ -53776,6 +53782,9 @@ class LRUCache {
 //# sourceMappingURL=index.js.map
 ;// CONCATENATED MODULE: external "node:path"
 const external_node_path_namespaceObject = require("node:path");
+// EXTERNAL MODULE: external "fs"
+var external_fs_ = __nccwpck_require__(7147);
+var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = require("node:fs");
 var external_node_fs_namespaceObject_0 = /*#__PURE__*/__nccwpck_require__.t(external_node_fs_namespaceObject, 2);
@@ -58121,6 +58130,9 @@ const glob = Object.assign(glob_, {
 });
 glob.glob = glob;
 //# sourceMappingURL=index.js.map
+// EXTERNAL MODULE: external "path"
+var external_path_ = __nccwpck_require__(1017);
+var external_path_default = /*#__PURE__*/__nccwpck_require__.n(external_path_);
 ;// CONCATENATED MODULE: ./.github/actions/changeset-release-notes/changelog.ts
 
 
@@ -58213,27 +58225,33 @@ function getReleaseNotes(changesets) {
     return result;
 }
 
-;// CONCATENATED MODULE: ./.github/actions/changeset-release-notes/changeset-release-notes.ts
-
-
-
-
+// EXTERNAL MODULE: external "child_process"
+var external_child_process_ = __nccwpck_require__(2081);
+var external_child_process_default = /*#__PURE__*/__nccwpck_require__.n(external_child_process_);
+;// CONCATENATED MODULE: ./.github/actions/changeset-release-notes/version.ts
 
 
 
 function getCurrentVersion(project) {
-    const pkg = JSON.parse(external_fs_.readFileSync(external_path_.join(project.rootPath, 'package.json'), 'utf-8'));
+    const pkg = JSON.parse(external_fs_default().readFileSync(external_path_default().join(project.rootPath, 'package.json'), 'utf-8'));
     return pkg.version;
 }
 function doVersion(projects) {
     const oldVersions = projects.map((project) => getCurrentVersion(project));
-    external_child_process_.execSync('pnpm exec changeset version');
+    external_child_process_default().execSync('pnpm exec changeset version');
     return projects.some((project, i) => {
         const lastVersion = oldVersions[i];
         const nextVersion = getCurrentVersion(project);
         return lastVersion !== nextVersion;
     });
 }
+
+;// CONCATENATED MODULE: ./.github/actions/changeset-release-notes/changeset-release-notes.ts
+
+
+
+
+
 async function main() {
     const changesets = await (0,changesets_read_cjs_default._default)(process.cwd());
     if (!changesets.length) {

@@ -3,11 +3,6 @@ import { sync as globSync } from 'glob'
 import * as fs from 'fs'
 import * as path from 'path'
 
-export type ChangeLogEntry = {
-  version: string
-  changes: string[]
-}
-
 export type Project = {
   version: string
   changelogPath: string
@@ -78,8 +73,6 @@ export function listChangesForAllProjects(changesets: NewChangeset[]) {
 
   return notes
 }
-
-export type Changes = { type: string; changes: string[] }
 
 export function getChangesForVersion(version: string, changelog: string): string {
   // Split the changelog into lines for easier processing

@@ -1,29 +1,8 @@
-import * as fs from 'fs'
-import * as path from 'path'
-import { PackageJSON } from '@changesets/types'
 import * as core from '@actions/core'
-import * as cp from 'child_process'
 import readChangesets from '@changesets/read'
 import { getReleaseNotes } from './notes'
-import { listProjects, Project } from './changelog'
-
-function getCurrentVersion(project: Project) {
-  const pkg = JSON.parse(fs.readFileSync(path.join(project.rootPath, 'package.json'), 'utf-8'))
-
-  return (pkg as PackageJSON).version
-}
-
-function doVersion(projects: Project[]) {
-  const oldVersions = projects.map((project) => getCurrentVersion(project))
-  cp.execSync('pnpm exec changeset version')
-
-  return projects.some((project, i) => {
-    const lastVersion = oldVersions[i]
-    const nextVersion = getCurrentVersion(project)
-
-    return lastVersion !== nextVersion
-  })
-}
+import { listProjects } from './changelog'
+import { doVersion } from './version'
 
 async function main() {
   const changesets = await readChangesets(process.cwd())
