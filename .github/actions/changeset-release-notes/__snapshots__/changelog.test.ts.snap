@@ -1,8 +1,11 @@
 // Jest Snapshot v1, https://goo.gl/fbAQLP
 
 exports[`getChangesForVersion parse changelog with multiple versions 1`] = `
-"### Minor Changes
+"
+### Minor Changes
+
 - **events**: Introduce \`PUT\` endpoint for \`/events\` API ([e8bc23f](https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/commit/e8bc23f115c3b01f9d0d472b02093d0d05d3f4a5))
 - **visits**: Model fixes ([e8bc23f](https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/commit/e8bc23f115c3b01f9d0d472b02093d0d05d3f4a5))
+
 "
 `;
