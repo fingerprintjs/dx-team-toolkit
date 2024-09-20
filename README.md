@@ -632,10 +632,11 @@ on:
 
 permissions:
   pull-requests: write
-  contents: write
 
 jobs:
   preview:
     name: Preview changeset release
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/preview-changeset-release.yml@1
+    with:
+      pr-title: ${{ github.event.pull_request.title }}
 ```
