@@ -1,0 +1,9 @@
+name: 'Changeset release notes'
+description: 'Returns release notes for latest changeset release'
+outputs:
+  release-notes:
+    description: 'Release notes'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

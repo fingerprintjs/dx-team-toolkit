@@ -1,0 +1,16 @@
+name: 'Preview changeset release'
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  preview:
+    name: Preview changeset release
+    uses: ./.github/workflows/preview-changeset-release.yml
+    with:
+      pr-title: ${{ github.event.pull_request.title }}
+
+
+

@@ -1,0 +1,64 @@
+name: 'Preview changeset release'
+on:
+  workflow_call:
+    inputs:
+      pr-title:
+        description: Title of created PR
+        required: true
+        type: string
+      node-version:
+        description: 'Node version to use'
+        required: false
+        type: string
+        default: 'lts/*'
+
+jobs:
+  preview:
+    name: Generate release notes
+    runs-on: ubuntu-latest
+    if: ${{ !contains('[changeset] ', inputs.pr-title) }}
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        with:
+          version: 9
+          run_install: true
+
+      - name: 'Install latest node version'
+        uses: actions/setup-node@v4
+        with:
+          node-version: ${{ inputs.node-version }}
+
+      - name: 'Get release notes'
+        id: notes
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-release-notes@v1
+        env:
+          GITHUB_TOKEN: ${{ github.token }}
+
+      - name: 'Add comment to PR'
+        if: steps.notes.outputs.release-notes != ''
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          header: Release notes
+          recreate: true
+          message: |
+            ### 🚀 Following releases will be created using changesets from this PR:
+            
+            ${{ steps.notes.outputs.release-notes }}
+
+      - name: 'Add comment to PR'
+        if: steps.notes.outputs.release-notes == ''
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          header: Release notes
+          recreate: true
+          message: |
+            ⚠️ This PR will not create a new release.
+
+      - name: 'Add release notes preview to the job summary'
+        if: steps.notes.outputs.release-notes != ''
+        run: |
+          echo "${{ steps.notes.outputs.release-notes }}" >> $GITHUB_STEP_SUMMARY
+
