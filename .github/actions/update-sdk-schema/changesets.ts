@@ -13,28 +13,6 @@ export function startPreRelease() {
   cp.execSync('pnpm exec changeset pre enter test', { stdio: 'inherit' })
 }
 
-export function addPreReleaseNotes(changesetsFileNames: string[]) {
-  if (!fs.existsSync(PRE_JSON_PATH)) {
-    console.warn('Pre release not started')
-
-    return
-  }
-
-  const contents = JSON.parse(fs.readFileSync(PRE_JSON_PATH, 'utf-8')) as {
-    changesets?: string[]
-  }
-
-  if (!Array.isArray(contents.changesets)) {
-    contents.changesets = []
-  }
-
-  contents.changesets.push(...changesetsFileNames.map((note) => note.replace('.md', '')))
-
-  console.info('writing pre.json', contents)
-
-  fs.writeFileSync(PRE_JSON_PATH, JSON.stringify(contents, null, 2))
-}
-
 export function getChangesetScope(changeset: string) {
   const regex = /\*\*(\w.+)\*\*:/
 

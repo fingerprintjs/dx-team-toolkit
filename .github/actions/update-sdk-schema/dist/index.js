@@ -47089,19 +47089,6 @@ function startPreRelease() {
     }
     external_child_process_namespaceObject.execSync('pnpm exec changeset pre enter test', { stdio: 'inherit' });
 }
-function addPreReleaseNotes(changesetsFileNames) {
-    if (!external_fs_.existsSync(PRE_JSON_PATH)) {
-        console.warn('Pre release not started');
-        return;
-    }
-    const contents = JSON.parse(external_fs_.readFileSync(PRE_JSON_PATH, 'utf-8'));
-    if (!Array.isArray(contents.changesets)) {
-        contents.changesets = [];
-    }
-    contents.changesets.push(...changesetsFileNames.map((note) => note.replace('.md', '')));
-    console.info('writing pre.json', contents);
-    external_fs_.writeFileSync(PRE_JSON_PATH, JSON.stringify(contents, null, 2));
-}
 function getChangesetScope(changeset) {
     const regex = /\*\*(\w.+)\*\*:/;
     const matches = regex.exec(changeset);
@@ -51133,8 +51120,7 @@ function loadScopes(scopesYaml) {
 
 
 
-
-async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examplesPath, repo, preRelease, owner, allowedScopes, generateCommand }) {
+async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }) {
     const release = await octokit.rest.repos.getReleaseByTag({
         owner: owner,
         repo: repo,
@@ -51193,9 +51179,6 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examp
     for (const [fileName, changeset] of changesets) {
         const filePath = external_path_default().join(CHANGESETS_PATH, fileName);
         external_fs_default().writeFileSync(filePath, changeset);
-    }
-    if (preRelease) {
-        addPreReleaseNotes(Array.from(changesets.keys()));
     }
 }
 

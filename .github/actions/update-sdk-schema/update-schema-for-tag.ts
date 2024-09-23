@@ -12,7 +12,6 @@ import fs from 'fs'
 import * as unzipper from 'unzipper'
 import path from 'path'
 import cp from 'child_process'
-import { addPreReleaseNotes } from './changesets'
 import { filterSchema } from './filter-schema'
 import { loadScopes } from './scopes'
 
@@ -20,7 +19,7 @@ export async function updateSchemaForTag(
   tag: string,
   octokit: GitHubClient,
   packageName: string,
-  { schemaPath, examplesPath, repo, preRelease, owner, allowedScopes, generateCommand }: Config
+  { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }: Config
 ) {
   const release = await octokit.rest.repos.getReleaseByTag({
     owner: owner,
@@ -96,9 +95,5 @@ export async function updateSchemaForTag(
     const filePath = path.join(CHANGESETS_PATH, fileName)
 
     fs.writeFileSync(filePath, changeset)
-  }
-
-  if (preRelease) {
-    addPreReleaseNotes(Array.from(changesets.keys()))
   }
 }
