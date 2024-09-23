@@ -47087,7 +47087,7 @@ function startPreRelease() {
         console.info('Pre release already started');
         return;
     }
-    external_child_process_namespaceObject.execSync('changeset pre enter test', { stdio: 'inherit' });
+    external_child_process_namespaceObject.execSync('pnpm exec changeset pre enter test', { stdio: 'inherit' });
 }
 function addPreReleaseNotes(changesetsFileNames) {
     if (!external_fs_.existsSync(PRE_JSON_PATH)) {
