@@ -10,7 +10,7 @@ export function startPreRelease() {
     return
   }
 
-  cp.execSync('changeset pre enter test', { stdio: 'inherit' })
+  cp.execSync('pnpm exec changeset pre enter test', { stdio: 'inherit' })
 }
 
 export function addPreReleaseNotes(changesetsFileNames: string[]) {
