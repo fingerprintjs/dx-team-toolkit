@@ -1,5 +1,5 @@
 import { addChangeset, initTestPackage, startPreRelease } from '../../../__tests__/test-utils/changeset'
-import { TEST_PACKAGE_PATH } from '../../../__tests__/test-utils/testPkgExec'
+import { TEST_PACKAGE_NAME, TEST_PACKAGE_PATH } from '../../../__tests__/test-utils/testPkgExec'
 import { changesetReleaseNotes } from './changeset-release-notes'
 
 jest.mock('@actions/core')
@@ -15,7 +15,7 @@ describe('Changeset release notes', () => {
     const majorSha = addChangeset('**visitors**: New major change', 'major')
 
     const preview = await changesetReleaseNotes(TEST_PACKAGE_PATH)
-    expect(preview).toEqual(`## test-pkg@2.0.0
+    expect(preview).toEqual(`## ${TEST_PACKAGE_NAME}@2.0.0
 
 
 ### Major Changes
@@ -43,7 +43,7 @@ describe('Changeset release notes', () => {
     const majorSha = addChangeset('**visitors**: New major change', 'major')
 
     const preview = await changesetReleaseNotes(TEST_PACKAGE_PATH)
-    expect(preview).toEqual(`## test-pkg@2.0.0-test.0
+    expect(preview).toEqual(`## ${TEST_PACKAGE_NAME}@2.0.0-test.0
 
 
 ### Major Changes

@@ -1,4 +1,5 @@
 import { addChangeset, doVersion, initTestPackage, readChangelog } from '../../__tests__/test-utils/changeset'
+import { TEST_PACKAGE_NAME } from '../../__tests__/test-utils/testPkgExec'
 
 describe('Changeset changelog format', () => {
   beforeEach(() => {
@@ -13,7 +14,7 @@ describe('Changeset changelog format', () => {
 
     const changelog = readChangelog()
 
-    const expected = `# test-pkg
+    const expected = `# ${TEST_PACKAGE_NAME}
 
 ## 2.0.0
 

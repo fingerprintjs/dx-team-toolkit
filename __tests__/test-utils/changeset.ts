@@ -3,7 +3,7 @@ import humanId from 'human-id'
 import * as fs from 'fs'
 import { PackageJSON } from '@changesets/types'
 import * as pkg from '../../package.json'
-import { TEST_PACKAGE_PATH, testPkgExec } from './testPkgExec'
+import { TEST_PACKAGE_NAME, TEST_PACKAGE_PATH, testPkgExec } from './testPkgExec'
 
 function doCommit(message: string) {
   testPkgExec(`git add . && git commit -m "${message}"`)
@@ -34,7 +34,7 @@ export function initTestPackage(withChangelogPreset = true) {
     const changesetConfigPath = path.join(TEST_PACKAGE_PATH, '.changeset/config.json')
     const changesetConfig = JSON.parse(fs.readFileSync(changesetConfigPath, 'utf-8'))
     changesetConfig.changelog = [
-      path.join(__dirname, 'dist/index.js'),
+      path.resolve(__dirname, '../../packages/changesets-changelog-format/dist/index.js'),
       {
         repo: 'test-owner/test-repo',
       },
@@ -60,7 +60,7 @@ export function initTestPackage(withChangelogPreset = true) {
 export function addChangeset(description: string, version: 'patch' | 'minor' | 'major') {
   const changeset = `
 ---
-'test-pkg': ${version}
+'${TEST_PACKAGE_NAME}': ${version}
 ---
 
 ${description}
