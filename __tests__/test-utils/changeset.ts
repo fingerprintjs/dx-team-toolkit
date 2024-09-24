@@ -83,3 +83,7 @@ export function doVersion() {
 export function readChangelog() {
   return fs.readFileSync(path.join(TEST_PACKAGE_PATH, 'CHANGELOG.md'), 'utf-8')
 }
+
+export function writeChangelog(contents: string) {
+  fs.writeFileSync(path.join(TEST_PACKAGE_PATH, 'CHANGELOG.md'), contents)
+}
