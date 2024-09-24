@@ -15,7 +15,7 @@ export type ReleaseNotes = {
   currentVersion: string
 }
 
-export function listProjects(changesets: NewChangeset[]) {
+export function listProjects(changesets: NewChangeset[], cwd = process.cwd()) {
   const ids = new Set<string>(
     ...changesets.map((c) => {
       return c.releases.map((r) => {
@@ -26,6 +26,7 @@ export function listProjects(changesets: NewChangeset[]) {
   console.info('Project names', Array.from(ids))
   const packageJsons = globSync('**/package.json', {
     ignore: ['**/node_modules/**'],
+    cwd,
   })
   console.info('Packages', packageJsons)
 
@@ -33,6 +34,8 @@ export function listProjects(changesets: NewChangeset[]) {
 
   packageJsons.forEach((packageJsonPath) => {
     try {
+      packageJsonPath = path.join(cwd, packageJsonPath)
+
       const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as PackageJSON
       if (!ids.has(packageJson.name)) {
         return
@@ -42,13 +45,12 @@ export function listProjects(changesets: NewChangeset[]) {
 
       const rootPath = path.dirname(packageJsonPath)
       const changelogPath = path.join(rootPath, 'CHANGELOG.md')
-      if (fs.existsSync(changelogPath)) {
-        projects.set(packageJson.name, {
-          version: packageJson.version,
-          changelogPath: changelogPath,
-          rootPath,
-        })
-      }
+
+      projects.set(packageJson.name, {
+        version: packageJson.version,
+        changelogPath: changelogPath,
+        rootPath,
+      })
     } catch (e) {
       console.error(`Failed to get project info for ${packageJsonPath}`, e)
     }
@@ -57,10 +59,10 @@ export function listProjects(changesets: NewChangeset[]) {
   return projects
 }
 
-export function listChangesForAllProjects(changesets: NewChangeset[]) {
+export function listChangesForAllProjects(changesets: NewChangeset[], cwd = process.cwd()) {
   const notes: ReleaseNotes[] = []
 
-  const changelogs = listProjects(changesets)
+  const changelogs = listProjects(changesets, cwd)
 
   changelogs.forEach((project, projectName) => {
     const changelog = fs.readFileSync(project.changelogPath, 'utf-8')
@@ -86,7 +88,7 @@ export function getChangesForVersion(version: string, changelog: string): string
     const trimmedLine = line.trim()
 
     // Check for a version line (e.g., "## 1.1.0")
-    const versionMatch = trimmedLine.match(/^## (\d+\.\d+\.\d+)/)
+    const versionMatch = trimmedLine.match(/^## (\d+\.\d+\.\d+.*)/)
     if (versionMatch) {
       currentVersion = versionMatch[1]
       // If the current version matches the requested version, continue processing

@@ -50350,18 +50350,6 @@ module.exports = parseParams
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/create fake namespace object */
 /******/ 	(() => {
 /******/ 		var getProto = Object.getPrototypeOf ? (obj) => (Object.getPrototypeOf(obj)) : (obj) => (obj.__proto__);
@@ -50431,6 +50419,11 @@ var __webpack_exports__ = {};
 "use strict";
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
+
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "main": () => (/* binding */ main)
+});
 
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(9093);
@@ -53784,7 +53777,6 @@ class LRUCache {
 const external_node_path_namespaceObject = require("node:path");
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(7147);
-var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 ;// CONCATENATED MODULE: external "node:fs"
 const external_node_fs_namespaceObject = require("node:fs");
 var external_node_fs_namespaceObject_0 = /*#__PURE__*/__nccwpck_require__.t(external_node_fs_namespaceObject, 2);
@@ -58132,12 +58124,11 @@ glob.glob = glob;
 //# sourceMappingURL=index.js.map
 // EXTERNAL MODULE: external "path"
 var external_path_ = __nccwpck_require__(1017);
-var external_path_default = /*#__PURE__*/__nccwpck_require__.n(external_path_);
 ;// CONCATENATED MODULE: ./.github/actions/changeset-release-notes/changelog.ts
 
 
 
-function listProjects(changesets) {
+function listProjects(changesets, cwd = process.cwd()) {
     const ids = new Set(...changesets.map((c) => {
         return c.releases.map((r) => {
             return r.name;
@@ -58146,11 +58137,13 @@ function listProjects(changesets) {
     console.info('Project names', Array.from(ids));
     const packageJsons = sync('**/package.json', {
         ignore: ['**/node_modules/**'],
+        cwd,
     });
     console.info('Packages', packageJsons);
     const projects = new Map();
     packageJsons.forEach((packageJsonPath) => {
         try {
+            packageJsonPath = external_path_.join(cwd, packageJsonPath);
             const packageJson = JSON.parse(external_fs_.readFileSync(packageJsonPath, 'utf-8'));
             if (!ids.has(packageJson.name)) {
                 return;
@@ -58158,13 +58151,11 @@ function listProjects(changesets) {
             console.info(`Found ${packageJson.name} in ${packageJsonPath}`);
             const rootPath = external_path_.dirname(packageJsonPath);
             const changelogPath = external_path_.join(rootPath, 'CHANGELOG.md');
-            if (external_fs_.existsSync(changelogPath)) {
-                projects.set(packageJson.name, {
-                    version: packageJson.version,
-                    changelogPath: changelogPath,
-                    rootPath,
-                });
-            }
+            projects.set(packageJson.name, {
+                version: packageJson.version,
+                changelogPath: changelogPath,
+                rootPath,
+            });
         }
         catch (e) {
             console.error(`Failed to get project info for ${packageJsonPath}`, e);
@@ -58172,9 +58163,9 @@ function listProjects(changesets) {
     });
     return projects;
 }
-function listChangesForAllProjects(changesets) {
+function listChangesForAllProjects(changesets, cwd = process.cwd()) {
     const notes = [];
-    const changelogs = listProjects(changesets);
+    const changelogs = listProjects(changesets, cwd);
     changelogs.forEach((project, projectName) => {
         const changelog = external_fs_.readFileSync(project.changelogPath, 'utf-8');
         notes.push({
@@ -58194,7 +58185,7 @@ function getChangesForVersion(version, changelog) {
         const line = lines[i];
         const trimmedLine = line.trim();
         // Check for a version line (e.g., "## 1.1.0")
-        const versionMatch = trimmedLine.match(/^## (\d+\.\d+\.\d+)/);
+        const versionMatch = trimmedLine.match(/^## (\d+\.\d+\.\d+.*)/);
         if (versionMatch) {
             currentVersion = versionMatch[1];
             // If the current version matches the requested version, continue processing
@@ -58215,9 +58206,9 @@ function getChangesForVersion(version, changelog) {
 
 ;// CONCATENATED MODULE: ./.github/actions/changeset-release-notes/notes.ts
 
-function getReleaseNotes(changesets) {
+function getReleaseNotes(changesets, cwd = process.cwd()) {
     let result = '';
-    const changes = listChangesForAllProjects(changesets);
+    const changes = listChangesForAllProjects(changesets, cwd);
     changes.forEach((change) => {
         result += `## ${change.projectName}@${change.currentVersion}\n\n`;
         result += `${change.changes}\n\n`;
@@ -58227,18 +58218,19 @@ function getReleaseNotes(changesets) {
 
 // EXTERNAL MODULE: external "child_process"
 var external_child_process_ = __nccwpck_require__(2081);
-var external_child_process_default = /*#__PURE__*/__nccwpck_require__.n(external_child_process_);
 ;// CONCATENATED MODULE: ./.github/actions/changeset-release-notes/version.ts
 
 
 
 function getCurrentVersion(project) {
-    const pkg = JSON.parse(external_fs_default().readFileSync(external_path_default().join(project.rootPath, 'package.json'), 'utf-8'));
+    const pkg = JSON.parse(external_fs_.readFileSync(external_path_.join(project.rootPath, 'package.json'), 'utf-8'));
     return pkg.version;
 }
-function doVersion(projects) {
+function doVersion(projects, cwd = process.cwd()) {
     const oldVersions = projects.map((project) => getCurrentVersion(project));
-    external_child_process_default().execSync('pnpm exec changeset version');
+    external_child_process_.execSync('pnpm exec changeset version', {
+        cwd,
+    });
     return projects.some((project, i) => {
         const lastVersion = oldVersions[i];
         const nextVersion = getCurrentVersion(project);
@@ -58251,21 +58243,27 @@ function doVersion(projects) {
 
 
 
-
-async function main() {
-    const changesets = await (0,changesets_read_cjs_default._default)(process.cwd());
+async function changesetReleaseNotes(cwd = process.cwd()) {
+    const changesets = await (0,changesets_read_cjs_default._default)(cwd);
     if (!changesets.length) {
         return;
     }
     console.info('Found changesets', JSON.stringify(changesets, null, 2));
-    const projects = Array.from(listProjects(changesets).values());
+    const projects = Array.from(listProjects(changesets, cwd).values());
     console.info('Found projects', JSON.stringify(projects, null, 2));
-    if (!doVersion(projects)) {
+    if (!doVersion(projects, cwd)) {
         console.info('No changes found for all projects');
         return;
     }
     console.info('Changelogs generated successfully');
-    const notes = getReleaseNotes(changesets);
+    return getReleaseNotes(changesets, cwd);
+}
+
+;// CONCATENATED MODULE: ./.github/actions/changeset-release-notes/main.ts
+
+
+async function main() {
+    const notes = await changesetReleaseNotes();
     if (notes) {
         core.setOutput('release-notes', notes);
     }
