@@ -1,8 +1,8 @@
 import { Project } from './changelog'
-import fs from 'fs'
-import path from 'path'
+import * as fs from 'fs'
+import * as path from 'path'
 import { PackageJSON } from '@changesets/types'
-import cp from 'child_process'
+import * as cp from 'child_process'
 
 function getCurrentVersion(project: Project) {
   const pkg = JSON.parse(fs.readFileSync(path.join(project.rootPath, 'package.json'), 'utf-8'))
@@ -10,9 +10,11 @@ function getCurrentVersion(project: Project) {
   return (pkg as PackageJSON).version
 }
 
-export function doVersion(projects: Project[]) {
+export function doVersion(projects: Project[], cwd = process.cwd()) {
   const oldVersions = projects.map((project) => getCurrentVersion(project))
-  cp.execSync('pnpm exec changeset version')
+  cp.execSync('pnpm exec changeset version', {
+    cwd,
+  })
 
   return projects.some((project, i) => {
     const lastVersion = oldVersions[i]
