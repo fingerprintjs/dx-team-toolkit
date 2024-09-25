@@ -87,6 +87,12 @@ export function getChangesForVersion(version: string, changelog: string): string
     const line = lines[i]
     const trimmedLine = line.trim()
 
+    // Ignore notes from semantic-release
+    if (/^## \[\d+\.\d+\.\d+.*]/.test(trimmedLine)) {
+      currentVersion = ''
+      continue
+    }
+
     // Check for a version line (e.g., "## 1.1.0")
     const versionMatch = trimmedLine.match(/^## (\d+\.\d+\.\d+.*)/)
     if (versionMatch) {
