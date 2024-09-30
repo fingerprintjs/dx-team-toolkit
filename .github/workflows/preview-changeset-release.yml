@@ -11,6 +11,11 @@ on:
         required: false
         type: string
         default: 'lts/*'
+      changeset-command:
+        description: 'Command used to generate changeset. It will be used in a suggestion if there are no changesets.'
+        required: false
+        type: string
+        default: 'pnpm exec changeset'
 
 jobs:
   preview:
@@ -55,7 +60,11 @@ jobs:
           header: Release notes
           recreate: true
           message: |
-            ⚠️ This PR will not create a new release.
+            ⚠️ This PR doesn't contain any changesets. If there are user-facing changes, don't forget to run:
+            ```bash
+            ${{ inputs.changeset-command }}
+            ```
+            to create a changeset.
 
       - name: 'Add release notes preview to the job summary'
         if: steps.notes.outputs.release-notes != ''
