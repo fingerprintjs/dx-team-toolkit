@@ -3,14 +3,14 @@ import * as fs from 'fs'
 
 const PRE_JSON_PATH = '.changeset/pre.json'
 
-export function startPreRelease() {
+export function startPreRelease(tag: string) {
   if (fs.existsSync(PRE_JSON_PATH)) {
     console.info('Pre release already started')
 
     return
   }
 
-  cp.execSync('pnpm exec changeset pre enter test', { stdio: 'inherit' })
+  cp.execSync(`pnpm exec changeset pre enter ${tag}`, { stdio: 'inherit' })
 }
 
 export function getChangesetScope(changeset: string) {
