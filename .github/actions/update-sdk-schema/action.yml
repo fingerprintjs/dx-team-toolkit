@@ -22,6 +22,9 @@ inputs:
   preRelease:
     description: 'Enable pre-release mode'
     default: "false"
+  preReleaseTag:
+    description: 'Tag suffix used for pre-releases'
+    default: "test"
   allowedScopes:
     description: "List of change scopes to allow, comma separated. If left empty, all scopes are allowed."
     default: ""

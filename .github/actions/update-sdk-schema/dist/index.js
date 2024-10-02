@@ -47082,12 +47082,12 @@ var external_child_process_default = /*#__PURE__*/__nccwpck_require__.n(external
 
 
 const PRE_JSON_PATH = '.changeset/pre.json';
-function startPreRelease() {
+function startPreRelease(tag) {
     if (external_fs_.existsSync(PRE_JSON_PATH)) {
         console.info('Pre release already started');
         return;
     }
-    external_child_process_namespaceObject.execSync('pnpm exec changeset pre enter test', { stdio: 'inherit' });
+    external_child_process_namespaceObject.execSync(`pnpm exec changeset pre enter ${tag}`, { stdio: 'inherit' });
 }
 function getChangesetScope(changeset) {
     const regex = /\*\*(\w.+)\*\*:/;
@@ -51212,7 +51212,8 @@ async function main() {
     const config = getConfig();
     const tag = core.getInput('tag');
     if (config.preRelease) {
-        startPreRelease();
+        const preReleaseTag = core.getInput('preReleaseTag');
+        startPreRelease(preReleaseTag);
     }
     const octokit = (0,github.getOctokit)(config.githubToken);
     const schemaVersion = getLatestSchemaVersion();

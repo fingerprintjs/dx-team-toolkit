@@ -15,7 +15,8 @@ async function main() {
   const tag = core.getInput('tag')
 
   if (config.preRelease) {
-    startPreRelease()
+    const preReleaseTag = core.getInput('preReleaseTag')
+    startPreRelease(preReleaseTag)
   }
 
   const octokit = getOctokit(config.githubToken)

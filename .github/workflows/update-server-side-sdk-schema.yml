@@ -53,6 +53,11 @@ on:
         required: false
         description: 'Whether to start a pre-release changeset flow'
         default: false
+      pre-release-tag:
+        type: string
+        required: false
+        description: 'Tag suffix used for pre-releases'
+        default: 'test'
       allowed-scopes:
         description: "List of change scopes to allow, comma separated. If left empty, all scopes are allowed."
         required: false
@@ -117,6 +122,7 @@ jobs:
           githubToken: '${{ steps.app-token.outputs.token }}'
           preRelease: '${{ inputs.pre-release }}'
           allowedScopes: ${{ inputs.allowed-scopes }}
+          preReleaseTag: '${{ inputs.pre-release-tag }}'
 
       - name: Add & Commit
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
