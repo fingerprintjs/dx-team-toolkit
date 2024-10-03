@@ -27,16 +27,18 @@ export async function downloadAsset(url: string) {
   return Buffer.from(await response.arrayBuffer())
 }
 
+interface ListReleasesBetweenParams {
+  octokit: GitHubClient
+  config: Pick<Config, 'owner' | 'repo'>
+  fromTag: string
+  toTag: string
+}
+
 /**
  * Lists releases between given tags
  * It is worth noting that for `fromTag` we perform `gt` comparison, while for `toTag` we perform `lte`
  * */
-export async function listReleasesBetween(
-  octokit: GitHubClient,
-  config: Pick<Config, 'owner' | 'repo'>,
-  fromTag: string,
-  toTag: string
-) {
+export async function listReleasesBetween({ octokit, config, fromTag, toTag }: ListReleasesBetweenParams) {
   const releases: Release[] = []
   let page = 1
   const perPage = 100

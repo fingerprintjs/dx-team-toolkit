@@ -47149,7 +47149,7 @@ async function downloadAsset(url) {
  * Lists releases between given tags
  * It is worth noting that for `fromTag` we perform `gt` comparison, while for `toTag` we perform `lte`
  * */
-async function listReleasesBetween(octokit, config, fromTag, toTag) {
+async function listReleasesBetween({ octokit, config, fromTag, toTag }) {
     const releases = [];
     let page = 1;
     const perPage = 100;
@@ -51216,15 +51216,11 @@ async function main() {
         startPreRelease(preReleaseTag);
     }
     const octokit = (0,github.getOctokit)(config.githubToken);
-    const schemaVersion = getLatestSchemaVersion();
-    if (!schemaVersion) {
-        await updateSchemaForTag(tag, octokit, packageJson.name, config);
-    }
-    else {
-        const releases = await listReleasesBetween(octokit, config, schemaVersion, tag);
-        for (const release of releases) {
-            await updateSchemaForTag(release.tag_name, octokit, packageJson.name, config);
-        }
+    // v1.0.0 is the first OpenAPI release that was created
+    const schemaVersion = getLatestSchemaVersion() ?? 'v1.0.0';
+    const releases = await listReleasesBetween({ octokit, config, fromTag: schemaVersion, toTag: tag });
+    for (const release of releases) {
+        await updateSchemaForTag(release.tag_name, octokit, packageJson.name, config);
     }
     writeSchemaVersion(tag);
 }

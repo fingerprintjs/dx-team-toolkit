@@ -20,16 +20,12 @@ async function main() {
   }
 
   const octokit = getOctokit(config.githubToken)
-  const schemaVersion = getLatestSchemaVersion()
+  // v1.0.0 is the first OpenAPI release that was created
+  const schemaVersion = getLatestSchemaVersion() ?? 'v1.0.0'
+  const releases = await listReleasesBetween({ octokit, config, fromTag: schemaVersion, toTag: tag })
 
-  if (!schemaVersion) {
-    await updateSchemaForTag(tag, octokit, packageJson.name, config)
-  } else {
-    const releases = await listReleasesBetween(octokit, config, schemaVersion, tag)
-
-    for (const release of releases) {
-      await updateSchemaForTag(release.tag_name, octokit, packageJson.name, config)
-    }
+  for (const release of releases) {
+    await updateSchemaForTag(release.tag_name, octokit, packageJson.name, config)
   }
 
   writeSchemaVersion(tag)
