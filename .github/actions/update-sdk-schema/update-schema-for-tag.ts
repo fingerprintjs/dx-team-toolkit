@@ -47,7 +47,9 @@ export async function updateSchemaForTag(
   const schema = await downloadAsset(schemaAsset.browser_download_url)
   const scopes = await downloadAsset(scopesAsset.browser_download_url)
   const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes)
+  console.info(`Writing schema (${tag}):\n`, filteredSchema)
   fs.writeFileSync(schemaPath, filteredSchema)
+  console.info('Schema written in', schemaPath)
 
   const examplesZip = await downloadAsset(examplesAsset.browser_download_url)
   const examples = await unzipper.Open.buffer(examplesZip)
