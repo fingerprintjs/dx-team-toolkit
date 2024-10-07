@@ -1,4 +1,5 @@
 import * as fs from 'fs'
+import * as path from 'path'
 
 const SCHEMA_VERSION_FILE = '.schema-version'
 
@@ -10,6 +11,6 @@ export function getLatestSchemaVersion() {
   }
 }
 
-export function writeSchemaVersion(version: string) {
-  fs.writeFileSync(SCHEMA_VERSION_FILE, version)
+export function writeSchemaVersion(version: string, cwd: string) {
+  fs.writeFileSync(path.join(cwd, SCHEMA_VERSION_FILE), version)
 }

@@ -22,6 +22,7 @@ export function findAsset(name: string, release: Release) {
 }
 
 export async function downloadAsset(url: string) {
+  console.info('Downloading asset:', url)
   const response = await fetch(url)
 
   return Buffer.from(await response.arrayBuffer())
