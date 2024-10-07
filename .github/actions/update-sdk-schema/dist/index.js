@@ -47013,18 +47013,6 @@ module.exports = parseParams
 /******/ 	}
 /******/ 	
 /************************************************************************/
-/******/ 	/* webpack/runtime/compat get default export */
-/******/ 	(() => {
-/******/ 		// getDefaultExport function for compatibility with non-harmony modules
-/******/ 		__nccwpck_require__.n = (module) => {
-/******/ 			var getter = module && module.__esModule ?
-/******/ 				() => (module['default']) :
-/******/ 				() => (module);
-/******/ 			__nccwpck_require__.d(getter, { a: getter });
-/******/ 			return getter;
-/******/ 		};
-/******/ 	})();
-/******/ 	
 /******/ 	/* webpack/runtime/define property getters */
 /******/ 	(() => {
 /******/ 		// define getter functions for harmony exports
@@ -47065,19 +47053,21 @@ var __webpack_exports__ = {};
 // ESM COMPAT FLAG
 __nccwpck_require__.r(__webpack_exports__);
 
+// EXPORTS
+__nccwpck_require__.d(__webpack_exports__, {
+  "updateSchema": () => (/* binding */ updateSchema)
+});
+
 // EXTERNAL MODULE: external "fs"
 var external_fs_ = __nccwpck_require__(7147);
-var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 // EXTERNAL MODULE: external "path"
 var external_path_ = __nccwpck_require__(1017);
-var external_path_default = /*#__PURE__*/__nccwpck_require__.n(external_path_);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(9093);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+github@6.0.0/node_modules/@actions/github/lib/github.js
 var github = __nccwpck_require__(5942);
 ;// CONCATENATED MODULE: external "child_process"
 const external_child_process_namespaceObject = require("child_process");
-var external_child_process_default = /*#__PURE__*/__nccwpck_require__.n(external_child_process_namespaceObject);
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/changesets.ts
 
 
@@ -47142,6 +47132,7 @@ function findAsset(name, release) {
     return result;
 }
 async function downloadAsset(url) {
+    console.info('Downloading asset:', url);
     const response = await fetch(url);
     return Buffer.from(await response.arrayBuffer());
 }
@@ -51067,12 +51058,14 @@ function filterSchema(schemaYaml, scopes, allowedScopes) {
     }
     for (const path in schema.paths) {
         if (!allowedMethods.has(path)) {
+            console.info(`Removing path ${path}`);
             delete schema.paths[path];
         }
         else {
             const allowedMethodsForPath = allowedMethods.get(path);
             for (const method in schema.paths[path]) {
                 if (!allowedMethodsForPath.has(method)) {
+                    console.info(`Removing method ${method} from ${path}`);
                     delete schema.paths[path][method];
                 }
             }
@@ -51090,6 +51083,7 @@ function removeUnusedSchemas(schema) {
     const components = schema.components?.schemas || {};
     for (const componentName of Object.keys(components)) {
         if (!usageRegistry.has(`#/components/schemas/${componentName}`)) {
+            console.info(`Removing component ${componentName}`);
             delete components[componentName];
         }
     }
@@ -51120,7 +51114,10 @@ function loadScopes(scopesYaml) {
 
 
 
-async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }) {
+async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }, cwd = process.cwd()) {
+    examplesPath = external_path_.join(cwd, examplesPath);
+    schemaPath = external_path_.join(cwd, schemaPath);
+    console.info('Updating schema for tag:', tag);
     const release = await octokit.rest.repos.getReleaseByTag({
         owner: owner,
         repo: repo,
@@ -51138,22 +51135,24 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examp
     const schema = await downloadAsset(schemaAsset.browser_download_url);
     const scopes = await downloadAsset(scopesAsset.browser_download_url);
     const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes);
-    external_fs_default().writeFileSync(schemaPath, filteredSchema);
+    console.info(`Writing schema (${tag}):\n`, filteredSchema);
+    external_fs_.writeFileSync(schemaPath, filteredSchema);
+    console.info('Schema written in', schemaPath);
     const examplesZip = await downloadAsset(examplesAsset.browser_download_url);
     const examples = await unzip.Open.buffer(examplesZip);
     // Empty examples directory
-    if (external_fs_default().existsSync(examplesPath)) {
+    if (external_fs_.existsSync(examplesPath)) {
         console.info(`Cleaning ${examplesPath}`);
-        external_fs_default().rmSync(examplesPath, { recursive: true, force: true });
+        external_fs_.rmSync(examplesPath, { recursive: true, force: true });
     }
-    external_fs_default().mkdirSync(examplesPath);
+    external_fs_.mkdirSync(examplesPath);
     console.info('Writing examples');
     await Promise.all(examples.files.map(async (file) => {
         if (file.type === 'Directory') {
             if (file.path !== EXAMPLE_PATH_TO_REPLACE) {
-                const dirPath = external_path_default().join(examplesPath, file.path.replace(EXAMPLE_PATH_TO_REPLACE, ''));
+                const dirPath = external_path_.join(examplesPath, file.path.replace(EXAMPLE_PATH_TO_REPLACE, ''));
                 try {
-                    external_fs_default().mkdirSync(dirPath);
+                    external_fs_.mkdirSync(dirPath);
                 }
                 catch (e) {
                     console.error(`failed to create directory ${dirPath}`, e);
@@ -51161,9 +51160,9 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examp
             }
             return;
         }
-        const filePath = external_path_default().join(examplesPath, file.path.replace(EXAMPLE_PATH_TO_REPLACE, ''));
+        const filePath = external_path_.join(examplesPath, file.path.replace(EXAMPLE_PATH_TO_REPLACE, ''));
         try {
-            external_fs_default().writeFileSync(filePath, await file.buffer());
+            external_fs_.writeFileSync(filePath, await file.buffer());
         }
         catch (e) {
             console.error(`failed to write file ${filePath}`, e);
@@ -51171,18 +51170,20 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examp
     }));
     console.info('Examples written');
     console.info('Generating code');
-    external_child_process_default().execSync(generateCommand, {
+    external_child_process_namespaceObject.execSync(generateCommand, {
         stdio: 'pipe',
+        cwd,
     });
     console.info('Code generated');
     console.info('Generating changesets');
     for (const [fileName, changeset] of changesets) {
-        const filePath = external_path_default().join(CHANGESETS_PATH, fileName);
-        external_fs_default().writeFileSync(filePath, changeset);
+        const filePath = external_path_.join(cwd, CHANGESETS_PATH, fileName);
+        external_fs_.writeFileSync(filePath, changeset);
     }
 }
 
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/schema-version.ts
+
 
 const SCHEMA_VERSION_FILE = '.schema-version';
 function getLatestSchemaVersion() {
@@ -51193,8 +51194,8 @@ function getLatestSchemaVersion() {
         return null;
     }
 }
-function writeSchemaVersion(version) {
-    external_fs_.writeFileSync(SCHEMA_VERSION_FILE, version);
+function writeSchemaVersion(version, cwd) {
+    external_fs_.writeFileSync(external_path_.join(cwd, SCHEMA_VERSION_FILE), version);
 }
 
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema.ts
@@ -51207,12 +51208,8 @@ function writeSchemaVersion(version) {
 
 
 
-async function main() {
-    const packageJson = JSON.parse(external_fs_.readFileSync(external_path_.join('./package.json'), 'utf-8'));
-    const config = getConfig();
-    const tag = core.getInput('tag');
+async function updateSchema({ config, tag, packageName, preReleaseTag = 'test', cwd }) {
     if (config.preRelease) {
-        const preReleaseTag = core.getInput('preReleaseTag');
         startPreRelease(preReleaseTag);
     }
     const octokit = (0,github.getOctokit)(config.githubToken);
@@ -51220,13 +51217,23 @@ async function main() {
     const schemaVersion = getLatestSchemaVersion() ?? 'v1.0.0';
     const releases = await listReleasesBetween({ octokit, config, fromTag: schemaVersion, toTag: tag });
     for (const release of releases) {
-        await updateSchemaForTag(release.tag_name, octokit, packageJson.name, config);
+        await updateSchemaForTag(release.tag_name, octokit, packageName, config, cwd);
     }
-    writeSchemaVersion(tag);
+    writeSchemaVersion(tag, cwd);
 }
-main().catch((err) => {
-    core.setFailed(err);
-});
+async function main() {
+    try {
+        const config = getConfig();
+        const tag = core.getInput('tag');
+        const packageJson = JSON.parse(external_fs_.readFileSync(external_path_.join('./package.json'), 'utf-8'));
+        const preReleaseTag = core.getInput('preReleaseTag');
+        await updateSchema({ config, tag, packageName: packageJson.name, preReleaseTag, cwd: process.cwd() });
+    }
+    catch (err) {
+        core.setFailed(err);
+    }
+}
+main();
 
 })();
 
