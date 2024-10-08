@@ -64,6 +64,45 @@ describe('Update schema', () => {
 
   it('first schema sync with two releases', async () => {
     listReleases.mockResolvedValue({
+      data: [v120, v110],
+    })
+
+    getReleaseByTag.mockImplementation(({ tag }) => {
+      switch (tag) {
+        case 'v1.1.0':
+          return { data: v110 }
+
+        case 'v1.2.0':
+          return { data: v120 }
+
+        default:
+          throw new Error(`Unexpected tag: ${tag}`)
+      }
+    })
+
+    await updateSchema({
+      tag: 'v1.2.0',
+      cwd: TEST_PACKAGE_PATH,
+      config: {
+        owner: 'test-owner',
+        repo: 'test-repo',
+        allowedScopes: ['events', 'visitors', 'webhook'],
+        githubToken: '',
+        examplesPath: 'examples',
+        generateCommand: 'touch ./.generated',
+        preRelease: false,
+        schemaPath: 'res/fingerprint-server-api.yaml',
+      },
+      packageName: 'test-package',
+    })
+
+    expect(testPackageFileExists('.generated')).toBeTruthy()
+    expect(readTestPackageFile('.schema-version').toString()).toEqual('v1.2.0')
+    expect(readTestPackageFile('res/fingerprint-server-api.yaml')).toMatchSnapshot('schema')
+  })
+
+  it('first schema sync with two releases where GH API returns releases in ascending order', async () => {
+    listReleases.mockResolvedValue({
       data: [v110, v120],
     })
 
@@ -98,6 +137,6 @@ describe('Update schema', () => {
 
     expect(testPackageFileExists('.generated')).toBeTruthy()
     expect(readTestPackageFile('.schema-version').toString()).toEqual('v1.2.0')
-    expect(readTestPackageFile('res/fingerprint-server-api.yaml')).toMatchSnapshot()
+    expect(readTestPackageFile('res/fingerprint-server-api.yaml')).toMatchSnapshot('schema')
   })
 })
