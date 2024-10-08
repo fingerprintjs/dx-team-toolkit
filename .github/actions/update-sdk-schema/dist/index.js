@@ -47163,7 +47163,8 @@ async function listReleasesBetween({ octokit, config, fromTag, toTag }) {
         page++;
     }
     console.info(`Found ${releases.length} releases that match following criteria: from ${fromTag} to ${toTag}`);
-    return releases;
+    // Sort releases in ascending order
+    return releases.sort((a, b) => (semver.gt(a.tag_name, b.tag_name) ? 1 : -1));
 }
 async function getReleaseNotes(releaseNotesAsset, allowedScopes, packageName) {
     // Map of changeset file name and contents
