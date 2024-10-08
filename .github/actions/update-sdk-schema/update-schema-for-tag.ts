@@ -8,10 +8,10 @@ import {
   SCHEMA_FILE,
   SCOPES_FILE,
 } from './const'
-import fs from 'fs'
+import * as fs from 'fs'
 import * as unzipper from 'unzipper'
-import path from 'path'
-import cp from 'child_process'
+import * as path from 'path'
+import * as cp from 'child_process'
 import { filterSchema } from './filter-schema'
 import { loadScopes } from './scopes'
 
@@ -19,8 +19,13 @@ export async function updateSchemaForTag(
   tag: string,
   octokit: GitHubClient,
   packageName: string,
-  { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }: Config
+  { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }: Config,
+  cwd = process.cwd()
 ) {
+  examplesPath = path.join(cwd, examplesPath)
+  schemaPath = path.join(cwd, schemaPath)
+
+  console.info('Updating schema for tag:', tag)
   const release = await octokit.rest.repos.getReleaseByTag({
     owner: owner,
     repo: repo,
@@ -42,7 +47,9 @@ export async function updateSchemaForTag(
   const schema = await downloadAsset(schemaAsset.browser_download_url)
   const scopes = await downloadAsset(scopesAsset.browser_download_url)
   const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes)
+  console.info(`Writing schema (${tag}):\n`, filteredSchema)
   fs.writeFileSync(schemaPath, filteredSchema)
+  console.info('Schema written in', schemaPath)
 
   const examplesZip = await downloadAsset(examplesAsset.browser_download_url)
   const examples = await unzipper.Open.buffer(examplesZip)
@@ -86,13 +93,14 @@ export async function updateSchemaForTag(
   console.info('Generating code')
   cp.execSync(generateCommand, {
     stdio: 'pipe',
+    cwd,
   })
   console.info('Code generated')
 
   console.info('Generating changesets')
 
   for (const [fileName, changeset] of changesets) {
-    const filePath = path.join(CHANGESETS_PATH, fileName)
+    const filePath = path.join(cwd, CHANGESETS_PATH, fileName)
 
     fs.writeFileSync(filePath, changeset)
   }

@@ -15,11 +15,13 @@ export function filterSchema(schemaYaml: string, scopes: ScopesMap, allowedScope
 
   for (const path in schema.paths) {
     if (!allowedMethods.has(path)) {
+      console.info(`Removing path ${path}`)
       delete schema.paths[path]
     } else {
       const allowedMethodsForPath = allowedMethods.get(path) as Set<string>
       for (const method in schema.paths[path]) {
         if (!allowedMethodsForPath.has(method)) {
+          console.info(`Removing method ${method} from ${path}`)
           delete schema.paths[path][method]
         }
       }
@@ -40,6 +42,7 @@ export function removeUnusedSchemas(schema: Record<string, any>) {
   const components = schema.components?.schemas || {}
   for (const componentName of Object.keys(components)) {
     if (!usageRegistry.has(`#/components/schemas/${componentName}`)) {
+      console.info(`Removing component ${componentName}`)
       delete components[componentName]
     }
   }

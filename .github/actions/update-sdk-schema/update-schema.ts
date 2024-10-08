@@ -3,19 +3,21 @@ import * as path from 'path'
 import * as core from '@actions/core'
 import { getOctokit } from '@actions/github'
 import { startPreRelease } from './changesets'
-import { getConfig } from './config'
+import { Config, getConfig } from './config'
 import { updateSchemaForTag } from './update-schema-for-tag'
 import { getLatestSchemaVersion, writeSchemaVersion } from './schema-version'
 import { listReleasesBetween } from './github'
 
-async function main() {
-  const packageJson = JSON.parse(fs.readFileSync(path.join('./package.json'), 'utf-8'))
+interface UpdateSchemaParams {
+  config: Config
+  tag: string
+  packageName: string
+  preReleaseTag?: string
+  cwd: string
+}
 
-  const config = getConfig()
-  const tag = core.getInput('tag')
-
+export async function updateSchema({ config, tag, packageName, preReleaseTag = 'test', cwd }: UpdateSchemaParams) {
   if (config.preRelease) {
-    const preReleaseTag = core.getInput('preReleaseTag')
     startPreRelease(preReleaseTag)
   }
 
@@ -25,12 +27,23 @@ async function main() {
   const releases = await listReleasesBetween({ octokit, config, fromTag: schemaVersion, toTag: tag })
 
   for (const release of releases) {
-    await updateSchemaForTag(release.tag_name, octokit, packageJson.name, config)
+    await updateSchemaForTag(release.tag_name, octokit, packageName, config, cwd)
   }
 
-  writeSchemaVersion(tag)
+  writeSchemaVersion(tag, cwd)
 }
 
-main().catch((err) => {
-  core.setFailed(err)
-})
+async function main() {
+  try {
+    const config = getConfig()
+    const tag = core.getInput('tag')
+    const packageJson = JSON.parse(fs.readFileSync(path.join('./package.json'), 'utf-8'))
+    const preReleaseTag = core.getInput('preReleaseTag')
+
+    await updateSchema({ config, tag, packageName: packageJson.name, preReleaseTag, cwd: process.cwd() })
+  } catch (err) {
+    core.setFailed(err as Error)
+  }
+}
+
+main()
