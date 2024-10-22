@@ -14,6 +14,7 @@ import * as path from 'path'
 import * as cp from 'child_process'
 import { filterSchema } from './filter-schema'
 import { loadScopes } from './scopes'
+import { withRetry } from './retry'
 
 export async function updateSchemaForTag(
   tag: string,
@@ -26,18 +27,27 @@ export async function updateSchemaForTag(
   schemaPath = path.join(cwd, schemaPath)
 
   console.info('Updating schema for tag:', tag)
-  const release = await octokit.rest.repos.getReleaseByTag({
-    owner: owner,
-    repo: repo,
-    tag,
-  })
+  const release = await withRetry(() =>
+    octokit.rest.repos.getReleaseByTag({
+      owner: owner,
+      repo: repo,
+      tag,
+    })
+  ).catch((e) => {
+    console.error('Failed to get release', e)
 
+    throw e
+  })
   const schemaAsset = findAsset(SCHEMA_FILE, release.data)
   const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data)
   const examplesAsset = findAsset(EXAMPLES_FILE, release.data)
   const scopesAsset = findAsset(SCOPES_FILE, release.data)
 
-  const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName)
+  const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName).catch((e) => {
+    console.error('Failed to get release notes', e)
+
+    throw e
+  })
 
   if (!changesets.size) {
     console.info('No changes found')

@@ -23,10 +23,16 @@ export function findAsset(name: string, release: Release) {
 }
 
 export async function downloadAsset(url: string) {
-  console.info('Downloading asset:', url)
-  const response = await withRetry(() => fetch(url))
+  try {
+    console.info('Downloading asset:', url)
+    const response = await withRetry(() => fetch(url))
 
-  return Buffer.from(await response.arrayBuffer())
+    return Buffer.from(await response.arrayBuffer())
+  } catch (e) {
+    console.error(`Failed to download asset: ${url}`, e)
+
+    throw e
+  }
 }
 
 interface ListReleasesBetweenParams {
