@@ -49139,9 +49139,15 @@ function findAsset(name, release) {
     return result;
 }
 async function downloadAsset(url) {
-    console.info('Downloading asset:', url);
-    const response = await withRetry(() => fetch(url));
-    return Buffer.from(await response.arrayBuffer());
+    try {
+        console.info('Downloading asset:', url);
+        const response = await withRetry(() => fetch(url));
+        return Buffer.from(await response.arrayBuffer());
+    }
+    catch (e) {
+        console.error(`Failed to download asset: ${url}`, e);
+        throw e;
+    }
 }
 /**
  * Lists releases between given tags
@@ -53122,20 +53128,27 @@ function loadScopes(scopesYaml) {
 
 
 
+
 async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }, cwd = process.cwd()) {
     examplesPath = external_path_.join(cwd, examplesPath);
     schemaPath = external_path_.join(cwd, schemaPath);
     console.info('Updating schema for tag:', tag);
-    const release = await octokit.rest.repos.getReleaseByTag({
+    const release = await withRetry(() => octokit.rest.repos.getReleaseByTag({
         owner: owner,
         repo: repo,
         tag,
+    })).catch((e) => {
+        console.error('Failed to get release', e);
+        throw e;
     });
     const schemaAsset = findAsset(SCHEMA_FILE, release.data);
     const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data);
     const examplesAsset = findAsset(EXAMPLES_FILE, release.data);
     const scopesAsset = findAsset(SCOPES_FILE, release.data);
-    const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName);
+    const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName).catch((e) => {
+        console.error('Failed to get release notes', e);
+        throw e;
+    });
     if (!changesets.size) {
         console.info('No changes found');
         return;
