@@ -5,6 +5,7 @@ import * as path from 'path'
 import * as semver from 'semver'
 import { getOctokit } from '@actions/github'
 import { Config } from './config'
+import { withRetry } from './retry'
 
 export type GitHubClient = ReturnType<typeof getOctokit>
 
@@ -23,7 +24,7 @@ export function findAsset(name: string, release: Release) {
 
 export async function downloadAsset(url: string) {
   console.info('Downloading asset:', url)
-  const response = await fetch(url)
+  const response = await withRetry(() => fetch(url))
 
   return Buffer.from(await response.arrayBuffer())
 }
@@ -45,12 +46,14 @@ export async function listReleasesBetween({ octokit, config, fromTag, toTag }: L
   const perPage = 100
 
   while (true) {
-    const { data } = await octokit.rest.repos.listReleases({
-      owner: config.owner,
-      repo: config.repo,
-      per_page: perPage,
-      page,
-    })
+    const { data } = await withRetry(() =>
+      octokit.rest.repos.listReleases({
+        owner: config.owner,
+        repo: config.repo,
+        per_page: perPage,
+        page,
+      })
+    )
 
     data.forEach((release) => {
       if (semver.gt(release.tag_name, fromTag) && semver.lte(release.tag_name, toTag)) {
