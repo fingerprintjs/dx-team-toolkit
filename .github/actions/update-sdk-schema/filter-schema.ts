@@ -28,12 +28,17 @@ export function filterSchema(schemaYaml: string, scopes: ScopesMap, allowedScope
     }
   }
 
-  removeUnusedSchemas(schema)
+  let removedCounter = 1
+  while (removedCounter > 0) {
+    removedCounter = removeUnusedSchemas(schema)
+  }
+
   return yaml.dump(schema)
 }
 
 export function removeUnusedSchemas(schema: Record<string, any>) {
   const usageRegistry = new Set<string>()
+  let removedCounter = 0
   walkJson(schema, '$ref', (usage) => {
     const componentName = usage['$ref']
     usageRegistry.add(componentName)
@@ -44,8 +49,10 @@ export function removeUnusedSchemas(schema: Record<string, any>) {
     if (!usageRegistry.has(`#/components/schemas/${componentName}`)) {
       console.info(`Removing component ${componentName}`)
       delete components[componentName]
+      removedCounter++
     }
   }
+  return removedCounter
 }
 
 function walkJson(json: Record<string, any>, key: string, callback: (json: Record<string, any>) => void) {

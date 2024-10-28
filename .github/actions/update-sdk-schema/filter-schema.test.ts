@@ -109,6 +109,17 @@ components:
         - visitorId
         - visits
       title: Response
+    RelatedVisitor:
+      type: object
+      additionalProperties: false
+      required:
+        - visitorId
+      properties:
+        visitorId:
+          type: string
+          description: >-
+            Visitor ID of a browser that originates from the same mobile device
+            as the input visitor ID.
     RelatedVisitorsResponse:
       type: object
       additionalProperties: false
