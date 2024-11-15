@@ -6,7 +6,7 @@
 name: Check GitHub actions dist
 
 on:
-  pull_request:
+  pull_request_target:
     paths-ignore:
       - '**.md'
 
@@ -51,5 +51,5 @@ jobs:
         with:
           add: '.github'
           github_token: ${{ secrets.GITHUB_TOKEN }}
-          message: "build: build actions"
+          message: "build(skip-ci): build actions"
           push: 'true'
