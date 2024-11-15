@@ -40,14 +40,14 @@ jobs:
           if [ "$(git diff --ignore-space-at-eol .github | wc -l)" -gt "0" ]; then
             echo "Detected uncommitted changes after build. See status below:"
             git diff
-            exit 1
+            echo "diff=1" >> "$GITHUB_OUTPUT"
           fi
         id: diff
 
       # If build was different from expected, commit new build
       - name: Add & Commit
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
-        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+        if: ${{ steps.diff.outputs.diff == '1' }}
         with:
           add: '.github'
           github_token: ${{ secrets.GITHUB_TOKEN }}
