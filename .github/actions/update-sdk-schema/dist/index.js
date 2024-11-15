@@ -53085,11 +53085,15 @@ function filterSchema(schemaYaml, scopes, allowedScopes) {
             }
         }
     }
-    removeUnusedSchemas(schema);
+    let removedCounter = 1;
+    while (removedCounter > 0) {
+        removedCounter = removeUnusedSchemas(schema);
+    }
     return dump(schema);
 }
 function removeUnusedSchemas(schema) {
     const usageRegistry = new Set();
+    let removedCounter = 0;
     walkJson(schema, '$ref', (usage) => {
         const componentName = usage['$ref'];
         usageRegistry.add(componentName);
@@ -53099,8 +53103,10 @@ function removeUnusedSchemas(schema) {
         if (!usageRegistry.has(`#/components/schemas/${componentName}`)) {
             console.info(`Removing component ${componentName}`);
             delete components[componentName];
+            removedCounter++;
         }
     }
+    return removedCounter;
 }
 function walkJson(json, key, callback) {
     Object.keys(json).forEach((iteratorKey) => {
