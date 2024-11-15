@@ -1,0 +1,71 @@
+# `.github/actions/**/dist/index.js` is a special file in Actions.
+# When you reference an action with `uses:` in a workflow,
+# `index.js` is the code that will run.
+# For our project, we generate this file through a build process from other source files.
+# We need to make sure the checked-in `index.js` actually matches what we expect it to be.
+name: Check GitHub actions dist
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+permissions:
+  pull-requests: write
+
+jobs:
+  check-dist:
+    runs-on: ubuntu-latest
+    outputs:
+      diff: ${{ steps.diff.outputs.diff }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild the dist/ directory
+        run: |
+          pnpm run build:actions
+
+      - name: Compare the expected and actual dist/ directories
+        run: |
+          if [ "$(git diff --ignore-space-at-eol .github | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff
+            echo "diff=1" >> "$GITHUB_OUTPUT"
+          fi
+        id: diff
+
+      - name: Add comment
+        if: steps.diff.outputs.diff == '1'
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          message: |
+            ⚠️ There were changes to GitHub actions. Don't forget to run:
+            ```bash
+            pnpm run build:actions
+            ```
+
+      - name: Remove comment
+        if: steps.diff.outputs.diff != '1'
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          delete: true
+
+  # We need to fail in a separate job, otherwise the comment from the previous job will be removed
+  fail-on-diff:
+    runs-on: ubuntu-latest
+    needs: check-dist
+    steps:
+      - name: Fail the job
+        if: ${{ needs.check-dist.outputs.diff == '1' }}
+        run: exit 1
