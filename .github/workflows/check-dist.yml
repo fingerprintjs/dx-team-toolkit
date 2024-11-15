@@ -11,20 +11,14 @@ on:
       - '**.md'
 
 permissions:
-  contents: write
+  pull-requests: write
 
 jobs:
   check-dist:
     runs-on: ubuntu-latest
-    environment: production
+    outputs:
+      diff: ${{ steps.diff.outputs.diff }}
     steps:
-      - name: 'Get token for the GitHub App'
-        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
-        id: app-token
-        with:
-          app-id: ${{ vars.APP_ID }}
-          private-key: ${{ secrets.APP_PRIVATE_KEY }}
-
       - uses: actions/checkout@v4
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
@@ -51,13 +45,27 @@ jobs:
           fi
         id: diff
 
-      # If build was different from expected, commit new build
-      - name: Add & Commit
-        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
-        if: ${{ steps.diff.outputs.diff == '1' }}
+      - name: Add comment
+        if: steps.diff.outputs.diff == '1'
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
-          add: '.github'
-          # We have to use token from GitHub app, otherwise the status checks in PR are bugged
-          github_token: ${{ steps.app-token.outputs.token }}
-          message: "build(skip-ci): build actions"
-          push: 'true'
+          message: |
+            ⚠️ There were changes to GitHub actions. Don't forget to run:
+            ```bash
+            pnpm run build:actions
+            ```
+
+      - name: Remove comment
+        if: steps.diff.outputs.diff != '1'
+        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        with:
+          delete: true
+
+  # We need to fail in a separate job, otherwise the comment from the previous job will be removed
+  fail-on-diff:
+    runs-on: ubuntu-latest
+    needs: check-dist
+    steps:
+      - name: Fail the job
+        if: ${{ needs.check-dist.outputs.diff == '1' }}
+        run: exit 1
