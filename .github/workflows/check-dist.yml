@@ -1,0 +1,55 @@
+# `.github/actions/**/dist/index.js` is a special file in Actions.
+# When you reference an action with `uses:` in a workflow,
+# `index.js` is the code that will run.
+# For our project, we generate this file through a build process from other source files.
+# We need to make sure the checked-in `index.js` actually matches what we expect it to be.
+name: Check GitHub actions dist
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+permissions:
+  contents: write
+
+jobs:
+  check-dist:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          repository: ${{ github.event.pull_request.head.repo.full_name }}
+          ref: ${{ github.event.pull_request.head.ref }}
+
+      - name: Install pnpm
+        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        with:
+          version: 9
+
+      - name: Install dependencies
+        run: pnpm install --frozen-lockfile
+
+      - name: Rebuild the dist/ directory
+        run: |
+          pnpm run build:actions
+
+      - name: Compare the expected and actual dist/ directories
+        run: |
+          if [ "$(git diff --ignore-space-at-eol .github | wc -l)" -gt "0" ]; then
+            echo "Detected uncommitted changes after build. See status below:"
+            git diff
+            exit 1
+          fi
+        id: diff
+
+      # If build was different from expected, commit new build
+      - name: Add & Commit
+        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
+        if: ${{ failure() && steps.diff.conclusion == 'failure' }}
+        with:
+          add: '.github'
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+          message: "build: build actions"
+          push: 'true'
