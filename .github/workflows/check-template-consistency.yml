@@ -38,6 +38,7 @@ jobs:
         if: steps.diff.outputs.has_diff == '1'
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
+          header: 'template-consistency'
           message: |
             ⚠️ Looks like you've edited generated files, instead of related template files.
             
@@ -53,6 +54,7 @@ jobs:
         if: steps.diff.outputs.has_diff != '1'
         uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
         with:
+          header: 'template-consistency'
           delete: true
 
   # We need to fail in a separate job, otherwise the comment from the previous job will be removed
