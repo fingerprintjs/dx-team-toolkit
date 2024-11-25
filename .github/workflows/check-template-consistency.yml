@@ -48,12 +48,12 @@ jobs:
         with:
           header: 'template-consistency'
           message: |
-            ⚠️ Looks like you've edited generated files, instead of related template files.
+            ⚠️ Template files and generated files are not in-sync.
             
-            Following files have been changed:
+            Following files do not match corresponding templates:
             `${{ steps.diff.outputs.diff }}`
             
-            To fix this warning, modify the template files instead and run the following command:
+            To fix this warning, make sure template files are up-to-date, and generate files by running the following command:
             ```bash
             ${{ inputs.generate-command }}
             ```
