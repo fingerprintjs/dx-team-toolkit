@@ -26,12 +26,15 @@ jobs:
       - name: Get diff
         id: diff
         run: |
-          {
-            echo 'diff<<EOF'
-            git diff --name-only HEAD
-            echo EOF
-          } >> "$GITHUB_OUTPUT"
-          echo "has_diff=1" >> "$GITHUB_OUTPUT"
+          local_diff=$(git diff --name-only HEAD)
+          
+          if [[ -z "$local_diff" ]]; then
+            {
+              echo 'diff<<EOF'
+              $local_diff
+              echo EOF
+            } >> "$GITHUB_OUTPUT"
+            echo "has_diff=1" >> "$GITHUB_OUTPUT"
 
       - name: Print diff details
         run: |
