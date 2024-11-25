@@ -10,4 +10,4 @@ jobs:
   check-template-consistency:
     uses: ./.github/workflows/check-template-consistency.yml
     with:
-      generate-command: 'touch test.txt && touch test1.txt && git add test.txt test1.txt'
+      generate-command: 'touch test.txt && git add test.txt'
