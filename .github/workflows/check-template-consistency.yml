@@ -29,12 +29,13 @@ jobs:
           local_diff=$(git diff --name-only HEAD)
           
           if [[ -z "$local_diff" ]]; then
-            {
-              echo 'diff<<EOF'
-              $local_diff
-              echo EOF
-            } >> "$GITHUB_OUTPUT"
+            echo "has_diff=0" >> "$GITHUB_OUTPUT"
+          else
+            echo "diff<<EOF" >> "$GITHUB_OUTPUT"
+            echo "$local_diff" >> "$GITHUB_OUTPUT"
+            echo "EOF" >> "$GITHUB_OUTPUT"
             echo "has_diff=1" >> "$GITHUB_OUTPUT"
+          fi
 
       - name: Print diff details
         run: |
