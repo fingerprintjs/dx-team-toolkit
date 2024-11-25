@@ -26,7 +26,11 @@ jobs:
       - name: Get diff
         id: diff
         run: |
-          echo "diff=$(git diff --name-only HEAD)" >> "$GITHUB_OUTPUT"
+          {
+            echo 'diff<<EOF'
+            git diff --name-only HEAD
+            echo EOF
+          } >> "$GITHUB_OUTPUT"
           echo "has_diff=1" >> "$GITHUB_OUTPUT"
 
       - name: Print diff details
