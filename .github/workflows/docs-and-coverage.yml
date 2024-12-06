@@ -52,12 +52,12 @@ jobs:
       - name: 'Install latest node version'
         uses: actions/setup-node@v4
         with:
-          node-version: ${{ inputs.nodeVersion }}
+          node-version: ${{ inputs.node-version }}
           check-latest: true
           cache: ${{ env.PACKAGE_MANAGER }}
 
       - name: Install dependencies
-        run: $PACKAGE_MANAGER install ${{ inputs.yarnFlags }}
+        run: $PACKAGE_MANAGER install
 
       - name: Run after install
         run: ${{ inputs.run-after-install }}
