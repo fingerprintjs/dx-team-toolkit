@@ -49079,6 +49079,7 @@ function getConfig() {
         generateCommand: core.getInput('generateCommand'),
         githubToken: core.getInput('githubToken'),
         preRelease: core.getInput('preRelease') === 'true',
+        force: core.getInput('force') === 'true',
         owner,
         repo,
         allowedScopes: core.getInput('allowedScopes')
@@ -49148,6 +49149,14 @@ async function downloadAsset(url) {
         console.error(`Failed to download asset: ${url}`, e);
         throw e;
     }
+}
+async function getRelease({ config, tag, octokit }) {
+    const { data } = await withRetry(() => octokit.rest.repos.getReleaseByTag({
+        owner: config.owner,
+        repo: config.repo,
+        tag,
+    }));
+    return data;
 }
 /**
  * Lists releases between given tags
@@ -53240,11 +53249,21 @@ async function updateSchema({ config, tag, packageName, preReleaseTag = 'test', 
         startPreRelease(preReleaseTag);
     }
     const octokit = (0,github.getOctokit)(config.githubToken);
-    // v1.0.0 is the first OpenAPI release that was created
-    const schemaVersion = getLatestSchemaVersion() ?? 'v1.0.0';
-    const releases = await listReleasesBetween({ octokit, config, fromTag: schemaVersion, toTag: tag });
-    for (const release of releases) {
+    if (config.force) {
+        const release = await getRelease({
+            config,
+            tag,
+            octokit,
+        });
         await updateSchemaForTag(release.tag_name, octokit, packageName, config, cwd);
+    }
+    else {
+        // v1.0.0 is the first OpenAPI release that was created
+        const schemaVersion = getLatestSchemaVersion() ?? 'v1.0.0';
+        const releases = await listReleasesBetween({ octokit, config, fromTag: schemaVersion, toTag: tag });
+        for (const release of releases) {
+            await updateSchemaForTag(release.tag_name, octokit, packageName, config, cwd);
+        }
     }
     writeSchemaVersion(tag, cwd);
 }
@@ -53254,7 +53273,13 @@ async function main() {
         const tag = core.getInput('tag');
         const packageJson = JSON.parse(external_fs_.readFileSync(external_path_.join('./package.json'), 'utf-8'));
         const preReleaseTag = core.getInput('preReleaseTag');
-        await updateSchema({ config, tag, packageName: packageJson.name, preReleaseTag, cwd: process.cwd() });
+        await updateSchema({
+            config,
+            tag,
+            packageName: packageJson.name,
+            preReleaseTag,
+            cwd: process.cwd(),
+        });
     }
     catch (err) {
         core.setFailed(err);

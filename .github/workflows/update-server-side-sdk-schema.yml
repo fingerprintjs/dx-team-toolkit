@@ -63,6 +63,11 @@ on:
         required: false
         type: string
         default: ""
+      force:
+        description: "Whenever to force update to given tag, even if it was already updated before"
+        default: false
+        type: boolean
+        required: false
 
     secrets:
       APP_PRIVATE_KEY:
@@ -123,6 +128,7 @@ jobs:
           preRelease: '${{ inputs.pre-release }}'
           allowedScopes: ${{ inputs.allowed-scopes }}
           preReleaseTag: '${{ inputs.pre-release-tag }}'
+          force: '${{ inputs.force }}'
 
       - name: Add & Commit
         uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5

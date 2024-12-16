@@ -9,6 +9,7 @@ export interface Config {
   owner: string
   repo: string
   allowedScopes: string[]
+  force: boolean
 }
 
 export function getConfig(): Config {
@@ -20,6 +21,7 @@ export function getConfig(): Config {
     generateCommand: core.getInput('generateCommand'),
     githubToken: core.getInput('githubToken'),
     preRelease: core.getInput('preRelease') === 'true',
+    force: core.getInput('force') === 'true',
     owner,
     repo,
     allowedScopes: core

@@ -92,6 +92,7 @@ describe('Update schema', () => {
         generateCommand: 'touch ./.generated',
         preRelease: false,
         schemaPath: 'res/fingerprint-server-api.yaml',
+        force: false,
       },
       packageName: 'test-package',
     })
@@ -131,6 +132,7 @@ describe('Update schema', () => {
         generateCommand: 'touch ./.generated',
         preRelease: false,
         schemaPath: 'res/fingerprint-server-api.yaml',
+        force: false,
       },
       packageName: 'test-package',
     })
