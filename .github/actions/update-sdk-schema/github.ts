@@ -42,6 +42,24 @@ interface ListReleasesBetweenParams {
   toTag: string
 }
 
+interface GetReleaseParams {
+  tag: string
+  octokit: GitHubClient
+  config: Pick<Config, 'owner' | 'repo'>
+}
+
+export async function getRelease({ config, tag, octokit }: GetReleaseParams): Promise<Release> {
+  const { data } = await withRetry(() =>
+    octokit.rest.repos.getReleaseByTag({
+      owner: config.owner,
+      repo: config.repo,
+      tag,
+    })
+  )
+
+  return data
+}
+
 /**
  * Lists releases between given tags
  * It is worth noting that for `fromTag` we perform `gt` comparison, while for `toTag` we perform `lte`

@@ -28,6 +28,9 @@ inputs:
   allowedScopes:
     description: "List of change scopes to allow, comma separated. If left empty, all scopes are allowed."
     default: ""
+  force:
+    description: "Whenever to force update to given tag, even if it was already updated before"
+    default: "false"
 runs:
   using: 'node20'
   main: 'dist/index.js'
