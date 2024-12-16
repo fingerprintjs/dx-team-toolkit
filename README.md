@@ -585,6 +585,7 @@ The workflow accepts the following input parameters:
 | `pre-release`      | No       | Bool   | `false`         | Whether to start a pre-release changeset flow                                                               |
 | `pre-release-tag`  | No       | String | `test`          | Tag suffix used for pre-releases                                                                            |
 | `allowed-scopes`   | No       | String | ""              | List of change scopes to allow, comma separated. If left empty, all scopes are allowed.                     |
+| `force`            | No       | Bool   | `false`         | "Whenever to force update to given tag, even if it was already updated before"                              |
 
 #### Workflow Secrets
 
