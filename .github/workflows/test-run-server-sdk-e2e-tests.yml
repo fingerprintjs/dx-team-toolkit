@@ -1,0 +1,17 @@
+name: Test server SDK E2E tests
+on:
+  pull_request:
+
+jobs:
+  run-server-sdk-e2e-tests:
+    uses: ./.github/workflows/run-server-sdk-e2e-tests.yml
+    strategy:
+      matrix:
+        sdk: [node, go, dotnet, php, python, java]
+    with:
+      appId: ${{ vars.APP_ID }}
+      sdk: ${{ matrix.sdk }}
+      sdkVersion: 'latest'
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}

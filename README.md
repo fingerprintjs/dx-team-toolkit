@@ -31,6 +31,7 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 - [10. Release SDKs using changesets](#10-release-sdks-using-changesets)
 - [11. Sync server-side SDK schema with OpenAPI release](#11-sync-server-side-sdk-schema-with-openapi-release)
 - [12. Preview changeset release](#12-preview-changeset-release)
+- [13. Run server-side SDK E2E tests](#13-run-server-side-sdk-e2e-tests)
 
 ### 1. Run tests and show coverage diff
 
@@ -641,4 +642,50 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/preview-changeset-release.yml@1
     with:
       pr-title: ${{ github.event.pull_request.title }}
+```
+
+### 13. Run server-side SDK E2E tests
+
+This workflow can be used for triggering E2E tests for given server-side SDK.
+It triggers the tests stored in `fingerprintjs/dx-team-orchestra` using `repository-dispatch` trigger.
+
+#### Workflow Inputs
+
+The workflow accepts the following input parameters:
+
+| Input Parameter | Required | Type   | Default  | Description                                                                  |
+| --------------- | -------- | ------ | -------- | ---------------------------------------------------------------------------- |
+| `sdk`           | Yes      | String | -        | Type of SDK to test, can be: `go`, `dotnet`, `node`, `php`, `python`, `java` |
+| `sdkVersion`    | No       | String | `latest` | Version of the sdk to test                                                   |
+| `appId`         | Yes      | String | -        | GitHub app id to access the repository with E2E tests                        |
+
+#### Workflow Secrets
+
+The workflow expects the following secret to be provided:
+
+| Secret Name         | Description                                                   |
+| ------------------- | ------------------------------------------------------------- |
+| `APP_PRIVATE_KEY`   | The GitHub App's private key, used to request a GitHub token. |
+| `SLACK_WEBHOOK_URL` | Slack webhook URL for sending job status.                     |
+
+#### Example of usage:
+
+```yaml
+name: Run server SDK E2E tests
+on:
+  pull_request:
+
+jobs:
+  run-server-sdk-e2e-tests:
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/run-server-sdk-e2e-tests.yml@1
+    strategy:
+      matrix:
+        sdk: [node, go, dotnet, php, python, java]
+    with:
+      appId: ${{ vars.APP_ID }}
+      sdk: ${{ matrix.sdk }}
+      sdkVersion: 'latest'
+    secrets:
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
