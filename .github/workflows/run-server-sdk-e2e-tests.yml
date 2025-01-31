@@ -26,6 +26,7 @@ on:
 jobs:
   e2e-tests:
     name: 'E2E Tests'
+    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: 'Get token for the GitHub App'
