@@ -657,16 +657,14 @@ The workflow accepts the following input parameters:
 | --------------- | -------- | ------ | -------- | ---------------------------------------------------------------------------- |
 | `sdk`           | Yes      | String | -        | Type of SDK to test, can be: `go`, `dotnet`, `node`, `php`, `python`, `java` |
 | `sdkVersion`    | No       | String | `latest` | Version of the sdk to test                                                   |
-| `appId`         | Yes      | String | -        | GitHub app id to access the repository with E2E tests                        |
 
 #### Workflow Secrets
 
 The workflow expects the following secret to be provided:
 
-| Secret Name         | Description                                                   |
-| ------------------- | ------------------------------------------------------------- |
-| `APP_PRIVATE_KEY`   | The GitHub App's private key, used to request a GitHub token. |
-| `SLACK_WEBHOOK_URL` | Slack webhook URL for sending job status.                     |
+| Secret Name         | Description                               |
+| ------------------- | ----------------------------------------- |
+| `SLACK_WEBHOOK_URL` | Slack webhook URL for sending job status. |
 
 #### Example of usage:
 
