@@ -9,9 +9,9 @@ jobs:
       matrix:
         sdk: [node, go, dotnet, php, python, java]
     with:
-      appId: ${{ vars.APP_ID }}
+      appId: ${{ vars.RUNNER_APP_ID }}
       sdk: ${{ matrix.sdk }}
       sdkVersion: 'latest'
     secrets:
-      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      APP_PRIVATE_KEY: ${{ secrets.RUNNER_APP_PRIVATE_KEY }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
