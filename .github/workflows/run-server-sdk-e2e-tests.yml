@@ -11,7 +11,14 @@ on:
         description: 'Type of SDK to test, can be: go, dotnet, node, php, python, java'
         type: string
         required: true
+      appId:
+        type: string
+        required: true
+        description: 'GitHub app id to access the repository with E2E tests'
     secrets:
+      APP_PRIVATE_KEY:
+        description: 'GitHub App token to request GitHub token'
+        required: true
       SLACK_WEBHOOK_URL:
         description: 'Slack webhook URL for sending job status'
         required: true
@@ -22,10 +29,17 @@ jobs:
     environment: production
     runs-on: ubuntu-latest
     steps:
+      - name: 'Get token for the GitHub App'
+        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        id: app-token
+        with:
+          app-id: ${{ inputs.appId }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
+
       - uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0
         with:
           repository: fingerprintjs/dx-team-orchiestra
-          token: ${{ github.token }}
+          token: steps.app-token.outputs.token
           event-type: 'e2e_tests'
           client-payload: |-
             {
