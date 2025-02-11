@@ -35,6 +35,8 @@ jobs:
         with:
           app-id: ${{ inputs.appId }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
+          owner: fingerprintjs
+          repositories: dx-team-orchestra
 
       - uses: peter-evans/repository-dispatch@ff45666b9427631e3450c54a1bcbee4d9ff4d7c0
         with:
