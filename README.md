@@ -658,6 +658,7 @@ The workflow accepts the following input parameters:
 | `sdk`           | Yes      | String | -        | Type of SDK to test, can be: `go`, `dotnet`, `node`, `php`, `python`, `java` |
 | `sdkVersion`    | No       | String | `latest` | Version of the sdk to test                                                   |
 | `appId`         | Yes      | String | -        | GitHub app id to access the repository with E2E tests                        |
+| `commitSha`     | No       | String | -        | SHA of commit that triggered the workflow                                    |
 
 #### Workflow Secrets
 

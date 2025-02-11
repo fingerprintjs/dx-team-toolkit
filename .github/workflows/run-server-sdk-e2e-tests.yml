@@ -15,6 +15,10 @@ on:
         type: string
         required: true
         description: 'GitHub app id to access the repository with E2E tests'
+      commitSha:
+        type: string
+        required: false
+        description: 'SHA of commit that triggered the workflow'
     secrets:
       APP_PRIVATE_KEY:
         description: 'GitHub App token to request GitHub token'
@@ -52,7 +56,8 @@ jobs:
               "run-php-sdk-tests": ${{ inputs.sdk == 'php' }},
               "run-python-sdk-tests": ${{ inputs.sdk == 'python' }},
               "run-java-sdk-tests": ${{ inputs.sdk == 'java' }},
-              "repository": ${{ github.repository }}
+              "repository": ${{ github.repository }},
+              "sha": ${{ inputs.commitSha }}
             }
 
   report_status:
