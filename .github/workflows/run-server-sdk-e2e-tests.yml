@@ -51,7 +51,8 @@ jobs:
               "run-dotnet-sdk-tests": ${{ inputs.sdk == 'dotnet' }},
               "run-php-sdk-tests": ${{ inputs.sdk == 'php' }},
               "run-python-sdk-tests": ${{ inputs.sdk == 'python' }},
-              "run-java-sdk-tests": ${{ inputs.sdk == 'java' }}
+              "run-java-sdk-tests": ${{ inputs.sdk == 'java' }},
+              "repository": ${{ github.repository }}
             }
 
   report_status:
