@@ -12,7 +12,7 @@ jobs:
       appId: ${{ vars.RUNNER_APP_ID }}
       sdk: ${{ matrix.sdk }}
       sdkVersion: 'latest'
-      commitSha: ${{ github.sha }}
+      commitSha: ${{ github.event.pull_request.head.sha }}
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.RUNNER_APP_PRIVATE_KEY }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
