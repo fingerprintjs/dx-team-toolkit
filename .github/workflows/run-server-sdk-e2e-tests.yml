@@ -56,8 +56,8 @@ jobs:
               "run-php-sdk-tests": ${{ inputs.sdk == 'php' }},
               "run-python-sdk-tests": ${{ inputs.sdk == 'python' }},
               "run-java-sdk-tests": ${{ inputs.sdk == 'java' }},
-              "repository": ${{ github.repository }},
-              "sha": ${{ inputs.commitSha }}
+              "repository": "${{ github.repository }}",
+              "sha": "${{ inputs.commitSha }}"
             }
 
   report_status:
