@@ -59,12 +59,3 @@ jobs:
               "sha": "${{ inputs.commitSha }}"
             }
 
-  report_status:
-    needs: e2e-tests
-    if: always()
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/report-workflow-status.yml@v1
-    with:
-      notification_title: '${{inputs.sdk}} SDK E2E Tests has {status_message}'
-      job_status: ${{ needs.e2e-tests.result }}
-    secrets:
-      SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
