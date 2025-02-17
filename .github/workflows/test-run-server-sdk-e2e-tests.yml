@@ -1,6 +1,6 @@
 name: Test server SDK E2E tests
 on:
-  pull_request:
+  workflow_dispatch:
 
 jobs:
   run-server-sdk-e2e-tests:
