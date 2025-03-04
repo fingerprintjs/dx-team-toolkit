@@ -142,7 +142,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
         with:
-          title: 'OpenAPI schema sync'
+          title: 'OpenAPI schema sync (${{ inputs.tag }})'
           token: ${{ steps.app-token.outputs.token }}
           branch: feat/open-api-${{ inputs.tag }}
 
