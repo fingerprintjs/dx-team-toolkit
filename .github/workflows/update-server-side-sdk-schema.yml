@@ -135,7 +135,7 @@ jobs:
         with:
           add: '.'
           github_token: ${{ steps.app-token.outputs.token }}
-          message: 'feat: update OpenAPI schema'
+          message: 'feat: sync OpenAPI schema to ${{ inputs.tag }}'
           push: 'false'
 
 
