@@ -76,7 +76,6 @@ on:
 
 jobs:
   update:
-    environment: production
     runs-on: ubuntu-latest
     steps:
       - name: 'Get token for the GitHub App'
