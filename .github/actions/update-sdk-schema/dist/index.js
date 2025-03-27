@@ -49061,7 +49061,8 @@ function getChangesetScope(changeset) {
     return null;
 }
 function replacePackageName(changeset, name) {
-    const regex = /---\n'(.*)':/;
+    // Match either single or double-quoted package name
+    const regex = /---\n['"](.*)['"]:/;
     const match = regex.exec(changeset);
     if (!match) {
         return changeset;

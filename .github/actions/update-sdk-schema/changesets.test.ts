@@ -1,7 +1,7 @@
 import { getChangesetScope, replacePackageName } from './changesets'
 
 describe('replacePackageName', () => {
-  it('replaces package name', () => {
+  it('replaces package name with single quote', () => {
     const changeset = `---
 'fingerprint-pro-server-api-openapi': patch
 ---
@@ -16,6 +16,24 @@ describe('replacePackageName', () => {
       ---
 
       **events**: Test patch change"
+    `)
+  })
+
+  it('replaces package name with double quotes', () => {
+    const changeset = `---
+"fingerprint-pro-server-api-openapi": minor
+---
+
+Add \`mitmAttack\` (man-in-the-middle attack) Smart Signal.`
+
+    const result = replacePackageName(changeset, 'test-package')
+
+    expect(result).toMatchInlineSnapshot(`
+      "---
+      "test-package": minor
+      ---
+
+      Add \`mitmAttack\` (man-in-the-middle attack) Smart Signal."
     `)
   })
 })
