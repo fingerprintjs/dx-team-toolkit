@@ -135,14 +135,15 @@ jobs:
         with:
           add: '.'
           github_token: ${{ steps.app-token.outputs.token }}
-          message: 'feat: update OpenAPI schema'
+          message: 'feat: sync OpenAPI schema to ${{ inputs.tag }}'
           push: 'false'
 
 
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
         with:
-          title: 'OpenAPI schema sync'
+          title: 'OpenAPI schema sync (${{ inputs.tag }})'
+          body: 'Schema sync for [${{ inputs.tag }}](https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/tag/${{ inputs.tag }}) OpenAPI schema release.'
           token: ${{ steps.app-token.outputs.token }}
           branch: feat/open-api-${{ inputs.tag }}
 
