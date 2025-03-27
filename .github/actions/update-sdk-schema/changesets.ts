@@ -26,7 +26,8 @@ export function getChangesetScope(changeset: string) {
 }
 
 export function replacePackageName(changeset: string, name: string) {
-  const regex = /---\n'(.*)':/
+  // Match either single or double-quoted package name
+  const regex = /---\n['"](.*)['"]:/
   const match = regex.exec(changeset)
 
   if (!match) {
