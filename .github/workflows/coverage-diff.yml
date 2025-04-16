@@ -19,7 +19,7 @@ on:
 
 jobs:
   run-tests-check-coverage:
-    runs-on: ubuntu-20.04
+    runs-on: ubuntu-latest
     name: Run tests & check coverage
     steps:
       - name: Checkout the repository
