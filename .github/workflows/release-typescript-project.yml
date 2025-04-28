@@ -19,6 +19,11 @@ on:
         type: string
         required: false
         description: 'GitHub app id for release process'
+      runsOn:
+        type: string
+        required: false
+        default: ubuntu-latest
+        description: GitHub action runner.
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations'
@@ -39,11 +44,12 @@ jobs:
       nodeVersion: ${{ inputs.nodeVersion }}
       artifactName: ${{ inputs.distFolderNeedForRelease && 'dist-folder' || '' }}
       artifactPath: ./dist
+      runsOn: ${{ inputs.runsOn }}
 
   release:
     name: 'Release'
     needs: build-and-check
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runsOn }}
     environment: production
     steps:
       - name: 'Checkout'
