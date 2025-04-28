@@ -24,11 +24,17 @@ on:
         required: false
         type: string
         default: './dist'
+      runsOn:
+        type: string
+        required: false
+        default: ubuntu-latest
+        description: GitHub action runner.
+
 
 jobs:
   build:
     name: 'Build sdk using last node version'
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runsOn }}
     steps:
       - name: 'Checkout project for pull_request_target trigger'
         if: ${{ github.event_name == 'pull_request_target' }}
