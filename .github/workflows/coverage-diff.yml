@@ -16,10 +16,15 @@ on:
         type: string
         required: false
         description: Commands to run after installing dependencies.
+      runsOn:
+        type: string
+        required: false
+        default: ubuntu-latest
+        description: GitHub action runner.
 
 jobs:
   run-tests-check-coverage:
-    runs-on: ubuntu-latest
+    runs-on: ${{ inputs.runsOn }}
     name: Run tests & check coverage
     steps:
       - name: Checkout the repository
