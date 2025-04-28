@@ -267,12 +267,13 @@ The workflow expects the following secrets to be provided:
 
 #### Inputs
 
-| Input Parameter            | Required | Type    | Default | Description                                               |
-|----------------------------|----------|---------|---------|-----------------------------------------------------------|
-| `runAfterInstall`          | No       | String  | `""`    | Commands to run after installing dependencies.            |
-| `distFolderNeedForRelease` | No       | Boolean | `false` | Flag that we need `dist` folder to start release process. |
-| `nodeVersion`              | No       | String  | `lts/*` | Node version to use                                       |
-| `appId`                    | No       | String  | `""`    | GitHub App Id for creating GitHub token for the release   |
+| Input Parameter            | Required | Type    | Default         | Description                                               |
+|----------------------------|----------|---------|-----------------|-----------------------------------------------------------|
+| `runAfterInstall`          | No       | String  | `""`            | Commands to run after installing dependencies.            |
+| `distFolderNeedForRelease` | No       | Boolean | `false`         | Flag that we need `dist` folder to start release process. |
+| `nodeVersion`              | No       | String  | `lts/*`         | Node version to use                                       |
+| `appId`                    | No       | String  | `""`            | GitHub App Id for creating GitHub token for the release   |
+| `runsOn`                   | No       | String  | `ubuntu-latest` | GitHub action runner.                                     |
 
 #### Usage
 
