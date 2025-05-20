@@ -148,6 +148,10 @@ structure.
 | `nodeVersion`                   | No       | String | `lts/*` | Node version to use                                                                                                                              |
 | `installSharedCommitLintConfig` | No       | Bool   | `true`  | Whether to install our shared commit lint config. If set to `true` it will run `npm i @fingerprintjs/commit-lint-dx-team@latest` before linting. |
 | `previewNotes`                  | No       | Bool   | `true`  | Whether to generate preview of the release notes                                                                                                 |
+| `semanticReleasePlugins`        | No       | String | `''`    | Additional Semantic Release plugins to install and include (one per line)                                                                        |
+| `prepareCommand`                | No       | String | `''`    | Command to run for project preparation                                                                                                           |
+| `setupLanguage`                 | No       | String | `''`    | Setup project for specific programming language. Supported values are `java`, `dotnet`, `python`, `golang`, `flutter`, and `php`.                |
+| `setupLanguageVersion`          | No       | String | `''`    | Version of the programming language to set up.                                                                                                   | 
 
 #### Example of usage:
 
