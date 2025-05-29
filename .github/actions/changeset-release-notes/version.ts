@@ -12,9 +12,15 @@ function getCurrentVersion(project: Project) {
 
 export function doVersion(projects: Project[], cwd = process.cwd()) {
   const oldVersions = projects.map((project) => getCurrentVersion(project))
+  
+  console.info('Updating version')
+  
   cp.execSync('pnpm exec changeset version', {
     cwd,
+    stdio: 'inherit'
   })
+  
+  console.info('Version updated')
 
   return projects.some((project, i) => {
     const lastVersion = oldVersions[i]
