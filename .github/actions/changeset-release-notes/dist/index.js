@@ -58233,9 +58233,12 @@ function getCurrentVersion(project) {
 }
 function doVersion(projects, cwd = process.cwd()) {
     const oldVersions = projects.map((project) => getCurrentVersion(project));
+    console.info('Updating version');
     external_child_process_.execSync('pnpm exec changeset version', {
         cwd,
+        stdio: 'inherit'
     });
+    console.info('Version updated');
     return projects.some((project, i) => {
         const lastVersion = oldVersions[i];
         const nextVersion = getCurrentVersion(project);
