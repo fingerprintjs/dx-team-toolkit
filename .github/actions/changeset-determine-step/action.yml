@@ -1,0 +1,9 @@
+name: 'Determine Changeset Step'
+description: 'Determine if publish or creating PR should run based on changeset status'
+outputs:
+  action:
+    description: 'Which action should be performed based on changesets (`pr` | `publish` | `none`)'
+
+runs:
+  using: 'node20'
+  main: 'dist/index.js'

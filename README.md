@@ -539,16 +539,18 @@ The workflow accepts the following input parameters:
 | `language-version` | Yes      | String | Version of the programming language to set up.                                                              |
 | `prepare-command`  | No       | String | Command(s) to run for project preparation, such as installing dependencies.                                 |
 | `java-version`     | No       | String | Version of Java to set up.                                                                                  |
-| `appId`            | No       | String | GitHub App Id for creating GitHub token for the release                                                     |
+| `appId`            | Yes      | String | GitHub App Id for creating GitHub token for the release                                                     |
+| `runnerAppId`      | No       | String | GitHub App Id for creating PR.                                                                              |
 
 #### Workflow Secrets
 
 The workflow expects the following secret to be provided:
 
-| Secret Name       | Description                                                      |
-|-------------------|------------------------------------------------------------------|
-| `APP_PRIVATE_KEY` | GitHub App private key for creating GitHub token for the release |
-| `NPM_AUTH_TOKEN`  | NPM authentication token for publishing packages.                |
+| Secret Name              | Description                                                   |
+|--------------------------|---------------------------------------------------------------|
+| `APP_PRIVATE_KEY`        | GitHub App token to request GitHub token for release process. |
+| `RUNNER_APP_PRIVATE_KEY` | GitHub App token to request GitHub token for creating PR.     |
+| `NPM_AUTH_TOKEN`         | NPM authentication token for publishing packages.             |
 
 #### Example of Usage:
 
@@ -564,8 +566,11 @@ jobs:
       language: node
       language-version: 21.x
       prepare-command: pnpm run build
+      appId: ${{ vars.APP_ID }}
+      runnerAppId: ${{ vars.RUNNER_APP_ID }}
     secrets:
-      GH_RELEASE_TOKEN: ${{ secrets.GH_RELEASE_TOKEN }}
+      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
+      RUNNER_APP_PRIVATE_KEY: ${{ secrets.RUNNER_APP_PRIVATE_KEY }}
 ```
 
 ### 11. Sync server-side SDK schema with OpenAPI release
