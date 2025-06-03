@@ -26862,7 +26862,7 @@ var core = __nccwpck_require__(9093);
 
 
 try {
-    // Collect changesets statss
+    // Collect changesets stats
     const random = Math.random().toString(36).slice(2, 10);
     const statusPath = `changeset-status-${random}.json`;
     (0,external_child_process_namespaceObject.execSync)(`npx changeset status --output "${statusPath}"`, { stdio: 'inherit' });
@@ -26875,16 +26875,16 @@ try {
         action = 'pr'; // PR will be created
     }
     else {
-        action = 'publish'; // Publish
         const pkg = JSON.parse(external_fs_default().readFileSync('package.json', 'utf-8'));
         const currentVersion = pkg.version;
         try {
             (0,external_child_process_namespaceObject.execSync)(`git fetch --tags`); // fetch tags
             (0,external_child_process_namespaceObject.execSync)(`git rev-parse --verify --quiet v${currentVersion}`);
-            // if tag exists we don't need to call publish
-            action = 'none';
         }
-        catch (e) { }
+        catch {
+            // tag was not found, we can publish
+            action = 'publish';
+        }
     }
     core.setOutput('action', action); // action = 'pr' | 'publish' | 'none'
     console.log(`[determine-changeset-action] action=${action}`);
