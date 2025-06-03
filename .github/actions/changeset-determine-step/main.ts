@@ -12,15 +12,16 @@ try {
 
     // Read status
     const status = JSON.parse(fs.readFileSync(statusPath, 'utf-8'));
-    console.log(`[determine-changeset-status] status=${status}`)
+    console.log(`[determine-changeset-status] status=${JSON.stringify(status, null, 2)}`);
     fs.unlinkSync(statusPath);
 
     let action = 'none';
     if (status.changesets && status.changesets.length > 0) {
-        action = 'pr';        // PR will be created
+        action = 'pr'; // PR will be created
     } else {
         const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'));
         const currentVersion = pkg.version;
+        console.log(`[determine-changeset-action] currentVersion=${currentVersion}`);
         try {
             execSync(`git fetch --tags`); // fetch tags
             execSync(`git rev-parse --verify --quiet v${currentVersion}`);

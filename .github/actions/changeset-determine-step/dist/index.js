@@ -26868,7 +26868,7 @@ try {
     (0,external_child_process_namespaceObject.execSync)(`npx changeset status --output "${statusPath}"`, { stdio: 'inherit' });
     // Read status
     const status = JSON.parse(external_fs_default().readFileSync(statusPath, 'utf-8'));
-    console.log(`[determine-changeset-status] status=${status}`);
+    console.log(`[determine-changeset-status] status=${JSON.stringify(status, null, 2)}`);
     external_fs_default().unlinkSync(statusPath);
     let action = 'none';
     if (status.changesets && status.changesets.length > 0) {
@@ -26877,6 +26877,7 @@ try {
     else {
         const pkg = JSON.parse(external_fs_default().readFileSync('package.json', 'utf-8'));
         const currentVersion = pkg.version;
+        console.log(`[determine-changeset-action] currentVersion=${currentVersion}`);
         try {
             (0,external_child_process_namespaceObject.execSync)(`git fetch --tags`); // fetch tags
             (0,external_child_process_namespaceObject.execSync)(`git rev-parse --verify --quiet v${currentVersion}`);
