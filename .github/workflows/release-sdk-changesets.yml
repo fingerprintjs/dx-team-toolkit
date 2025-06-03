@@ -67,11 +67,11 @@ jobs:
 
       - name: Determine changesets step
         id: changeset-determine-step
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-determine-step@69d5be0d9dce35441b0337f58e97a52217441dc7
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-determine-step@facbe669cf753b11483b1b24fd144c2cc8ead438
   create-pr:
     runs-on: ubuntu-latest
     needs: determine-changesets-step
-    if: needs.determine-changesets-step.outputs.action == 'pr' || inputs.runnerAppId != ''
+    if: needs.determine-changesets-step.outputs.action == 'pr' && inputs.runnerAppId != ''
     steps:
       - name: 'Get token for the GitHub App'
         if: ${{ inputs.appId != '' }}
