@@ -38,10 +38,10 @@ on:
         description: 'GitHub app id for creating PR.'
     secrets:
       APP_PRIVATE_KEY:
-        description: 'GitHub App token to request GitHub token for release process.'
+        description: 'GitHub App private key to request GitHub token for release process.'
         required: true
       RUNNER_APP_PRIVATE_KEY:
-        description: 'GitHub App token to request GitHub token for creating PR.'
+        description: 'GitHub App private key to request GitHub token for creating PR.'
         required: false
       NPM_AUTH_TOKEN:
         description: 'NPM authentication token for publishing packages.'
@@ -108,7 +108,7 @@ jobs:
       - name: 'Install changesets'
         run: 'pnpm install @changesets/cli --global'
 
-      - name: Create Release
+      - name: Create Release PR
         uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9
         with:
           version: ${{ inputs.version-command }}

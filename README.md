@@ -546,11 +546,11 @@ The workflow accepts the following input parameters:
 
 The workflow expects the following secret to be provided:
 
-| Secret Name              | Description                                                   |
-|--------------------------|---------------------------------------------------------------|
-| `APP_PRIVATE_KEY`        | GitHub App token to request GitHub token for release process. |
-| `RUNNER_APP_PRIVATE_KEY` | GitHub App token to request GitHub token for creating PR.     |
-| `NPM_AUTH_TOKEN`         | NPM authentication token for publishing packages.             |
+| Secret Name              | Description                                                         |
+|--------------------------|---------------------------------------------------------------------|
+| `APP_PRIVATE_KEY`        | GitHub App private key to request GitHub token for release process. |
+| `RUNNER_APP_PRIVATE_KEY` | GitHub App private key to request GitHub token for creating PR.     |
+| `NPM_AUTH_TOKEN`         | NPM authentication token for publishing packages.                   |
 
 #### Example of Usage:
 

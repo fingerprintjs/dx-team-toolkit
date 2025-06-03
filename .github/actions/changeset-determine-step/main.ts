@@ -5,7 +5,7 @@ import fs from 'fs';
 import * as core from '@actions/core'
 
 try {
-    // Collect changesets statss
+    // Collect changesets stats
     const random = Math.random().toString(36).slice(2, 10);
     const statusPath = `changeset-status-${random}.json`
     execSync(`npx changeset status --output "${statusPath}"`, { stdio: 'inherit' });
