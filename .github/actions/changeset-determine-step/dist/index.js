@@ -26857,7 +26857,6 @@ var external_fs_ = __nccwpck_require__(7147);
 var external_fs_default = /*#__PURE__*/__nccwpck_require__.n(external_fs_);
 // EXTERNAL MODULE: ./node_modules/.pnpm/@actions+core@1.10.1/node_modules/@actions/core/lib/core.js
 var core = __nccwpck_require__(9093);
-var core_default = /*#__PURE__*/__nccwpck_require__.n(core);
 ;// CONCATENATED MODULE: ./.github/actions/changeset-determine-step/main.ts
 
 
@@ -26887,15 +26886,15 @@ try {
         }
         catch (e) { }
     }
-    core_default().setOutput('action', action); // action = 'pr' | 'publish' | 'none'
+    core.setOutput('action', action); // action = 'pr' | 'publish' | 'none'
     console.log(`[determine-changeset-action] action=${action}`);
 }
 catch (err) {
     if (err instanceof Error) {
-        core_default().setFailed(err.message);
+        core.setFailed(err.message);
     }
     else {
-        core_default().setFailed(String(err));
+        core.setFailed(String(err));
     }
 }
 
