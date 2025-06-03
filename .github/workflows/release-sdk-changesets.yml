@@ -67,7 +67,7 @@ jobs:
 
       - name: Determine changesets step
         id: changeset-determine-step
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-determine-step@4b8be0c79af46ddb5b4812025fccb6177e1979ce
+        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-determine-step@69d5be0d9dce35441b0337f58e97a52217441dc7
   create-pr:
     runs-on: ubuntu-latest
     needs: determine-changesets-step
