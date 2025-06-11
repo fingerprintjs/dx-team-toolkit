@@ -448,6 +448,15 @@ to another specified branch.
 | `target_branch` | Yes      | String  | -       | The branch for which the PR is created |
 | `tag_name`      | No       | String  | -       | The name of the release tag            |
 | `prerelease`    | No       | Boolean | `false` | Whether the release is a pre-release   |
+| `app_id`        | No       | String  | ""      | GitHub app id for obtaining token      |
+
+#### Workflow Secrets
+
+The workflow expects the following secret to be provided:
+
+| Secret Name       | Description                                                   |
+|-------------------|---------------------------------------------------------------|
+| `APP_PRIVATE_KEY` | The GitHub App's private key, used to request a GitHub token. |
 
 #### Examples of usage:
 
