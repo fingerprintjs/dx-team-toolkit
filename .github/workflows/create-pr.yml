@@ -13,6 +13,14 @@ on:
       prerelease:
         required: false
         type: boolean
+      app_id:
+        type: string
+        required: false
+        description: 'GitHub app id for obtaining token.'
+    secrets:
+      APP_PRIVATE_KEY:
+        description: 'GitHub App token to request GitHub token.'
+        required: false
 
 jobs:
   create-pr-to-main-on-release:
@@ -26,12 +34,21 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: 'rc'
+          persist-credentials: false
+
+      - name: 'Get token for the GitHub App'
+        if: ${{ inputs.app_id != '' }}
+        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        id: app-token
+        with:
+          app-id: ${{ inputs.app_id }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Create Pull Request from tag branch to main
         run: |
           gh pr create --title "Release ${{ inputs.tag_name }}" --body "Release ${{ inputs.tag_name }}" --base main --head rc --repo ${{ github.repository }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.app_id != '' && steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
 
   create-pr-to-sync-with-main:
     if: inputs.target_branch != 'main'
@@ -41,9 +58,18 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: 'main'
+          persist-credentials: false
+
+      - name: 'Get token for the GitHub App'
+        if: ${{ inputs.app_id != '' }}
+        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        id: app-token
+        with:
+          app-id: ${{ inputs.app_id }}
+          private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: Create Pull Request from main to rc
         run: |
           gh pr create --title "Sync ${{ inputs.target_branch }} with main" --body "Sync ${{ inputs.target_branch }} with main" --base ${{ inputs.target_branch }} --head main --repo ${{ github.repository }}
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITHUB_TOKEN: ${{ inputs.app_id != '' && steps.app-token.outputs.token || secrets.GITHUB_TOKEN }}
