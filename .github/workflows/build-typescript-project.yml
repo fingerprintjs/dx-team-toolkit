@@ -29,6 +29,11 @@ on:
         required: false
         default: ubuntu-latest
         description: GitHub action runner.
+      checkTypes:
+        type: boolean
+        required: false
+        default: true
+        description: 'Whether to run type checking.'
 
 
 jobs:
@@ -87,6 +92,7 @@ jobs:
         run: $PACKAGE_MANAGER test
 
       - name: 'Check types'
+        if: ${{ inputs.checkTypes }}
         run: $PACKAGE_MANAGER test:dts
 
       - name: 'Upload artifact'
