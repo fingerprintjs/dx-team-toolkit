@@ -185,14 +185,15 @@ jobs:
 
 #### Inputs
 
-| Input Parameter   | Required | Type   | Default         | Description                                                                                |
-|-------------------|----------|--------|-----------------|--------------------------------------------------------------------------------------------|
-| `yarnFlags`       | No       | String | `""`            | Additional flags for the `yarn install` command.                                           |
-| `artifactName`    | No       | String | `""`            | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
-| `artifactPath`    | No       | String | `"./dist"`      | Path of the files to upload as artifact.                                                   |
-| `runAfterInstall` | No       | String | `""`            | Commands to run after installing dependencies.                                             |
-| `nodeVersion`     | No       | String | `lts/*`         | Node version to use                                                                        |
-| `runsOn`          | No       | String | `ubuntu-latest` | GitHub action runner.                                                                      |
+| Input Parameter   | Required | Type    | Default         | Description                                                                                |
+|-------------------|----------|---------|-----------------|--------------------------------------------------------------------------------------------|
+| `yarnFlags`       | No       | String  | `""`            | Additional flags for the `yarn install` command.                                           |
+| `artifactName`    | No       | String  | `""`            | Name of the artifact to upload. If not provided, the artifact upload step will be skipped. |
+| `artifactPath`    | No       | String  | `"./dist"`      | Path of the files to upload as artifact.                                                   |
+| `runAfterInstall` | No       | String  | `""`            | Commands to run after installing dependencies.                                             |
+| `nodeVersion`     | No       | String  | `lts/*`         | Node version to use                                                                        |
+| `runsOn`          | No       | String  | `ubuntu-latest` | GitHub action runner.                                                                      |
+| `checkTypes`      | No       | Boolean | `true`          | Whether to run type checking.                                                              |
 
 #### Examples of usage:
 
