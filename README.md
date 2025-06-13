@@ -279,6 +279,7 @@ The workflow expects the following secrets to be provided:
 | `nodeVersion`              | No       | String  | `lts/*`         | Node version to use                                       |
 | `appId`                    | No       | String  | `""`            | GitHub App Id for creating GitHub token for the release   |
 | `runsOn`                   | No       | String  | `ubuntu-latest` | GitHub action runner.                                     |
+| `checkTypes`               | No       | Boolean | `true`          | Whether to run type checking when building the project.   |
 
 #### Usage
 

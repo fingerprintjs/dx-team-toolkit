@@ -24,6 +24,11 @@ on:
         required: false
         default: ubuntu-latest
         description: GitHub action runner.
+      checkTypes:
+        type: boolean
+        required: false
+        default: true
+        description: 'Whether to run type checking when building the project.'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations'
@@ -45,6 +50,7 @@ jobs:
       artifactName: ${{ inputs.distFolderNeedForRelease && 'dist-folder' || '' }}
       artifactPath: ./dist
       runsOn: ${{ inputs.runsOn }}
+      checkTypes: ${{ inputs.checkTypes }}
 
   release:
     name: 'Release'
