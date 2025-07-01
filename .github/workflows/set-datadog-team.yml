@@ -1,0 +1,22 @@
+name: 'Set the team tag in DataDog for the workflow results'
+on:
+  workflow_call:
+    secrets:
+      DD_API_KEY:
+        required: true
+
+jobs:
+  set_datadog_team:
+    name: 'Set the team tag in DataDog for the workflow results'
+    runs-on: ubuntu-latest
+    steps:
+      # Install the DD CLI directly from GitHub instead of using npmjs.com. Downloading from
+      # GitHub is significantly faster.
+      - name: 'Install the DataDog CLI'
+        run: |
+          curl -L --fail "https://github.com/DataDog/datadog-ci/releases/latest/download/datadog-ci_linux-x64" --output "$RUNNER_TEMP/datadog-ci" && chmod +x "$RUNNER_TEMP/datadog-ci"
+      - name: 'Set the team tag for the pipeline in DataDog'
+        run: |
+          "$RUNNER_TEMP/datadog-ci" tag --no-fail --level pipeline --tags team:integrations
+        env:
+          DD_API_KEY: '${{ secrets.DD_API_KEY }}'
