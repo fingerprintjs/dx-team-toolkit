@@ -1,13 +1,18 @@
-name: 'Set the team tag in DataDog for the workflow results'
+name: 'Set the team tag and additional, optional tags in DataDog for the workflow results'
 on:
   workflow_call:
+    inputs:
+      additionalTags:
+        description: 'Comma-separated list of additional Datadog tags to set (e.g., release-version:1.3.1)'
+        required: false
+        type: string
     secrets:
       DD_API_KEY:
         required: true
 
 jobs:
-  set_datadog_team:
-    name: 'Set the team tag in DataDog for the workflow results'
+  set_datadog_tags:
+    name: 'Set the team tag and additional, optional tags in DataDog for the workflow results'
     runs-on: ubuntu-latest
     steps:
       # Install the DD CLI directly from GitHub instead of using npmjs.com. Downloading from
@@ -15,8 +20,21 @@ jobs:
       - name: 'Install the DataDog CLI'
         run: |
           curl -L --fail "https://github.com/DataDog/datadog-ci/releases/latest/download/datadog-ci_linux-x64" --output "$RUNNER_TEMP/datadog-ci" && chmod +x "$RUNNER_TEMP/datadog-ci"
-      - name: 'Set the team tag for the pipeline in DataDog'
+      - name: 'Set the team tag and additional, optional tags for the pipeline in DataDog'
         run: |
-          "$RUNNER_TEMP/datadog-ci" tag --no-fail --level pipeline --tags team:integrations
+          # Convert the additionalTags input into the format: --tags tag1:value1 --tags tag2:value2
+          TAG_ARGS=""
+          if [ -n "${{ inputs.additionalTags }}" ]; then
+            IFS=',' read -ra TAGS <<< "${{ inputs.additionalTags }}"
+            for tag in "${TAGS[@]}"; do
+              # Trim whitespace
+              tag_trimmed="$(echo "$tag" | xargs)"
+
+              TAG_ARGS="$TAG_ARGS --tags $tag_trimmed"
+            done
+          fi
+
+          # Set the tags
+          "$RUNNER_TEMP/datadog-ci" tag --no-fail --level pipeline --tags team:integrations $TAG_ARGS
         env:
           DD_API_KEY: '${{ secrets.DD_API_KEY }}'

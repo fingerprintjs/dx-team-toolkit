@@ -1,0 +1,13 @@
+name: Test Set Datadog Team Workflow
+
+on:
+  pull_request:
+
+jobs:
+  test-set-datadog-team:
+    name: Test Set Datadog Team
+    uses: ./.github/workflows/set-datadog-team.yml
+    with:
+      additionalTags: dx-team-toolkit-test-tag:${{ github.event.number }}
+    secrets:
+      DD_API_KEY: ${{ secrets.INTEGRATIONS_DATADOG_API_KEY }}
