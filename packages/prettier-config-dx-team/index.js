@@ -10,6 +10,7 @@ module.exports = {
   bracketSameLine: false,
   arrowParens: 'always',
   svelteSortOrder: 'options-scripts-markup-styles',
+  proseWrap: 'never',
   overrides: [
     {
       files: '*.md',
