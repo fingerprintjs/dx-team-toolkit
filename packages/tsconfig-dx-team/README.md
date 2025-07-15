@@ -1,8 +1,6 @@
 # Tsconfig dx-team preset
 
-This package provides a custom preset
-for [typescript](https://www.typescriptlang.org/), specifically designed
-for the DX team at FingerprintJS.
+This package provides a custom preset for [typescript](https://www.typescriptlang.org/), specifically designed for the DX team at FingerprintJS.
 
 ## Installation
 
@@ -35,5 +33,4 @@ To use this preset in your project, add the following configuration to your proj
 
 ## License
 
-This project is licensed under the MIT license. See
-the [LICENSE](https://github.com/fingerprintjs/dx-team-toolkit/blob/main/LICENSE) file for more info.
+This project is licensed under the MIT license. See the [LICENSE](https://github.com/fingerprintjs/dx-team-toolkit/blob/main/LICENSE) file for more info.
