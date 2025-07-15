@@ -1,10 +1,6 @@
 # Conventional changelog dx-team preset
 
-This package provides a custom preset
-for [Conventional Changelog](https://github.com/conventional-changelog/conventional-changelog), specifically designed
-for the DX team at FingerprintJS. It is configured for use
-with [semantic-release](https://github.com/semantic-release/semantic-release) and includes customizable release rules
-and categories for changes.
+This package provides a custom preset for [Conventional Changelog](https://github.com/conventional-changelog/conventional-changelog), specifically designed for the DX team at FingerprintJS. It is configured for use with [semantic-release](https://github.com/semantic-release/semantic-release) and includes customizable release rules and categories for changes.
 
 ## Installation
 
@@ -70,5 +66,4 @@ BREAKING CHANGE: use node 20
 
 ## License
 
-This project is licensed under the MIT license. See
-the [LICENSE](https://github.com/fingerprintjs/dx-team-toolkit/blob/main/LICENSE) file for more info.
+This project is licensed under the MIT license. See the [LICENSE](https://github.com/fingerprintjs/dx-team-toolkit/blob/main/LICENSE) file for more info.
