@@ -18,6 +18,7 @@ runs:
   using: "composite"
   steps:
     - name: 'Install Java'
+      if: ${{ inputs.language != 'flutter' }} # Flutter requires newer version of Java that already installed in worker
       uses: actions/setup-java@v4
       with:
         distribution: 'zulu' # See 'Supported distributions' for available options
