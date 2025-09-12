@@ -159,6 +159,7 @@ structure.
 | `prepareCommand`                | No       | String | `''`    | Command to run for project preparation                                                                                                           |
 | `setupLanguage`                 | No       | String | `''`    | Setup project for specific programming language. Supported values are `java`, `dotnet`, `python`, `golang`, `flutter`, and `php`.                |
 | `setupLanguageVersion`          | No       | String | `''`    | Version of the programming language to set up.                                                                                                   |
+| `releaseWorkingDirectory`       | No       | String | `""`    | Working directory for release process                                                                                                            |
 
 #### Example of usage:
 
