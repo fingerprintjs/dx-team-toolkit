@@ -1,12 +1,14 @@
 # DX Team Toolkit
 
-> **Note** This repository isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of support from Fingerprint. We warmly welcome community contributions.
+> **Note** This repository isn’t part of our core product. It’s kindly shared “as-is” without any guaranteed level of
+> support from Fingerprint. We warmly welcome community contributions.
 
 ## Reusable configurations
 
 This monorepo stores reusable configurations for tools like ESLint, Prettier, etc. used by the DX team at Fingerprint.
 
 <!-- prettier-ignore -->
+
 |   | Package                                                                                                    | Published version                                                                                                                                                                                                                                            |
 |---|------------------------------------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | 1 | Eslint: [@fingerprintjs/eslint-config-dx-team](packages/eslint-config-dx-team)                             | <a href="https://www.npmjs.com/package/@fingerprintjs/eslint-config-dx-team"><img src="https://img.shields.io/npm/v/@fingerprintjs/eslint-config-dx-team.svg" alt="Current NPM version @fingerprintjs/eslint-config-dx-team"></a>                            |
@@ -18,7 +20,8 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 ## Reusable workflows
 
 - [1. Run tests and show coverage diff](#1-run-tests-and-show-coverage-diff)
-- [2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
+- [2. Generate docs and coverage report and publish to the Github Pages using
+  `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
 - [3. Analyze commits](#3-analyze-commits)
 - [4. Build typescript project](#4-build-typescript-project)
 - [5. Release TypeScript project](#5-release-typescript-project)
@@ -42,6 +45,7 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 #### Inputs
 
 <!-- prettier-ignore -->
+
 | Input Parameter   | Required | Type   | Default         | Description                                    |
 |-------------------|----------|--------|-----------------|------------------------------------------------|
 | `runAfterInstall` | No       | String | `""`            | Commands to run after installing dependencies. |
@@ -75,11 +79,14 @@ jobs:
 3. `yarn test:coverage` runs tests and prepares coverage report in `./coverage/coverage.txt`
 4. `yarn docs` generate documentation using typedoc in `./docs` folder
 
-> **Note**: By default, this workflow prepares the `gh-pages` folder by moving the contents of `./docs` and `./coverage/lcov-report` into it. If you need a different structure, you can override the default behavior by passing the appropriate commands in the `prepare-gh-pages-commands` input parameter.
+> **Note**: By default, this workflow prepares the `gh-pages` folder by moving the contents of `./docs` and
+`./coverage/lcov-report` into it. If you need a different structure, you can override the default behavior by passing
+> the appropriate commands in the `prepare-gh-pages-commands` input parameter.
 
 #### Inputs
 
 <!-- prettier-ignore -->
+
 | Input Parameter             | Required | Type    | Default                                                                      | Description                                                                                                                                                        |
 |-----------------------------|----------|---------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
 | `prepare-gh-pages-commands` | No       | String  | <pre>mv docs ./gh-pages<br>mv coverage/lcov-report ./gh-pages/coverage</pre> | Commands to prepare the content of the `gh-pages` folder. The `gh-pages` folder will be created automatically. Only specify the commands for moving files into it. |
@@ -103,7 +110,8 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
 ```
 
-This example uses the default commands to prepare the content of the gh-pages folder, which moves the `docs` and `coverage/lcov-report` folders into the `gh-pages` folder.
+This example uses the default commands to prepare the content of the gh-pages folder, which moves the `docs` and
+`coverage/lcov-report` folders into the `gh-pages` folder.
 
 #### Example of usage with custom behavior:
 
@@ -125,7 +133,9 @@ jobs:
         mv coverage/lcov-report ./gh-pages/coverage
 ```
 
-In this example, we're explicitly passing the `prepare-gh-pages-commands` parameter with the commands to move the `docs` and `coverage/lcov-report` folders into the `gh-pages` folder. You can customize these commands to fit your project's structure.
+In this example, we're explicitly passing the `prepare-gh-pages-commands` parameter with the commands to move the `docs`
+and `coverage/lcov-report` folders into the `gh-pages` folder. You can customize these commands to fit your project's
+structure.
 
 ### 3. Analyze commits
 
@@ -139,6 +149,7 @@ In this example, we're explicitly passing the `prepare-gh-pages-commands` parame
 #### Inputs
 
 <!-- prettier-ignore -->
+
 | Input Parameter                 | Required | Type   | Default | Description                                                                                                                                      |
 |---------------------------------|----------|--------|---------|--------------------------------------------------------------------------------------------------------------------------------------------------|
 | `nodeVersion`                   | No       | String | `lts/*` | Node version to use                                                                                                                              |
@@ -182,6 +193,7 @@ jobs:
 #### Inputs
 
 <!-- prettier-ignore -->
+
 | Input Parameter   | Required | Type    | Default         | Description                                                                                |
 |-------------------|----------|---------|-----------------|--------------------------------------------------------------------------------------------|
 | `yarnFlags`       | No       | String  | `""`            | Additional flags for the `yarn install` command.                                           |
@@ -227,7 +239,7 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        node-version: [10, 12, 14, 16, 17, 18, 19, 20]
+        node-version: [ 10, 12, 14, 16, 17, 18, 19, 20 ]
     steps:
       - uses: actions/checkout@v4
         with:
@@ -247,7 +259,8 @@ jobs:
 
 #### Description
 
-This workflow handles the release process for a TypeScript project. It builds the project, runs CI checks, and performs a semantic release.
+This workflow handles the release process for a TypeScript project. It builds the project, runs CI checks, and performs
+a semantic release.
 
 #### Prerequisites:
 
@@ -261,6 +274,7 @@ This workflow handles the release process for a TypeScript project. It builds th
 The workflow expects the following secrets to be provided:
 
 <!-- prettier-ignore -->
+
 | Secret Name        | Description                                                      |
 |--------------------|------------------------------------------------------------------|
 | `GH_RELEASE_TOKEN` | GitHub token for creating releases                               |
@@ -270,6 +284,7 @@ The workflow expects the following secrets to be provided:
 #### Inputs
 
 <!-- prettier-ignore -->
+
 | Input Parameter            | Required | Type    | Default         | Description                                               |
 |----------------------------|----------|---------|-----------------|-----------------------------------------------------------|
 | `runAfterInstall`          | No       | String  | `""`            | Commands to run after installing dependencies.            |
@@ -278,6 +293,7 @@ The workflow expects the following secrets to be provided:
 | `appId`                    | No       | String  | `""`            | GitHub App Id for creating GitHub token for the release   |
 | `runsOn`                   | No       | String  | `ubuntu-latest` | GitHub action runner.                                     |
 | `checkTypes`               | No       | Boolean | `true`          | Whether to run type checking when building the project.   |
+| `releaseWorkingDirectory`  | No       | String  | `""`            | Working directory for release process                     |
 
 #### Usage
 
@@ -298,15 +314,19 @@ jobs:
       NPM_AUTH_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
 ```
 
-In this example, the workflow is triggered on a push event to the `main` or `test` branches. The secrets are automatically picked up from the `production` environment.
+In this example, the workflow is triggered on a push event to the `main` or `test` branches. The secrets are
+automatically picked up from the `production` environment.
 
-Make sure you've configured the `production` environment and the required secrets: `GH_RELEASE_TOKEN` and `NPM_AUTH_TOKEN` (if you want to release to NPM) in your repository settings.
+Make sure you've configured the `production` environment and the required secrets: `GH_RELEASE_TOKEN` and
+`NPM_AUTH_TOKEN` (if you want to release to NPM) in your repository settings.
 
 ### 6. Release Server SDK
 
 #### Description
 
-This workflow handles the release process for server projects across multiple programming languages like Java, DotNET, Python, Golang, and PHP. It sets up the required environment, prepares the project, and executes a semantic release to determine the next version number and generate release notes based on commit messages.
+This workflow handles the release process for server projects across multiple programming languages like Java, DotNET,
+Python, Golang, and PHP. It sets up the required environment, prepares the project, and executes a semantic release to
+determine the next version number and generate release notes based on commit messages.
 
 #### Prerequisites:
 
@@ -318,6 +338,7 @@ This workflow handles the release process for server projects across multiple pr
 The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
+
 | Input Parameter                  | Required | Type   | Default | Description                                                                                                    |
 |----------------------------------|----------|--------|---------|----------------------------------------------------------------------------------------------------------------|
 | `language`                       | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, `flutter` and `php`. |
@@ -332,6 +353,7 @@ The workflow accepts the following input parameters:
 The workflow expects the following secrets to be provided:
 
 <!-- prettier-ignore -->
+
 | Secret Name        | Description                                                      | Required For    |
 |--------------------|------------------------------------------------------------------|-----------------|
 | `APP_PRIVATE_KEY`  | GitHub App private key for creating GitHub token for the release | All projects    |
@@ -369,21 +391,26 @@ jobs:
       PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
 ```
 
-**Note**: Ensure you've configured the appropriate environment and secrets based on the programming language of your project. For a Python project, for instance, the `PYPI_TOKEN` must be available.
+**Note**: Ensure you've configured the appropriate environment and secrets based on the programming language of your
+project. For a Python project, for instance, the `PYPI_TOKEN` must be available.
 
 ### 7. Report Workflow Status
 
-This reusable workflow sends notifications reporting the status of a GitHub Actions workflow. Currently, it sends these notifications to Slack using the `ravsamhq/notify-slack-action`. The workflow requires the status of a job and a notification title to be provided as inputs.
+This reusable workflow sends notifications reporting the status of a GitHub Actions workflow. Currently, it sends these
+notifications to Slack using the `ravsamhq/notify-slack-action`. The workflow requires the status of a job and a
+notification title to be provided as inputs.
 
 #### Prerequisites:
 
-1. A configured Slack webhook URL. You'll set this up in your Slack workspace and then save it as a secret in your GitHub repository.
+1. A configured Slack webhook URL. You'll set this up in your Slack workspace and then save it as a secret in your
+   GitHub repository.
 
 #### Workflow Inputs
 
 The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
+
 | Input Parameter      | Required | Type   | Description                                                             |
 |----------------------|----------|--------|-------------------------------------------------------------------------|
 | `job_status`         | Yes      | String | The status of the job. Valid values: 'success', 'failure', 'cancelled'. |
@@ -394,6 +421,7 @@ The workflow accepts the following input parameters:
 The workflow expects the following secrets to be provided:
 
 <!-- prettier-ignore -->
+
 | Secret Name         | Description                                                            |
 |---------------------|------------------------------------------------------------------------|
 | `SLACK_WEBHOOK_URL` | Slack webhook URL. This secret is used to send notifications to Slack. |
@@ -424,11 +452,13 @@ jobs:
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
 
-Make sure you've set up the required `SLACK_WEBHOOK_URL` secret in your repository's settings. Adjust the values in the example as needed for your use case.
+Make sure you've set up the required `SLACK_WEBHOOK_URL` secret in your repository's settings. Adjust the values in the
+example as needed for your use case.
 
 ### 8. Create PR to Main on Release
 
-This reusable workflow creates a Pull Request (PR) to the `main` branch in case of the prerelease or from `main` branch to another specified branch.
+This reusable workflow creates a Pull Request (PR) to the `main` branch in case of the prerelease or from `main` branch
+to another specified branch.
 
 #### Prerequisites:
 
@@ -438,6 +468,7 @@ This reusable workflow creates a Pull Request (PR) to the `main` branch in case 
 #### Inputs
 
 <!-- prettier-ignore -->
+
 | Input Parameter | Required | Type    | Default | Description                            |
 |-----------------|----------|---------|---------|----------------------------------------|
 | `target_branch` | Yes      | String  | -       | The branch for which the PR is created |
@@ -449,8 +480,8 @@ This reusable workflow creates a Pull Request (PR) to the `main` branch in case 
 
 The workflow expects the following secret to be provided:
 
-| Secret Name | Description |
-| --- | --- |
+| Secret Name       | Description                                                   |
+|-------------------|---------------------------------------------------------------|
 | `APP_PRIVATE_KEY` | The GitHub App's private key, used to request a GitHub token. |
 
 #### Examples of usage:
@@ -475,7 +506,9 @@ jobs:
 
 ### 9. Create Prerelease Branch and Force Push
 
-This reusable workflow creates a new branch from the `main` branch and performs a force push to overwrite it. It's designed to reset a branch to a specific state before a release. The workflow uses a GitHub App token for authentication, ensuring actions are performed securely and can be traced back to the app.
+This reusable workflow creates a new branch from the `main` branch and performs a force push to overwrite it. It's
+designed to reset a branch to a specific state before a release. The workflow uses a GitHub App token for
+authentication, ensuring actions are performed securely and can be traced back to the app.
 
 #### Prerequisites:
 
@@ -487,6 +520,7 @@ This reusable workflow creates a new branch from the `main` branch and performs 
 The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
+
 | Input Parameter | Required | Type   | Description                                      |
 |-----------------|----------|--------|--------------------------------------------------|
 | `branch_name`   | Yes      | String | The name of the branch to create and force push. |
@@ -497,6 +531,7 @@ The workflow accepts the following input parameters:
 The workflow expects the following secret to be provided:
 
 <!-- prettier-ignore -->
+
 | Secret Name       | Description                                                   |
 |-------------------|---------------------------------------------------------------|
 | `APP_PRIVATE_KEY` | The GitHub App's private key, used to request a GitHub token. |
@@ -518,7 +553,8 @@ jobs:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
 ```
 
-Ensure you've set up the required `APP_PRIVATE_KEY` secret in your repository's settings. Adjust the values in the example as needed for your use case.
+Ensure you've set up the required `APP_PRIVATE_KEY` secret in your repository's settings. Adjust the values in the
+example as needed for your use case.
 
 ### 10. Release SDKs using changesets
 
@@ -534,6 +570,7 @@ This reusable workflow handles release process using [changesets](https://github
 The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
+
 | Input Parameter    | Required | Type   | Description                                                                                                 |
 |--------------------|----------|--------|-------------------------------------------------------------------------------------------------------------|
 | `prepare-command`  | No       | String | Command(s) to run for project preparation, such as installing dependencies.                                 |
@@ -551,6 +588,7 @@ The workflow accepts the following input parameters:
 The workflow expects the following secret to be provided:
 
 <!-- prettier-ignore -->
+
 | Secret Name              | Description                                                         |
 |--------------------------|---------------------------------------------------------------------|
 | `APP_PRIVATE_KEY`        | GitHub App private key to request GitHub token for release process. |
@@ -580,13 +618,15 @@ jobs:
 
 ### 11. Sync server-side SDK schema with OpenAPI release
 
-This workflow handles release of OpenAPI schema and syncs it with given server-side SDK. It is meant to be triggered by OpenAPI tag creation via `repository-dispatch` trigger.
+This workflow handles release of OpenAPI schema and syncs it with given server-side SDK. It is meant to be triggered by
+OpenAPI tag creation via `repository-dispatch` trigger.
 
 #### Workflow Inputs
 
 The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
+
 | Input Parameter    | Required | Type   | Default         | Description                                                                                                 |
 |--------------------|----------|--------|-----------------|-------------------------------------------------------------------------------------------------------------|
 | `language`         | Yes      | String | -               | Programming language for the project. Supported are `java`, `dotnet`, `node`, `python`, `golang` and `php`. |
@@ -610,6 +650,7 @@ The workflow accepts the following input parameters:
 The workflow expects the following secret to be provided:
 
 <!-- prettier-ignore -->
+
 | Secret Name       | Description                                                   |
 |-------------------|---------------------------------------------------------------|
 | `APP_PRIVATE_KEY` | The GitHub App's private key, used to request a GitHub token. |
@@ -620,7 +661,7 @@ The workflow expects the following secret to be provided:
 name: Sync schema
 on:
   repository_dispatch:
-    types: [schema-released]
+    types: [ schema-released ]
 
 jobs:
   release:
@@ -638,7 +679,8 @@ jobs:
 
 ### 12. Preview changeset release
 
-This reusable workflow processes parsed [changesets](https://github.com/changesets/changesets) and generates preview of release notes.
+This reusable workflow processes parsed [changesets](https://github.com/changesets/changesets) and generates preview of
+release notes.
 
 #### Prerequisites:
 
@@ -664,13 +706,15 @@ jobs:
 
 ### 13. Run server-side SDK E2E tests
 
-This workflow can be used for triggering E2E tests for given server-side SDK. It triggers the tests stored in `fingerprintjs/dx-team-orchestra` using `repository-dispatch` trigger.
+This workflow can be used for triggering E2E tests for given server-side SDK. It triggers the tests stored in
+`fingerprintjs/dx-team-orchestra` using `repository-dispatch` trigger.
 
 #### Workflow Inputs
 
 The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
+
 | Input Parameter | Required | Type   | Default  | Description                                                                  |
 |-----------------|----------|--------|----------|------------------------------------------------------------------------------|
 | `sdk`           | Yes      | String | -        | Type of SDK to test, can be: `go`, `dotnet`, `node`, `php`, `python`, `java` |
@@ -683,6 +727,7 @@ The workflow accepts the following input parameters:
 The workflow expects the following secret to be provided:
 
 <!-- prettier-ignore -->
+
 | Secret Name         | Description                                                   |
 |---------------------|---------------------------------------------------------------|
 | `APP_PRIVATE_KEY`   | The GitHub App's private key, used to request a GitHub token. |
@@ -700,7 +745,7 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/run-server-sdk-e2e-tests.yml@1
     strategy:
       matrix:
-        sdk: [node, go, dotnet, php, python, java]
+        sdk: [ node, go, dotnet, php, python, java ]
     with:
       appId: ${{ vars.APP_ID }}
       sdk: ${{ matrix.sdk }}
