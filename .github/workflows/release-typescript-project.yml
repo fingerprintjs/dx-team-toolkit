@@ -29,6 +29,10 @@ on:
         required: false
         default: true
         description: 'Whether to run type checking when building the project.'
+      releaseWorkingDirectory:
+        type: string
+        required: false
+        description: 'Working directory for release process'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations'
@@ -112,6 +116,7 @@ jobs:
       - name: 'Semantic Release'
         uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4
         with:
+          working_directory: ${{ inputs.releaseWorkingDirectory }}
           extra_plugins: |
             @semantic-release/exec@6.0.3
             conventional-changelog-conventionalcommits@5.0.0
