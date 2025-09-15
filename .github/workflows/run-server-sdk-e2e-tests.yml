@@ -23,9 +23,6 @@ on:
       APP_PRIVATE_KEY:
         description: 'GitHub App token to request GitHub token'
         required: true
-      SLACK_WEBHOOK_URL:
-        description: 'Slack webhook URL for sending job status'
-        required: true
 
 jobs:
   e2e-tests:
