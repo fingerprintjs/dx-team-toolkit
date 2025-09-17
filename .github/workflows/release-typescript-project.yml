@@ -94,7 +94,7 @@ jobs:
         uses: actions/download-artifact@v4
         with:
           name: dist-folder
-          path: ./dist
+          path: ${{ inputs.releaseWorkingDirectory != '' && format('{0}/dist', inputs.releaseWorkingDirectory) || './dist' }}
 
       - name: 'Install Dependencies and prepare packages'
         run: $PACKAGE_MANAGER install ${{ inputs.yarnFlags }}
