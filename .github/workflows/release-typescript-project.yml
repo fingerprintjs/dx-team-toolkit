@@ -52,7 +52,7 @@ jobs:
       runAfterInstall: ${{ inputs.runAfterInstall }}
       nodeVersion: ${{ inputs.nodeVersion }}
       artifactName: ${{ inputs.distFolderNeedForRelease && 'dist-folder' || '' }}
-      artifactPath: ./dist
+      artifactPath: ${{ inputs.releaseWorkingDirectory != '' && format('{0}/dist', inputs.releaseWorkingDirectory) || './dist' }}
       runsOn: ${{ inputs.runsOn }}
       checkTypes: ${{ inputs.checkTypes }}
 
