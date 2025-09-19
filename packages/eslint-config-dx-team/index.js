@@ -25,7 +25,7 @@ module.exports = {
     curly: [2, 'all'],
     /* 
       Type-casting should be avoided if possible,
-      or require an explicit eslint-disable-next-line directive with an explanation why its necessary there
+      or require an explicit eslint-disable-next-line directive with an explanation why it's necessary there
     */
     '@typescript-eslint/consistent-type-assertions': [
       'error',
