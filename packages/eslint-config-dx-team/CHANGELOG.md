@@ -1,5 +1,11 @@
 # @fingerprintjs/eslint-config-dx-team
 
+## 0.2.0
+
+### Minor Changes
+
+- Feat: Add `@typescript-eslint/consistent-type-assertions` eslint rule to discourage type casting ([2e299c9](https://github.com/fingerprintjs/dx-team-toolkit/commit/2e299c9e04c36fab6e3e53a6da330b3df9e891de))
+
 ## 0.1.0
 
 ### Minor Changes

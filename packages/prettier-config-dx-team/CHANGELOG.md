@@ -1,5 +1,11 @@
 # @fingerprintjs/prettier-config-dx-team
 
+## 0.3.0
+
+### Minor Changes
+
+- add `proseWrap: never` to prettier config ([720edac](https://github.com/fingerprintjs/dx-team-toolkit/commit/720edac3216754cd1394cf27bb70533c77c009c1))
+
 ## 0.2.0
 
 ### Minor Changes
