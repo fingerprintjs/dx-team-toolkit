@@ -44,10 +44,6 @@ on:
         description: 'NPM authentication token for publishing packages'
         required: false
 
-permissions:
-  id-token: write  # Required for Trusted Publishing: https://docs.npmjs.com/trusted-publishers
-  contents: read
-
 jobs:
   build-and-check:
     name: 'Build project and run CI checks'
