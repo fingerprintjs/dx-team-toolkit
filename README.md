@@ -276,25 +276,26 @@ The workflow expects the following secrets to be provided:
 
 <!-- prettier-ignore -->
 
-| Secret Name        | Description                                                      |
-|--------------------|------------------------------------------------------------------|
-| `GH_RELEASE_TOKEN` | GitHub token for creating releases                               |
-| `APP_PRIVATE_KEY`  | GitHub App private key for creating GitHub token for the release |
-| `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages                 |
+| Secret Name        | Description                                                                                               |
+|--------------------|-----------------------------------------------------------------------------------------------------------|
+| `GH_RELEASE_TOKEN` | GitHub token for creating releases                                                                        |
+| `APP_PRIVATE_KEY`  | GitHub App private key for creating GitHub token for the release                                          |
+| `NPM_AUTH_TOKEN`   | NPM authentication token for publishing packages. Can be omitted if `useTrustedPublishing` is set to true |
 
 #### Inputs
 
 <!-- prettier-ignore -->
 
-| Input Parameter            | Required | Type    | Default         | Description                                               |
-|----------------------------|----------|---------|-----------------|-----------------------------------------------------------|
-| `runAfterInstall`          | No       | String  | `""`            | Commands to run after installing dependencies.            |
-| `distFolderNeedForRelease` | No       | Boolean | `false`         | Flag that we need `dist` folder to start release process. |
-| `nodeVersion`              | No       | String  | `lts/*`         | Node version to use                                       |
-| `appId`                    | No       | String  | `""`            | GitHub App Id for creating GitHub token for the release   |
-| `runsOn`                   | No       | String  | `ubuntu-latest` | GitHub action runner.                                     |
-| `checkTypes`               | No       | Boolean | `true`          | Whether to run type checking when building the project.   |
-| `releaseWorkingDirectory`  | No       | String  | `""`            | Working directory for release process                     |
+| Input Parameter            | Required | Type    | Default         | Description                                                                        |
+|----------------------------|----------|---------|-----------------|------------------------------------------------------------------------------------|
+| `runAfterInstall`          | No       | String  | `""`            | Commands to run after installing dependencies.                                     |
+| `distFolderNeedForRelease` | No       | Boolean | `false`         | Flag that we need `dist` folder to start release process.                          |
+| `nodeVersion`              | No       | String  | `lts/*`         | Node version to use                                                                |
+| `appId`                    | No       | String  | `""`            | GitHub App Id for creating GitHub token for the release                            |
+| `runsOn`                   | No       | String  | `ubuntu-latest` | GitHub action runner.                                                              |
+| `checkTypes`               | No       | Boolean | `true`          | Whether to run type checking when building the project.                            |
+| `releaseWorkingDirectory`  | No       | String  | `""`            | Working directory for release process                                              |
+| `useTrustedPublishing`     | No       | Boolean | `false`         | Whether to use Trusted Publishing instead of NPM token for publishing the package. |
 
 #### Usage
 
