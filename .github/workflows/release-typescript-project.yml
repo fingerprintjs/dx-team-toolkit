@@ -88,6 +88,11 @@ jobs:
         with:
           node-version: ${{ inputs.nodeVersion }}
           cache: ${{ env.PACKAGE_MANAGER }}
+      
+      # Ensure npm 11.5.1 or later is installed for trusted publishing
+      - name: Update npm
+        if: ${{ secrets.NPM_AUTH_TOKEN == '' }} 
+        run: npm i -g npm@^11.5.1 && npm --version
 
       - name: 'Download dist folder artifact'
         if: ${{ inputs.distFolderNeedForRelease }}
@@ -124,3 +129,10 @@ jobs:
           GITHUB_TOKEN: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           HUSKY: 0
+      
+      # @semantic-release/npm doesn't support Trusted Publishing yet: https://github.com/semantic-release/npm/issues/958
+      # In this instance, the .releaserc config should include `npmPublish` set to false, and the CI will handle publishing in this step.
+      - name: 'Publish to NPM'
+        if: ${{ secrets.NPM_AUTH_TOKEN == '' }}
+        run: npm publish
+        working-directory: ${{ inputs.releaseWorkingDirectory }}
