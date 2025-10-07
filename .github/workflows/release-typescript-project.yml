@@ -33,6 +33,11 @@ on:
         type: string
         required: false
         description: 'Working directory for release process'
+      useTrustedPublishing:
+        type: boolean
+        required: false
+        default: false
+        description: 'Whether to use trusted publishing for publishing packages'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations'
@@ -91,7 +96,7 @@ jobs:
       
       # Ensure npm 11.5.1 or later is installed for trusted publishing
       - name: Update npm
-        if: ${{ secrets.NPM_AUTH_TOKEN == '' }} 
+        if: ${{ inputs.useTrustedPublishing }}
         run: npm i -g npm@^11.5.1 && npm --version
 
       - name: 'Download dist folder artifact'
@@ -133,6 +138,6 @@ jobs:
       # @semantic-release/npm doesn't support Trusted Publishing yet: https://github.com/semantic-release/npm/issues/958
       # In this instance, the .releaserc config should include `npmPublish` set to false, and the CI will handle publishing in this step.
       - name: 'Publish to NPM'
-        if: ${{ secrets.NPM_AUTH_TOKEN == '' }}
+        if: ${{ inputs.useTrustedPublishing }}
         run: npm publish
         working-directory: ${{ inputs.releaseWorkingDirectory }}
