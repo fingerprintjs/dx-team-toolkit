@@ -36,6 +36,11 @@ on:
         default: ''
         required: false
         description: 'GitHub app id for creating PR.'
+      useTrustedPublishing:
+        type: boolean
+        required: false
+        default: false
+        description: 'Whether to use trusted publishing for publishing packages'
     secrets:
       APP_PRIVATE_KEY:
         description: 'GitHub App private key to request GitHub token for release process.'
@@ -165,4 +170,5 @@ jobs:
           title: 'Release [changeset]'
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-          NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
+          # If useTrustedPublishing is true, use OIDC for npm authentication instead of NPM_TOKEN https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868 by passing an empty string
+          NPM_TOKEN: ${{ inputs.useTrustedPublishing && '' || secrets.NPM_AUTH_TOKEN }}
