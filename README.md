@@ -573,17 +573,18 @@ The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
 
-| Input Parameter    | Required | Type   | Description                                                                                                 |
-|--------------------|----------|--------|-------------------------------------------------------------------------------------------------------------|
-| `prepare-command`  | No       | String | Command(s) to run for project preparation, such as installing dependencies.                                 |
-| `version-command`  | No       | String | Command to run for project versioning                                                                       |
-| `publish-command`  | No       | String | Command to run for project publishing                                                                       |
-| `language`         | Yes      | String | Programming language for the project. Supported are `java`, `dotnet`, `node`, `python`, `golang` and `php`. |
-| `language-version` | Yes      | String | Version of the programming language to set up.                                                              |
-| `prepare-command`  | No       | String | Command(s) to run for project preparation, such as installing dependencies.                                 |
-| `java-version`     | No       | String | Version of Java to set up.                                                                                  |
-| `appId`            | Yes      | String | GitHub App Id for creating GitHub token for the release                                                     |
-| `runnerAppId`      | No       | String | GitHub App Id for creating PR.                                                                              |
+| Input Parameter        | Required | Type    | Description                                                                                                 |
+|------------------------|----------|---------|-------------------------------------------------------------------------------------------------------------|
+| `prepare-command`      | No       | String  | Command(s) to run for project preparation, such as installing dependencies.                                 |
+| `version-command`      | No       | String  | Command to run for project versioning                                                                       |
+| `publish-command`      | No       | String  | Command to run for project publishing                                                                       |
+| `language`             | Yes      | String  | Programming language for the project. Supported are `java`, `dotnet`, `node`, `python`, `golang` and `php`. |
+| `language-version`     | Yes      | String  | Version of the programming language to set up.                                                              |
+| `prepare-command`      | No       | String  | Command(s) to run for project preparation, such as installing dependencies.                                 |
+| `java-version`         | No       | String  | Version of Java to set up.                                                                                  |
+| `appId`                | Yes      | String  | GitHub App Id for creating GitHub token for the release                                                     |
+| `runnerAppId`          | No       | String  | GitHub App Id for creating PR.                                                                              |
+| `useTrustedPublishing` | No       | Boolean | Whether to use Trusted Publishing instead of NPM token for publishing the package.                          |
 
 #### Workflow Secrets
 
@@ -591,11 +592,11 @@ The workflow expects the following secret to be provided:
 
 <!-- prettier-ignore -->
 
-| Secret Name              | Description                                                         |
-|--------------------------|---------------------------------------------------------------------|
-| `APP_PRIVATE_KEY`        | GitHub App private key to request GitHub token for release process. |
-| `RUNNER_APP_PRIVATE_KEY` | GitHub App private key to request GitHub token for creating PR.     |
-| `NPM_AUTH_TOKEN`         | NPM authentication token for publishing packages.                   |
+| Secret Name              | Description                                                                                               |
+|--------------------------|-----------------------------------------------------------------------------------------------------------|
+| `APP_PRIVATE_KEY`        | GitHub App private key to request GitHub token for release process.                                       |
+| `RUNNER_APP_PRIVATE_KEY` | GitHub App private key to request GitHub token for creating PR.                                           |
+| `NPM_AUTH_TOKEN`         | NPM authentication token for publishing packages. Can be omitted if `useTrustedPublishing` is set to true |
 
 #### Example of Usage:
 
