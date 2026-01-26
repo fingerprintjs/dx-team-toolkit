@@ -108,7 +108,7 @@ jobs:
         run: 'pnpm install @changesets/cli --global'
 
       - name: Create Release PR
-        uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9
+        uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9 # v1.6.0
         with:
           version: ${{ inputs.version-command }}
           commit: 'chore(release): changeset created a new release'
@@ -157,7 +157,7 @@ jobs:
         run: 'pnpm install @changesets/cli --global'
 
       - name: Create Release
-        uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9
+        uses: changesets/action@aba318e9165b45b7948c60273e0b72fce0a64eb9 # v1.6.0
         with:
           publish: ${{ inputs.publish-command }}
           version: ${{ inputs.version-command }}
