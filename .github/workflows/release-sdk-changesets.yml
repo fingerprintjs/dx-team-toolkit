@@ -157,6 +157,11 @@ jobs:
         with:
           version: 9
           run_install: 'true'
+      
+      # Ensure npm 11.5.1 or later is installed for trusted publishing
+      - name: Update npm
+        if: ${{ inputs.useTrustedPublishing }}
+        run: npm i -g npm@^11.5.1 && npm --version
 
       - name: 'Install changesets'
         run: 'pnpm install @changesets/cli --global'
