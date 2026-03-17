@@ -6,6 +6,11 @@ on:
         description: 'Command to run for project preparation (e.g., installing dependencies).'
         required: false
         type: string
+      github-release-files:
+        description: A comma-delimited list of glob patterns to identify the local files to attach to the GitHub release.
+        type: string
+        required: false
+        default: ''
       version-command:
         description: 'Command to run for project versioning'
         default: pnpm exec changeset version
@@ -167,6 +172,7 @@ jobs:
         run: 'pnpm install @changesets/cli --global'
 
       - name: Create Release
+        id: changesets-release
         uses: changesets/action@c48e67d110a68bc90ccf1098e9646092baacaa87 # v1.6.0
         with:
           publish: ${{ inputs.publish-command }}
@@ -177,3 +183,31 @@ jobs:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           # If useTrustedPublishing is true, use OIDC for npm authentication instead of NPM_TOKEN https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868 by passing an empty string
           NPM_TOKEN: ${{ inputs.useTrustedPublishing && '' || secrets.NPM_AUTH_TOKEN }}
+
+      - name: 'Upload files to GitHub release'
+        if: inputs.github-release-files != '' && steps.changesets-release.outputs.published == 'true'
+        env:
+          PACKAGES: ${{ steps.changesets-release.outputs.publishedPackages }}
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # Expand support for '**'
+          shopt -s globstar
+
+          # Convert no match patterns into the empty string to result in upload failures
+          shopt -s nullglob
+
+          # Calculate the tag name for the release of the primary package
+          PACKAGE_NAME=$(jq -r .name ./package.json)
+          VERSION=$(echo "$PACKAGES" | jq --arg package_name "$PACKAGE_NAME" -r '.[] | select(.name == $package_name) | .version')
+          if [ "$(echo "$PACKAGES" | jq 'length')" -eq 1 ]; then
+            TAG="v$VERSION"
+          else
+            # Changesets uses a different naming convention for multi-package repos
+            TAG="${PACKAGE_NAME}@${VERSION}"
+          fi
+
+          IFS=',' read -ra GLOB_PATTERNS <<< "${{ inputs.github-release-files }}"
+          for pattern in "${GLOB_PATTERNS[@]}"; do
+            echo "Uploading files matching the pattern \"$pattern\" to the $TAG release"
+            gh release upload "$TAG" $pattern
+          done
