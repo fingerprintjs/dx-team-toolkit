@@ -162,7 +162,7 @@ jobs:
         with:
           version: 9
           run_install: 'true'
-      
+
       # Ensure npm 11.5.1 or later is installed for trusted publishing
       - name: Update npm
         if: ${{ inputs.useTrustedPublishing }}
@@ -195,11 +195,15 @@ jobs:
 
           # Convert no match patterns into the empty string to result in upload failures
           shopt -s nullglob
+          
+          # Check if changeset config has any ignored packages
+          CHANGESET_CONFIG_IGNORE=$(jq -r .ignore ./.changeset/config.json | jq 'length')
 
           # Calculate the tag name for the release of the primary package
           PACKAGE_NAME=$(jq -r .name ./package.json)
           VERSION=$(echo "$PACKAGES" | jq --arg package_name "$PACKAGE_NAME" -r '.[] | select(.name == $package_name) | .version')
-          if [ "$(echo "$PACKAGES" | jq 'length')" -eq 1 ]; then
+          # If there is only one package published, and changeset config has no ignored packages, use the version as the tag name
+          if [ "$(echo "$PACKAGES" | jq 'length')" -eq 1 ] && [ "$CHANGESET_CONFIG_IGNORE" -eq 0 ]; then
             TAG="v$VERSION"
           else
             # Changesets uses a different naming convention for multi-package repos
