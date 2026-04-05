@@ -166,7 +166,9 @@ jobs:
       # Ensure npm 11.5.1 or later is installed for trusted publishing
       - name: Update npm
         if: ${{ inputs.useTrustedPublishing }}
-        run: npm i -g npm@^11.5.1 && npm --version
+        run: |
+          npm i -g npm@^11.5.1 && npm --version
+          echo "NPM_CONFIG_PROVENANCE=true" >> $GITHUB_ENV
 
       - name: 'Install changesets'
         run: 'pnpm install @changesets/cli --global'
