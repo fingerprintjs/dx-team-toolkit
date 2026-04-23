@@ -27,6 +27,11 @@ on:
         description: 'Tag for the OpenAPI release.'
         required: true
         type: string
+      schema-source:
+        description: 'Source of the schema in OpenAPI release artifacts'
+        required: false
+        default: 'fingerprint-server-api-v4.yaml'
+        type: string
       schema-path:
         description: 'Path to the OpenAPI schema.'
         required: true
@@ -119,6 +124,7 @@ jobs:
       - name: Update schema
         uses: fingerprintjs/dx-team-toolkit/.github/actions/update-sdk-schema@v1
         with:
+          schemaSource: ${{ inputs.schema-source }}
           schemaPath: ${{ inputs.schema-path }}
           examplesPath: ${{ inputs.examples-path }}
           generateCommand: ${{ inputs.generate-command }}
