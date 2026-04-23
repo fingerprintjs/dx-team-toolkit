@@ -9,12 +9,18 @@ export interface Config {
   preRelease: boolean
   owner: string
   repo: string
+  scopesOwner: string
+  scopesRepo: string
+  scopesConfigPath: string
+  scopesRef: string
   allowedScopes: string[]
   force: boolean
 }
 
 export function getConfig(): Config {
   const [owner, repo] = core.getInput('openApiRepository').split('/')
+  const scopesRepositoryInput = core.getInput('scopesRepository').trim()
+  const [scopesOwner, scopesRepo] = (scopesRepositoryInput || `${owner}/${repo}`).split('/')
 
   return {
     schemaSource: core.getInput('schemaSource'),
@@ -26,6 +32,10 @@ export function getConfig(): Config {
     force: core.getInput('force') === 'true',
     owner,
     repo,
+    scopesOwner,
+    scopesRepo,
+    scopesConfigPath: core.getInput('scopesConfigPath') || 'config/scopes.yaml',
+    scopesRef: core.getInput('scopesRef') || 'main',
     allowedScopes: core
       .getInput('allowedScopes')
       .split(',')

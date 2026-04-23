@@ -1,24 +1,19 @@
 import { Config } from './config'
 import { downloadAsset, findAsset, getReleaseNotes, GitHubClient } from './github'
-import {
-  CHANGESETS_PATH,
-  EXAMPLE_PATH_TO_REPLACE,
-  EXAMPLES_FILE,
-  RELEASE_NOTES,
-  SCOPES_FILE,
-} from './const'
+import { CHANGESETS_PATH, EXAMPLE_PATH_TO_REPLACE, EXAMPLES_FILE, RELEASE_NOTES } from './const'
 import * as fs from 'fs'
 import * as unzipper from 'unzipper'
 import * as path from 'path'
 import * as cp from 'child_process'
 import { filterSchema } from './filter-schema'
-import { loadScopes } from './scopes'
+import { ScopesMap } from './scopes'
 import { withRetry } from './retry'
 
 export async function updateSchemaForTag(
   tag: string,
   octokit: GitHubClient,
   packageName: string,
+  scopes: ScopesMap,
   { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }: Config,
   cwd = process.cwd()
 ) {
@@ -40,7 +35,6 @@ export async function updateSchemaForTag(
   const schemaAsset = findAsset(schemaSource, release.data)
   const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data)
   const examplesAsset = findAsset(EXAMPLES_FILE, release.data)
-  const scopesAsset = findAsset(SCOPES_FILE, release.data)
 
   const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName).catch((e) => {
     console.error('Failed to get release notes', e)
@@ -54,8 +48,7 @@ export async function updateSchemaForTag(
   }
 
   const schema = await downloadAsset(schemaAsset.browser_download_url)
-  const scopes = await downloadAsset(scopesAsset.browser_download_url)
-  const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes)
+  const filteredSchema = filterSchema(schema.toString(), scopes, allowedScopes)
   console.info(`Writing schema (${tag}):\n`, filteredSchema)
   fs.writeFileSync(schemaPath, filteredSchema)
   console.info('Schema written in', schemaPath)

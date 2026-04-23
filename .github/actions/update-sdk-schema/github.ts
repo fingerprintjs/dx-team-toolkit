@@ -25,7 +25,13 @@ export function findAsset(name: string, release: Release) {
 export async function downloadAsset(url: string) {
   try {
     console.info('Downloading asset:', url)
-    const response = await withRetry(() => fetch(url))
+    const response = await withRetry(async () => {
+      const r = await fetch(url)
+      if (!r.ok) {
+        throw new Error(`Failed to download ${url}: ${r.status} ${r.statusText}`)
+      }
+      return r
+    })
 
     return Buffer.from(await response.arrayBuffer())
   } catch (e) {
@@ -33,6 +39,20 @@ export async function downloadAsset(url: string) {
 
     throw e
   }
+}
+
+interface DownloadRepoFileParams {
+  owner: string
+  repo: string
+  path: string
+  ref: string
+}
+
+export async function downloadRepoFile({ owner, repo, path, ref }: DownloadRepoFileParams) {
+  const normalizedPath = path.replace(/^\/+/, '')
+  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${normalizedPath}`
+
+  return downloadAsset(url)
 }
 
 interface ListReleasesBetweenParams {

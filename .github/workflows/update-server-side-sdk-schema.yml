@@ -64,12 +64,27 @@ on:
         description: 'Tag suffix used for pre-releases'
         default: 'test'
       allowed-scopes:
-        description: "List of change scopes to allow, comma separated. If left empty, all scopes are allowed."
+        description: 'List of change scopes to allow, comma separated. If left empty, all scopes are allowed.'
         required: false
         type: string
-        default: ""
+        default: ''
+      scopes-repository:
+        description: 'Repository to source scopes.yaml from, in format of owner/repo. Defaults to the OpenAPI repo.'
+        required: false
+        type: string
+        default: ''
+      scopes-config-path:
+        description: 'Path to scopes.yaml within scopes-repository'
+        required: false
+        type: string
+        default: 'config/scopes.yaml'
+      scopes-ref:
+        description: 'Git ref (branch, tag, or SHA) to read scopes-config-path from'
+        required: false
+        type: string
+        default: 'main'
       force:
-        description: "Whenever to force update to given tag, even if it was already updated before"
+        description: 'Whether to force update to given tag, even if it was already updated before'
         default: false
         type: boolean
         required: false
@@ -132,6 +147,9 @@ jobs:
           githubToken: '${{ steps.app-token.outputs.token }}'
           preRelease: '${{ inputs.pre-release }}'
           allowedScopes: ${{ inputs.allowed-scopes }}
+          scopesRepository: ${{ inputs.scopes-repository }}
+          scopesConfigPath: ${{ inputs.scopes-config-path }}
+          scopesRef: ${{ inputs.scopes-ref }}
           preReleaseTag: '${{ inputs.pre-release-tag }}'
           force: '${{ inputs.force }}'
 
@@ -143,7 +161,6 @@ jobs:
           message: 'feat: sync OpenAPI schema to ${{ inputs.tag }}'
           push: 'false'
 
-
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
         with:
@@ -151,4 +168,3 @@ jobs:
           body: 'Schema sync for [${{ inputs.tag }}](https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/tag/${{ inputs.tag }}) OpenAPI schema release.'
           token: ${{ steps.app-token.outputs.token }}
           branch: feat/open-api-${{ inputs.tag }}
-

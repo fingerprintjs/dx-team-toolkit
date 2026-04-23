@@ -6,7 +6,8 @@ import { startPreRelease } from './changesets'
 import { Config, getConfig } from './config'
 import { updateSchemaForTag } from './update-schema-for-tag'
 import { getLatestSchemaVersion, writeSchemaVersion } from './schema-version'
-import { getRelease, listReleasesBetween } from './github'
+import { downloadRepoFile, getRelease, listReleasesBetween } from './github'
+import { loadScopes } from './scopes'
 
 interface UpdateSchemaParams {
   config: Config
@@ -23,6 +24,14 @@ export async function updateSchema({ config, tag, packageName, preReleaseTag = '
 
   const octokit = getOctokit(config.githubToken)
 
+  const scopesBuffer = await downloadRepoFile({
+    owner: config.scopesOwner,
+    repo: config.scopesRepo,
+    path: config.scopesConfigPath,
+    ref: config.scopesRef,
+  })
+  const scopes = loadScopes(scopesBuffer.toString())
+
   if (config.force) {
     const release = await getRelease({
       config,
@@ -30,14 +39,14 @@ export async function updateSchema({ config, tag, packageName, preReleaseTag = '
       octokit,
     })
 
-    await updateSchemaForTag(release.tag_name, octokit, packageName, config, cwd)
+    await updateSchemaForTag(release.tag_name, octokit, packageName, scopes, config, cwd)
   } else {
     // v1.0.0 is the first OpenAPI release that was created
     const schemaVersion = getLatestSchemaVersion() ?? 'v1.0.0'
     const releases = await listReleasesBetween({ octokit, config, fromTag: schemaVersion, toTag: tag })
 
     for (const release of releases) {
-      await updateSchemaForTag(release.tag_name, octokit, packageName, config, cwd)
+      await updateSchemaForTag(release.tag_name, octokit, packageName, scopes, config, cwd)
     }
   }
 
