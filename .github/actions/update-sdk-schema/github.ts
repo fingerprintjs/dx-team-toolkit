@@ -25,7 +25,13 @@ export function findAsset(name: string, release: Release) {
 export async function downloadAsset(url: string) {
   try {
     console.info('Downloading asset:', url)
-    const response = await withRetry(() => fetch(url))
+    const response = await withRetry(async () => {
+      const r = await fetch(url)
+      if (!r.ok) {
+        throw new Error(`Failed to download ${url}: ${r.status} ${r.statusText}`)
+      }
+      return r
+    })
 
     return Buffer.from(await response.arrayBuffer())
   } catch (e) {
