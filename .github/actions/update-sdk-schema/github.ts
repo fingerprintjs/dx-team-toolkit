@@ -49,7 +49,8 @@ interface DownloadRepoFileParams {
 }
 
 export async function downloadRepoFile({ owner, repo, path, ref }: DownloadRepoFileParams) {
-  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${path}`
+  const normalizedPath = path.replace(/^\/+/, '')
+  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${normalizedPath}`
 
   return downloadAsset(url)
 }

@@ -49165,7 +49165,8 @@ async function downloadAsset(url) {
     }
 }
 async function downloadRepoFile({ owner, repo, path, ref }) {
-    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${path}`;
+    const normalizedPath = path.replace(/^\/+/, '');
+    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${normalizedPath}`;
     return downloadAsset(url);
 }
 async function getRelease({ config, tag, octokit }) {
@@ -53144,12 +53145,6 @@ function walkJson(json, key, callback) {
     });
 }
 
-;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/scopes.ts
-
-function loadScopes(scopesYaml) {
-    return load(scopesYaml);
-}
-
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema-for-tag.ts
 
 
@@ -53159,8 +53154,7 @@ function loadScopes(scopesYaml) {
 
 
 
-
-async function updateSchemaForTag(tag, octokit, packageName, { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand, scopesOwner, scopesRepo, scopesConfigPath, scopesRef, }, cwd = process.cwd()) {
+async function updateSchemaForTag(tag, octokit, packageName, scopes, { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }, cwd = process.cwd()) {
     examplesPath = external_path_.join(cwd, examplesPath);
     schemaPath = external_path_.join(cwd, schemaPath);
     console.info('Updating schema for tag:', tag);
@@ -53184,13 +53178,7 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaSource, sch
         return;
     }
     const schema = await downloadAsset(schemaAsset.browser_download_url);
-    const scopes = await downloadRepoFile({
-        owner: scopesOwner,
-        repo: scopesRepo,
-        path: scopesConfigPath,
-        ref: scopesRef,
-    });
-    const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes);
+    const filteredSchema = filterSchema(schema.toString(), scopes, allowedScopes);
     console.info(`Writing schema (${tag}):\n`, filteredSchema);
     external_fs_.writeFileSync(schemaPath, filteredSchema);
     console.info('Schema written in', schemaPath);
@@ -53254,7 +53242,14 @@ function writeSchemaVersion(version, cwd) {
     external_fs_.writeFileSync(external_path_.join(cwd, SCHEMA_VERSION_FILE), version);
 }
 
+;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/scopes.ts
+
+function loadScopes(scopesYaml) {
+    return load(scopesYaml);
+}
+
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/update-schema.ts
+
 
 
 
@@ -53269,20 +53264,27 @@ async function updateSchema({ config, tag, packageName, preReleaseTag = 'test', 
         startPreRelease(preReleaseTag);
     }
     const octokit = (0,github.getOctokit)(config.githubToken);
+    const scopesBuffer = await downloadRepoFile({
+        owner: config.scopesOwner,
+        repo: config.scopesRepo,
+        path: config.scopesConfigPath,
+        ref: config.scopesRef,
+    });
+    const scopes = loadScopes(scopesBuffer.toString());
     if (config.force) {
         const release = await getRelease({
             config,
             tag,
             octokit,
         });
-        await updateSchemaForTag(release.tag_name, octokit, packageName, config, cwd);
+        await updateSchemaForTag(release.tag_name, octokit, packageName, scopes, config, cwd);
     }
     else {
         // v1.0.0 is the first OpenAPI release that was created
         const schemaVersion = getLatestSchemaVersion() ?? 'v1.0.0';
         const releases = await listReleasesBetween({ octokit, config, fromTag: schemaVersion, toTag: tag });
         for (const release of releases) {
-            await updateSchemaForTag(release.tag_name, octokit, packageName, config, cwd);
+            await updateSchemaForTag(release.tag_name, octokit, packageName, scopes, config, cwd);
         }
     }
     writeSchemaVersion(tag, cwd);

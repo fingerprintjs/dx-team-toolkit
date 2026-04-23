@@ -1,31 +1,20 @@
 import { Config } from './config'
-import { downloadAsset, downloadRepoFile, findAsset, getReleaseNotes, GitHubClient } from './github'
+import { downloadAsset, findAsset, getReleaseNotes, GitHubClient } from './github'
 import { CHANGESETS_PATH, EXAMPLE_PATH_TO_REPLACE, EXAMPLES_FILE, RELEASE_NOTES } from './const'
 import * as fs from 'fs'
 import * as unzipper from 'unzipper'
 import * as path from 'path'
 import * as cp from 'child_process'
 import { filterSchema } from './filter-schema'
-import { loadScopes } from './scopes'
+import { ScopesMap } from './scopes'
 import { withRetry } from './retry'
 
 export async function updateSchemaForTag(
   tag: string,
   octokit: GitHubClient,
   packageName: string,
-  {
-    schemaSource,
-    schemaPath,
-    examplesPath,
-    repo,
-    owner,
-    allowedScopes,
-    generateCommand,
-    scopesOwner,
-    scopesRepo,
-    scopesConfigPath,
-    scopesRef,
-  }: Config,
+  scopes: ScopesMap,
+  { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }: Config,
   cwd = process.cwd()
 ) {
   examplesPath = path.join(cwd, examplesPath)
@@ -59,13 +48,7 @@ export async function updateSchemaForTag(
   }
 
   const schema = await downloadAsset(schemaAsset.browser_download_url)
-  const scopes = await downloadRepoFile({
-    owner: scopesOwner,
-    repo: scopesRepo,
-    path: scopesConfigPath,
-    ref: scopesRef,
-  })
-  const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes)
+  const filteredSchema = filterSchema(schema.toString(), scopes, allowedScopes)
   console.info(`Writing schema (${tag}):\n`, filteredSchema)
   fs.writeFileSync(schemaPath, filteredSchema)
   console.info('Schema written in', schemaPath)

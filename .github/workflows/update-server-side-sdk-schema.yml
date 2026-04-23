@@ -84,7 +84,7 @@ on:
         type: string
         default: 'main'
       force:
-        description: 'Whenever to force update to given tag, even if it was already updated before'
+        description: 'Whether to force update to given tag, even if it was already updated before'
         default: false
         type: boolean
         required: false
