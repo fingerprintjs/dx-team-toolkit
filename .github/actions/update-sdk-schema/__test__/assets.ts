@@ -14,14 +14,8 @@ const assetsMap = {
     path.resolve(__dirname, './v1.1.0/schema.yaml'),
   'https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/download/v1.2.0/fingerprint-server-api.yaml':
     path.resolve(__dirname, './v1.2.0/schema.yaml'),
-  'https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/download/v1.1.0/scopes': path.resolve(
-    __dirname,
-    './v1.1.0/scopes.yaml'
-  ),
-  'https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/download/v1.2.0/scopes': path.resolve(
-    __dirname,
-    './v1.2.0/scopes.yaml'
-  ),
+  'https://raw.githubusercontent.com/fingerprintjs/fingerprint-pro-server-api-openapi/main/config/scopes.yaml':
+    path.resolve(__dirname, './v1.1.0/scopes.yaml'),
 }
 
 export function maybeMockAsset(url: string) {

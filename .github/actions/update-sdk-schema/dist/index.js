@@ -49074,6 +49074,8 @@ function replacePackageName(changeset, name) {
 
 function getConfig() {
     const [owner, repo] = core.getInput('openApiRepository').split('/');
+    const scopesRepositoryInput = core.getInput('scopesRepository').trim();
+    const [scopesOwner, scopesRepo] = (scopesRepositoryInput || `${owner}/${repo}`).split('/');
     return {
         schemaSource: core.getInput('schemaSource'),
         schemaPath: core.getInput('schemaPath'),
@@ -49084,6 +49086,10 @@ function getConfig() {
         force: core.getInput('force') === 'true',
         owner,
         repo,
+        scopesOwner,
+        scopesRepo,
+        scopesConfigPath: core.getInput('scopesConfigPath') || 'config/scopes.yaml',
+        scopesRef: core.getInput('scopesRef') || 'main',
         allowedScopes: core.getInput('allowedScopes')
             .split(',')
             .map((v) => v.trim())
@@ -49152,6 +49158,10 @@ async function downloadAsset(url) {
         throw e;
     }
 }
+async function downloadRepoFile({ owner, repo, path, ref }) {
+    const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${path}`;
+    return downloadAsset(url);
+}
 async function getRelease({ config, tag, octokit }) {
     const { data } = await withRetry(() => octokit.rest.repos.getReleaseByTag({
         owner: config.owner,
@@ -49212,7 +49222,6 @@ const RELEASE_NOTES = 'changesets.zip';
 const EXAMPLES_FILE = 'examples.zip';
 const EXAMPLE_PATH_TO_REPLACE = 'examples/';
 const CHANGESETS_PATH = '.changeset';
-const SCOPES_FILE = 'scopes.yaml';
 
 ;// CONCATENATED MODULE: ./node_modules/.pnpm/js-yaml@4.1.0/node_modules/js-yaml/dist/js-yaml.mjs
 
@@ -53145,7 +53154,7 @@ function loadScopes(scopesYaml) {
 
 
 
-async function updateSchemaForTag(tag, octokit, packageName, { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }, cwd = process.cwd()) {
+async function updateSchemaForTag(tag, octokit, packageName, { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand, scopesOwner, scopesRepo, scopesConfigPath, scopesRef, }, cwd = process.cwd()) {
     examplesPath = external_path_.join(cwd, examplesPath);
     schemaPath = external_path_.join(cwd, schemaPath);
     console.info('Updating schema for tag:', tag);
@@ -53160,7 +53169,6 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaSource, sch
     const schemaAsset = findAsset(schemaSource, release.data);
     const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data);
     const examplesAsset = findAsset(EXAMPLES_FILE, release.data);
-    const scopesAsset = findAsset(SCOPES_FILE, release.data);
     const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName).catch((e) => {
         console.error('Failed to get release notes', e);
         throw e;
@@ -53170,7 +53178,12 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaSource, sch
         return;
     }
     const schema = await downloadAsset(schemaAsset.browser_download_url);
-    const scopes = await downloadAsset(scopesAsset.browser_download_url);
+    const scopes = await downloadRepoFile({
+        owner: scopesOwner,
+        repo: scopesRepo,
+        path: scopesConfigPath,
+        ref: scopesRef,
+    });
     const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes);
     console.info(`Writing schema (${tag}):\n`, filteredSchema);
     external_fs_.writeFileSync(schemaPath, filteredSchema);

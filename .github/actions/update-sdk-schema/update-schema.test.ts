@@ -86,6 +86,10 @@ describe('Update schema', () => {
       config: {
         owner: 'test-owner',
         repo: 'test-repo',
+        scopesOwner: 'fingerprintjs',
+        scopesRepo: 'fingerprint-pro-server-api-openapi',
+        scopesConfigPath: 'config/scopes.yaml',
+        scopesRef: 'main',
         schemaSource: 'fingerprint-server-api-schema-for-sdks.yaml',
         allowedScopes: ['events', 'visitors', 'webhook'],
         githubToken: '',
@@ -127,6 +131,10 @@ describe('Update schema', () => {
       config: {
         owner: 'test-owner',
         repo: 'test-repo',
+        scopesOwner: 'fingerprintjs',
+        scopesRepo: 'fingerprint-pro-server-api-openapi',
+        scopesConfigPath: 'config/scopes.yaml',
+        scopesRef: 'main',
         allowedScopes: ['events', 'visitors', 'webhook'],
         githubToken: '',
         schemaSource: 'fingerprint-server-api-schema-for-sdks.yaml',

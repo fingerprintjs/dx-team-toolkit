@@ -22,18 +22,27 @@ inputs:
   openApiRepository:
     description: 'OpenAPI repository in format of owner/repo'
     default: 'fingerprintjs/fingerprint-pro-server-api-openapi'
+  scopesRepository:
+    description: 'Repository to source scopes.yaml from, in format of owner/repo. Defaults to openApiRepository.'
+    default: ''
+  scopesConfigPath:
+    description: 'Path to scopes.yaml within scopesRepository'
+    default: 'config/scopes.yaml'
+  scopesRef:
+    description: 'Git ref (branch, tag, or SHA) to read scopesConfigPath from'
+    default: 'main'
   preRelease:
     description: 'Enable pre-release mode'
-    default: "false"
+    default: 'false'
   preReleaseTag:
     description: 'Tag suffix used for pre-releases'
-    default: "test"
+    default: 'test'
   allowedScopes:
-    description: "List of change scopes to allow, comma separated. If left empty, all scopes are allowed."
-    default: ""
+    description: 'List of change scopes to allow, comma separated. If left empty, all scopes are allowed.'
+    default: ''
   force:
-    description: "Whenever to force update to given tag, even if it was already updated before"
-    default: "false"
+    description: 'Whenever to force update to given tag, even if it was already updated before'
+    default: 'false'
 runs:
   using: 'node24'
   main: 'dist/index.js'

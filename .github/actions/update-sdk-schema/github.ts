@@ -35,6 +35,19 @@ export async function downloadAsset(url: string) {
   }
 }
 
+interface DownloadRepoFileParams {
+  owner: string
+  repo: string
+  path: string
+  ref: string
+}
+
+export async function downloadRepoFile({ owner, repo, path, ref }: DownloadRepoFileParams) {
+  const url = `https://raw.githubusercontent.com/${owner}/${repo}/${ref}/${path}`
+
+  return downloadAsset(url)
+}
+
 interface ListReleasesBetweenParams {
   octokit: GitHubClient
   config: Pick<Config, 'owner' | 'repo'>

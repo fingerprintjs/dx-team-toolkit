@@ -1,12 +1,6 @@
 import { Config } from './config'
-import { downloadAsset, findAsset, getReleaseNotes, GitHubClient } from './github'
-import {
-  CHANGESETS_PATH,
-  EXAMPLE_PATH_TO_REPLACE,
-  EXAMPLES_FILE,
-  RELEASE_NOTES,
-  SCOPES_FILE,
-} from './const'
+import { downloadAsset, downloadRepoFile, findAsset, getReleaseNotes, GitHubClient } from './github'
+import { CHANGESETS_PATH, EXAMPLE_PATH_TO_REPLACE, EXAMPLES_FILE, RELEASE_NOTES } from './const'
 import * as fs from 'fs'
 import * as unzipper from 'unzipper'
 import * as path from 'path'
@@ -19,7 +13,19 @@ export async function updateSchemaForTag(
   tag: string,
   octokit: GitHubClient,
   packageName: string,
-  { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }: Config,
+  {
+    schemaSource,
+    schemaPath,
+    examplesPath,
+    repo,
+    owner,
+    allowedScopes,
+    generateCommand,
+    scopesOwner,
+    scopesRepo,
+    scopesConfigPath,
+    scopesRef,
+  }: Config,
   cwd = process.cwd()
 ) {
   examplesPath = path.join(cwd, examplesPath)
@@ -40,7 +46,6 @@ export async function updateSchemaForTag(
   const schemaAsset = findAsset(schemaSource, release.data)
   const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data)
   const examplesAsset = findAsset(EXAMPLES_FILE, release.data)
-  const scopesAsset = findAsset(SCOPES_FILE, release.data)
 
   const changesets = await getReleaseNotes(releaseNotesAsset, allowedScopes, packageName).catch((e) => {
     console.error('Failed to get release notes', e)
@@ -54,7 +59,12 @@ export async function updateSchemaForTag(
   }
 
   const schema = await downloadAsset(schemaAsset.browser_download_url)
-  const scopes = await downloadAsset(scopesAsset.browser_download_url)
+  const scopes = await downloadRepoFile({
+    owner: scopesOwner,
+    repo: scopesRepo,
+    path: scopesConfigPath,
+    ref: scopesRef,
+  })
   const filteredSchema = filterSchema(schema.toString(), loadScopes(scopes.toString()), allowedScopes)
   console.info(`Writing schema (${tag}):\n`, filteredSchema)
   fs.writeFileSync(schemaPath, filteredSchema)
