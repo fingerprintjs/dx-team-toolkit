@@ -5,7 +5,6 @@ import {
   EXAMPLE_PATH_TO_REPLACE,
   EXAMPLES_FILE,
   RELEASE_NOTES,
-  SCHEMA_FILE,
   SCOPES_FILE,
 } from './const'
 import * as fs from 'fs'
@@ -20,7 +19,7 @@ export async function updateSchemaForTag(
   tag: string,
   octokit: GitHubClient,
   packageName: string,
-  { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }: Config,
+  { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }: Config,
   cwd = process.cwd()
 ) {
   examplesPath = path.join(cwd, examplesPath)
@@ -38,7 +37,7 @@ export async function updateSchemaForTag(
 
     throw e
   })
-  const schemaAsset = findAsset(SCHEMA_FILE, release.data)
+  const schemaAsset = findAsset(schemaSource, release.data)
   const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data)
   const examplesAsset = findAsset(EXAMPLES_FILE, release.data)
   const scopesAsset = findAsset(SCOPES_FILE, release.data)

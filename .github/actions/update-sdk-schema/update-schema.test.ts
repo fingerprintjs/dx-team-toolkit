@@ -86,6 +86,7 @@ describe('Update schema', () => {
       config: {
         owner: 'test-owner',
         repo: 'test-repo',
+        schemaSource: 'fingerprint-server-api-schema-for-sdks.yaml',
         allowedScopes: ['events', 'visitors', 'webhook'],
         githubToken: '',
         examplesPath: 'examples',
@@ -128,6 +129,7 @@ describe('Update schema', () => {
         repo: 'test-repo',
         allowedScopes: ['events', 'visitors', 'webhook'],
         githubToken: '',
+        schemaSource: 'fingerprint-server-api-schema-for-sdks.yaml',
         examplesPath: 'examples',
         generateCommand: 'touch ./.generated',
         preRelease: false,

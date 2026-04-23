@@ -49075,6 +49075,7 @@ function replacePackageName(changeset, name) {
 function getConfig() {
     const [owner, repo] = core.getInput('openApiRepository').split('/');
     return {
+        schemaSource: core.getInput('schemaSource'),
         schemaPath: core.getInput('schemaPath'),
         examplesPath: core.getInput('examplesPath'),
         generateCommand: core.getInput('generateCommand'),
@@ -49207,7 +49208,6 @@ async function getReleaseNotes(releaseNotesAsset, allowedScopes, packageName) {
 }
 
 ;// CONCATENATED MODULE: ./.github/actions/update-sdk-schema/const.ts
-const SCHEMA_FILE = 'fingerprint-server-api-schema-for-sdks.yaml';
 const RELEASE_NOTES = 'changesets.zip';
 const EXAMPLES_FILE = 'examples.zip';
 const EXAMPLE_PATH_TO_REPLACE = 'examples/';
@@ -53145,7 +53145,7 @@ function loadScopes(scopesYaml) {
 
 
 
-async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }, cwd = process.cwd()) {
+async function updateSchemaForTag(tag, octokit, packageName, { schemaSource, schemaPath, examplesPath, repo, owner, allowedScopes, generateCommand }, cwd = process.cwd()) {
     examplesPath = external_path_.join(cwd, examplesPath);
     schemaPath = external_path_.join(cwd, schemaPath);
     console.info('Updating schema for tag:', tag);
@@ -53157,7 +53157,7 @@ async function updateSchemaForTag(tag, octokit, packageName, { schemaPath, examp
         console.error('Failed to get release', e);
         throw e;
     });
-    const schemaAsset = findAsset(SCHEMA_FILE, release.data);
+    const schemaAsset = findAsset(schemaSource, release.data);
     const releaseNotesAsset = findAsset(RELEASE_NOTES, release.data);
     const examplesAsset = findAsset(EXAMPLES_FILE, release.data);
     const scopesAsset = findAsset(SCOPES_FILE, release.data);

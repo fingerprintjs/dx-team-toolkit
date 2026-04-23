@@ -1,6 +1,7 @@
 import * as core from '@actions/core'
 
 export interface Config {
+  schemaSource: string
   schemaPath: string
   examplesPath: string
   generateCommand: string
@@ -16,6 +17,7 @@ export function getConfig(): Config {
   const [owner, repo] = core.getInput('openApiRepository').split('/')
 
   return {
+    schemaSource: core.getInput('schemaSource'),
     schemaPath: core.getInput('schemaPath'),
     examplesPath: core.getInput('examplesPath'),
     generateCommand: core.getInput('generateCommand'),
