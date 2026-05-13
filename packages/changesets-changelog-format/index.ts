@@ -8,9 +8,9 @@ function getCommitLink(sha: string, repo: string) {
 async function getReleaseLine(
   changeset: NewChangesetWithCommit,
   _versionType: unknown,
-  options: null | Record<string, any>
+  options: null | Record<string, unknown>
 ): Promise<string> {
-  if (!options?.repo) {
+  if (typeof options?.repo !== 'string') {
     throw new TypeError('Missing `options.repo`')
   }
 
