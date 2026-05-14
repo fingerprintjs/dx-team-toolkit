@@ -1,5 +1,11 @@
 # @fingerprintjs/eslint-config-dx-team
 
+## 1.0.0
+
+### Major Changes
+
+- Add a type-checked ESLint config and enable stricter default lint rules. ([1ccb466](https://github.com/fingerprintjs/dx-team-toolkit/commit/1ccb466ce2b744cac595070759e6e2ae659fd7cc))
+
 ## 0.2.0
 
 ### Minor Changes
