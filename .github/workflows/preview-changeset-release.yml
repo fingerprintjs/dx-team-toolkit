@@ -16,6 +16,10 @@ on:
         required: false
         type: string
         default: 'pnpm exec changeset'
+      prepare-command:
+        description: 'Command to run for project preparation (e.g., installing dependencies).'
+        required: false
+        type: string
 
 jobs:
   preview:
@@ -49,6 +53,10 @@ jobs:
 
       - name: Install dependencies
         run: $PACKAGE_MANAGER install
+
+      - name: Prepare project
+        if: ${{ inputs.prepare-command }}
+        run: ${{ inputs.prepare-command }}
 
       - name: 'Get release notes'
         id: notes

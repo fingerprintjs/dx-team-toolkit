@@ -691,6 +691,19 @@ release notes.
 
 1. Project is properly configured to release using changesets.
 
+#### Workflow Inputs
+
+The workflow accepts the following input parameters:
+
+<!-- prettier-ignore -->
+
+| Input Parameter     | Required | Type   | Default              | Description                                                                                       |
+|---------------------|----------|--------|----------------------|---------------------------------------------------------------------------------------------------|
+| `pr-title`          | Yes      | String | -                    | Title of created PR                                                                               |
+| `node-version`      | No       | String | `lts/*`              | Node version to use                                                                               |
+| `changeset-command` | No       | String | `pnpm exec changeset`| Command used to generate changeset. It will be used in a suggestion if there are no changesets.   |
+| `prepare-command`   | No       | String | -                    | Command(s) to run for project preparation, such as installing dependencies.                       |
+
 #### Example of usage:
 
 ```yaml
