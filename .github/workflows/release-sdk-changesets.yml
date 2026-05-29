@@ -68,12 +68,12 @@ jobs:
 
       - name: 'Determine package manager'
         run: |
-          if [[ -f "pnpm-lock.yaml" ]]; then
-            echo "Using pnpm"
-            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
-          else
+          if [[ -f "yarn.lock" ]]; then
             echo "Using yarn"
             echo "PACKAGE_MANAGER=yarn" >> $GITHUB_ENV
+          else
+            echo "Using pnpm"
+            echo "PACKAGE_MANAGER=pnpm" >> $GITHUB_ENV
           fi
 
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
