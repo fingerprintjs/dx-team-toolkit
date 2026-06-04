@@ -24,6 +24,7 @@ module.exports = {
     [
       '@semantic-release/exec',
       {
+        // eslint-disable-next-line no-template-curly-in-string
         prepareCmd: 'echo "Prepare to release ${nextRelease.version}"',
       },
     ],
