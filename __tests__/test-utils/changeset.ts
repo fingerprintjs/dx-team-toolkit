@@ -42,7 +42,7 @@ export function initTestPackage(withChangelogPreset = true) {
     fs.writeFileSync(changesetConfigPath, JSON.stringify(changesetConfig, null, 2))
   }
 
-  const testPkgJson = JSON.parse(fs.readFileSync(path.join(TEST_PACKAGE_PATH, 'package.json'), 'utf-8')) as PackageJSON
+  const testPkgJson: PackageJSON = JSON.parse(fs.readFileSync(path.join(TEST_PACKAGE_PATH, 'package.json'), 'utf-8'))
 
   testPkgJson.dependencies = {
     '@changesets/cli': pkg.devDependencies['@changesets/cli'],

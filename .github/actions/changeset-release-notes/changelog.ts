@@ -36,7 +36,7 @@ export function listProjects(changesets: NewChangeset[], cwd = process.cwd()) {
     try {
       packageJsonPath = path.join(cwd, packageJsonPath)
 
-      const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8')) as PackageJSON
+      const packageJson: PackageJSON = JSON.parse(fs.readFileSync(packageJsonPath, 'utf-8'))
       if (!ids.has(packageJson.name)) {
         return
       }

@@ -8,5 +8,6 @@ interface Scope {
 export type ScopesMap = Record<string, Scope>
 
 export function loadScopes(scopesYaml: string): ScopesMap {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
   return yaml.load(scopesYaml) as ScopesMap
 }

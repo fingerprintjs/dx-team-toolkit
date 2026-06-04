@@ -11,7 +11,7 @@
     "test:coverage": "jest --runInBand --coverage",
     "docs": "mkdir docs && cp README.md ./docs/README.md",
     "lint:fix": "pnpm run lint --fix",
-    "lint": "eslint --ext .ts,.js --ignore-path .gitignore --max-warnings 0 . .github/actions"
+    "lint": "eslint --max-warnings 0"
   },
   "prettier": "@fingerprintjs/prettier-config-dx-team",
   "devDependencies": {
@@ -28,12 +28,8 @@
     "@octokit/rest": "^21.0.1",
     "@types/jest": "^29.5.12",
     "@types/unzipper": "^0.10.10",
-    "@typescript-eslint/eslint-plugin": "^6.21.0",
-    "@typescript-eslint/parser": "^6.21.0",
     "@vercel/ncc": "^0.38.1",
-    "eslint": "^8.57.0",
-    "eslint-config-prettier": "^8.10.0",
-    "eslint-plugin-prettier": "^4.2.1",
+    "eslint": "^10.4.1",
     "glob": "^11.0.0",
     "human-id": "^4.1.1",
     "husky": "^8.0.3",
