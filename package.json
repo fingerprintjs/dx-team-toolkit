@@ -19,7 +19,7 @@
     "@changesets/read": "^0.6.1",
     "@changesets/types": "^6.0.0",
     "@commitlint/cli": "^17.8.1",
-    "@fingerprintjs/changesets-changelog-format": "^0.2.0",
+    "@fingerprintjs/changesets-changelog-format": "workspace:local",
     "@fingerprintjs/commit-lint-dx-team": "workspace:local",
     "@fingerprintjs/conventional-changelog-dx-team": "workspace:local",
     "@fingerprintjs/eslint-config-dx-team": "workspace:local",
