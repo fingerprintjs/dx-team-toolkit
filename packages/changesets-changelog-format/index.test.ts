@@ -1,20 +1,21 @@
-import { addChangeset, doVersion, initTestPackage, readChangelog } from '../../__tests__/test-utils/changeset'
-import { TEST_PACKAGE_NAME } from '../../__tests__/test-utils/testPkgExec'
+import { initTestPackage } from '../../__tests__/test-utils/changeset'
 
 describe('Changeset changelog format', () => {
+  let pkg: ReturnType<typeof initTestPackage>
+
   beforeEach(() => {
-    initTestPackage()
+    pkg = initTestPackage()
   })
 
   it('with multiple changes', () => {
-    const patchSha = addChangeset('**events**: Test fix', 'patch')
-    const minorSha = addChangeset('**identification**: New feature', 'minor')
-    const majorSha = addChangeset('**visitors**: New major change', 'major')
-    doVersion()
+    const patchSha = pkg.addChangeset('**events**: Test fix', 'patch')
+    const minorSha = pkg.addChangeset('**identification**: New feature', 'minor')
+    const majorSha = pkg.addChangeset('**visitors**: New major change', 'major')
+    pkg.doVersion()
 
-    const changelog = readChangelog()
+    const changelog = pkg.readChangelog()
 
-    const expected = `# ${TEST_PACKAGE_NAME}
+    const expected = `# ${pkg.name}
 
 ## 2.0.0
 
