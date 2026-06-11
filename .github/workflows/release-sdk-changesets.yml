@@ -163,8 +163,10 @@ jobs:
         if: ${{ inputs.useTrustedPublishing }}
         run: |
           npm i -g npm@^11.5.1 && npm --version
-          echo "NPM_CONFIG_PROVENANCE=true" >> $GITHUB_ENV
 
+      - name: Enable npm provenance
+        if: ${{ inputs.useTrustedPublishing }}
+        run: echo "NPM_CONFIG_PROVENANCE=true" >> $GITHUB_ENV
       - name: 'Install changesets'
         run: 'pnpm install @changesets/cli --global'
 
