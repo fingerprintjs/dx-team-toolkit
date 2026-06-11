@@ -54,6 +54,10 @@ describe('Update schema', () => {
     })
   })
 
+  afterEach(() => {
+    fs.rmSync(pkg.path, { recursive: true, force: true })
+  })
+
   it('first schema sync with two releases', async () => {
     listReleases.mockResolvedValue({
       data: [v120, v110],
