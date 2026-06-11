@@ -585,6 +585,7 @@ The workflow accepts the following input parameters:
 | `appId`                | Yes      | String  | GitHub App Id for creating GitHub token for the release                                                     |
 | `runnerAppId`          | No       | String  | GitHub App Id for creating PR.                                                                              |
 | `useTrustedPublishing` | No       | Boolean | Whether to use Trusted Publishing instead of NPM token for publishing the package.                          |
+| `github-release-files` | No       | String  | A comma-delimited list of glob patterns to identify the local files to attach to the GitHub release.        |
 
 #### Workflow Secrets
 
@@ -614,6 +615,7 @@ jobs:
       prepare-command: pnpm run build
       appId: ${{ vars.APP_ID }}
       runnerAppId: ${{ vars.RUNNER_APP_ID }}
+      github-release-files: 'dist/**'
     secrets:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
       RUNNER_APP_PRIVATE_KEY: ${{ secrets.RUNNER_APP_PRIVATE_KEY }}
@@ -688,6 +690,19 @@ release notes.
 #### Prerequisites:
 
 1. Project is properly configured to release using changesets.
+
+#### Workflow Inputs
+
+The workflow accepts the following input parameters:
+
+<!-- prettier-ignore -->
+
+| Input Parameter     | Required | Type   | Default              | Description                                                                                       |
+|---------------------|----------|--------|----------------------|---------------------------------------------------------------------------------------------------|
+| `pr-title`          | Yes      | String | -                    | Title of created PR                                                                               |
+| `node-version`      | No       | String | `lts/*`              | Node version to use                                                                               |
+| `changeset-command` | No       | String | `pnpm exec changeset`| Command used to generate changeset. It will be used in a suggestion if there are no changesets.   |
+| `prepare-command`   | No       | String | -                    | Command(s) to run for project preparation, such as installing dependencies.                       |
 
 #### Example of usage:
 

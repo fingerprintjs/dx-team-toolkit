@@ -1,6 +1,6 @@
 {
   "name": "@fingerprintjs/eslint-config-dx-team",
-  "version": "0.2.0",
+  "version": "1.0.0",
   "private": false,
   "description": "Custom eslint config for DX Team",
   "repository": {
@@ -9,9 +9,14 @@
   },
   "author": "FingerprintJS, Inc (https://fingerprint.com)",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "main": "index.js",
   "files": [
-    "index.js"
+    "index.js",
+    "type-checked.js"
   ],
   "dependencies": {
     "@typescript-eslint/eslint-plugin": "6.19.1",

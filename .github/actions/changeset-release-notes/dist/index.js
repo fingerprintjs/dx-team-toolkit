@@ -58231,10 +58231,18 @@ function getCurrentVersion(project) {
     const pkg = JSON.parse(external_fs_.readFileSync(external_path_.join(project.rootPath, 'package.json'), 'utf-8'));
     return pkg.version;
 }
+function detectPackageManager(cwd) {
+    if (external_fs_.existsSync(external_path_.join(cwd, 'yarn.lock'))) {
+        return 'yarn';
+    }
+    return 'pnpm';
+}
 function doVersion(projects, cwd = process.cwd()) {
     const oldVersions = projects.map((project) => getCurrentVersion(project));
-    console.info('Updating version');
-    external_child_process_.execSync('pnpm exec changeset version', {
+    const packageManager = detectPackageManager(cwd);
+    console.info(`Updating version using ${packageManager}`);
+    const command = packageManager === 'yarn' ? 'yarn changeset version' : 'pnpm exec changeset version';
+    external_child_process_.execSync(command, {
         cwd,
         stdio: 'inherit'
     });

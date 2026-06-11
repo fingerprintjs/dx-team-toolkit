@@ -7,8 +7,8 @@
     "prepare": "husky install",
     "build": "pnpm run -r build",
     "build:actions": "bash ./scripts/build-actions.sh",
-    "test": "jest",
-    "test:coverage": "jest --coverage",
+    "test": "jest --runInBand",
+    "test:coverage": "jest --runInBand --coverage",
     "docs": "mkdir docs && cp README.md ./docs/README.md",
     "lint:fix": "pnpm run lint --fix",
     "lint": "eslint --ext .ts,.js --ignore-path .gitignore --max-warnings 0 . .github/actions"

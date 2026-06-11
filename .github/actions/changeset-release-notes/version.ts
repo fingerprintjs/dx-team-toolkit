@@ -10,12 +10,22 @@ function getCurrentVersion(project: Project) {
   return (pkg as PackageJSON).version
 }
 
+function detectPackageManager(cwd: string): 'yarn' | 'pnpm' {
+  if (fs.existsSync(path.join(cwd, 'yarn.lock'))) {
+    return 'yarn'
+  }
+  return 'pnpm'
+}
+
 export function doVersion(projects: Project[], cwd = process.cwd()) {
   const oldVersions = projects.map((project) => getCurrentVersion(project))
-  
-  console.info('Updating version')
-  
-  cp.execSync('pnpm exec changeset version', {
+
+  const packageManager = detectPackageManager(cwd)
+  console.info(`Updating version using ${packageManager}`)
+
+  const command = packageManager === 'yarn' ? 'yarn changeset version' : 'pnpm exec changeset version'
+
+  cp.execSync(command, {
     cwd,
     stdio: 'inherit'
   })

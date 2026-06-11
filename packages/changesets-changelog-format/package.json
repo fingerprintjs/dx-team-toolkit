@@ -8,6 +8,10 @@
   },
   "author": "FingerprintJS, Inc (https://fingerprint.com)",
   "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
   "main": "dist/index.js",
   "files": [
     "dist/index.js"
