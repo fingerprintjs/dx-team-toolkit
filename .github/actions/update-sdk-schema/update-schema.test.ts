@@ -6,6 +6,8 @@ import { createTestPkg } from '../../../__tests__/test-utils/testPkgExec'
 import * as fs from 'fs'
 import * as path from 'path'
 
+jest.mock('@actions/core')
+
 const listReleases = jest.fn()
 const getReleaseByTag = jest.fn()
 
