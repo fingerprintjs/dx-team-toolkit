@@ -11,7 +11,7 @@ describe('Changeset release notes', () => {
   })
 
   it('preview with changelog containing legacy notes', async () => {
-    pkg.writeChangelog(`# {pkg.name}
+    pkg.writeChangelog(`# ${pkg.name}
     
     
 ## [1.0.0](https://github.com/fingerprintjs/fingerprint-pro-server-api-go-sdk/compare/v0.0.0...v1.0.0) (2024-07-30)
