@@ -43,8 +43,8 @@ importers:
         specifier: ^17.8.1
         version: 17.8.1
       '@fingerprintjs/changesets-changelog-format':
-        specifier: ^0.2.0
-        version: 0.2.0
+        specifier: workspace:local
+        version: link:packages/changesets-changelog-format
       '@fingerprintjs/commit-lint-dx-team':
         specifier: workspace:local
         version: link:packages/commit-lint-dx-team
@@ -652,9 +652,6 @@ packages:
   '@fastify/busboy@2.1.1':
     resolution: {integrity: sha512-vBZP4NlzfOlerQTnba4aqZoMhE/a9HY7HRqoOPaETQcSQuWEIyZMHGfVu6w9wGtGK5fED5qRs2DteVCjOH60sA==}
     engines: {node: '>=14'}
-
-  '@fingerprintjs/changesets-changelog-format@0.2.0':
-    resolution: {integrity: sha512-1jI+J1r8OKUtjlFfQW4bmQ8u4E1097zPaKw5fUCgAcahLPgwW4Ae+Keoc253CSyyaKgTu2v/wniUGchmPaXAsg==}
 
   '@humanwhocodes/config-array@0.11.14':
     resolution: {integrity: sha512-3T8LkOmg45BV5FICb15QQMsyUSWrQ8AygVfC7ZG32zOalnqrilm018ZVCw0eapXux8FtA33q8PSRSstjee3jSg==}
@@ -3863,7 +3860,7 @@ snapshots:
       '@types/node': 20.5.1
       chalk: 4.1.2
       cosmiconfig: 8.3.6(typescript@5.4.2)
-      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.4.2))(ts-node@10.9.2(@types/node@20.11.27)(typescript@5.4.2))(typescript@5.4.2)
+      cosmiconfig-typescript-loader: 4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.4.2))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.4.2))(typescript@5.4.2)
       lodash.isplainobject: 4.0.6
       lodash.merge: 4.6.2
       lodash.uniq: 4.5.0
@@ -4024,10 +4021,6 @@ snapshots:
   '@eslint/js@8.57.0': {}
 
   '@fastify/busboy@2.1.1': {}
-
-  '@fingerprintjs/changesets-changelog-format@0.2.0':
-    dependencies:
-      '@changesets/types': 6.0.0
 
   '@humanwhocodes/config-array@0.11.14':
     dependencies:
@@ -5027,7 +5020,7 @@ snapshots:
 
   core-util-is@1.0.3: {}
 
-  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.4.2))(ts-node@10.9.2(@types/node@20.11.27)(typescript@5.4.2))(typescript@5.4.2):
+  cosmiconfig-typescript-loader@4.4.0(@types/node@20.5.1)(cosmiconfig@8.3.6(typescript@5.4.2))(ts-node@10.9.2(@types/node@20.5.1)(typescript@5.4.2))(typescript@5.4.2):
     dependencies:
       '@types/node': 20.5.1
       cosmiconfig: 8.3.6(typescript@5.4.2)
