@@ -6,7 +6,7 @@ export function filterSchema(schemaYaml: string, scopes: ScopesMap, allowedScope
   const schema = yaml.load(schemaYaml) as Record<string, any>
   const allowedMethods = new Map<string, Set<string>>()
   for (const scope of allowedScopes) {
-    if (!Object.prototype.hasOwnProperty.call(scopes, scope)) {
+    if (!Object.hasOwn(scopes, scope)) {
       console.error(`Scope ${scope} did not found in the configuration`)
       continue
     }

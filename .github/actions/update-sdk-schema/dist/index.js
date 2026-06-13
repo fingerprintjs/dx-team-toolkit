@@ -53090,7 +53090,7 @@ function filterSchema(schemaYaml, scopes, allowedScopes) {
     const schema = load(schemaYaml);
     const allowedMethods = new Map();
     for (const scope of allowedScopes) {
-        if (!Object.prototype.hasOwnProperty.call(scopes, scope)) {
+        if (!Object.hasOwn(scopes, scope)) {
             console.error(`Scope ${scope} did not found in the configuration`);
             continue;
         }
