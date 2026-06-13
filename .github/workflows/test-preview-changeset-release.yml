@@ -11,6 +11,7 @@ jobs:
     uses: ./.github/workflows/preview-changeset-release.yml
     with:
       pr-title: ${{ github.event.pull_request.title }}
+      prepare-command: 'pnpm run -r build'
 
 
 
