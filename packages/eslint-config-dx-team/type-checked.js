@@ -1,6 +1,7 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
 const { defineConfig } = require('eslint/config')
 const tseslint = require('typescript-eslint')
+const prettierConfig = require('eslint-config-prettier')
 const base = require('./index.js')
 
 module.exports = defineConfig([
@@ -20,4 +21,5 @@ module.exports = defineConfig([
       '@typescript-eslint/switch-exhaustiveness-check': 'error',
     },
   },
+  prettierConfig,
 ])
