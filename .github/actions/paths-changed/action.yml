@@ -9,8 +9,10 @@ description: >-
 inputs:
   paths:
     description: >-
-      Newline-separated list of glob patterns to watch. Uses the same syntax as
-      GitHub's built-in `paths:` filter. Example:
+      Newline-separated list of positive picomatch glob patterns to watch. This
+      wrapper passes the list to one dorny/paths-filter filter, so prefer include
+      patterns here. Use dorny/paths-filter directly for advanced filter YAML,
+      change-type rules, or exclusion semantics. Example:
         paths: |
           src/**
           package.json
@@ -35,8 +37,8 @@ inputs:
     default: '.'
   token:
     description: >-
-      GitHub token used to fetch the list of changed files for `push` events via
-      the API. Defaults to the job token.
+      GitHub token used to fetch the list of changed files for pull request
+      events via the API. Defaults to the job token.
     required: false
     default: ${{ github.token }}
 
@@ -72,7 +74,7 @@ runs:
             pattern="${pattern%"${pattern##*[![:space:]]}"}"
             [ -z "$pattern" ] && continue
             # Escape single quotes so the pattern is safe inside single-quoted YAML
-            escaped="${pattern//\'/\'\'}"
+            escaped="${pattern//\'/''}"
             echo "  - '${escaped}'"
           done <<< "$PATHS"
           echo '__PATHS_CHANGED_EOF__'

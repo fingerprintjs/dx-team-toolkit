@@ -37,11 +37,11 @@ action packages that pattern so nobody has to write it again.
 
 | Input               | Required | Default            | Description                                                                                          |
 |---------------------|----------|--------------------|------------------------------------------------------------------------------------------------------|
-| `paths`             | Yes      | -                  | Newline-separated list of glob patterns to watch (same syntax as GitHub's built-in `paths:` filter). |
+| `paths`             | Yes      | -                  | Newline-separated list of positive picomatch glob patterns to watch.                                 |
 | `base`              | No       | _(auto)_           | Base ref of the comparison. Defaults to the PR base branch / previous commit.                        |
 | `ref`               | No       | _(auto)_           | Head ref of the comparison. Defaults to the current ref.                                             |
 | `working-directory` | No       | `.`                | Relative path under `$GITHUB_WORKSPACE` to run the detection in.                                     |
-| `token`             | No       | `${{ github.token }}` | Token used to fetch changed files for `push` events via the API.                                  |
+| `token`             | No       | `${{ github.token }}` | Token used to fetch changed files for pull request events via the API.                            |
 
 ## Outputs
 
@@ -59,6 +59,10 @@ name: Check broken links
 
 on:
   pull_request: # no `paths:` filter — the workflow always runs
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   check-broken-links:
@@ -89,6 +93,10 @@ reports success, and is mergeable.
 ```yaml
 on:
   pull_request:
+
+permissions:
+  contents: read
+  pull-requests: read
 
 jobs:
   changes:
@@ -121,5 +129,11 @@ jobs:
 
 - Built on top of [`dorny/paths-filter`](https://github.com/dorny/paths-filter), which
   handles the `pull_request` vs `push` diff semantics and shallow checkouts.
-- Glob syntax follows [picomatch](https://github.com/micromatch/picomatch) (e.g. `**`,
-  `*`, `{a,b}`), matching the syntax used by GitHub's native `paths:` filter.
+- For `pull_request` workflows, grant `pull-requests: read`. If the workflow also checks
+  out the repository, grant `contents: read`.
+- The `paths` input accepts positive [picomatch](https://github.com/micromatch/picomatch)
+  glob patterns such as `src/**`, `*.md`, and `{package.json,pnpm-lock.yaml}`. This action
+  wraps one [`dorny/paths-filter`](https://github.com/dorny/paths-filter) filter, so do not
+  use GitHub trigger-style ordered exclusion patterns like `!src/**/*.md` here. Use
+  `dorny/paths-filter` directly when you need advanced filter YAML, change-type rules such
+  as `added|modified`, or exclusion semantics.
