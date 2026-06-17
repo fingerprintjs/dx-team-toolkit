@@ -1,18 +1,13 @@
 name: 'Paths changed'
 description: >-
-  Detect whether a pull request or push touched any of the given path globs while
-  still always reporting a status, so the check can safely be marked as required.
-  Solves GitHub's "skipped but required" problem: keep your workflow trigger free
-  of `paths:` filters so the job always runs, then gate the expensive steps on the
-  `changed` output of this action.
+  Detect changed paths while still letting required checks report a status.
 
 inputs:
   paths:
     description: >-
-      Newline-separated list of positive picomatch glob patterns to watch. This
-      wrapper passes the list to one dorny/paths-filter filter, so prefer include
-      patterns here. Use dorny/paths-filter directly for advanced filter YAML,
-      change-type rules, or exclusion semantics. Example:
+      Newline-separated positive picomatch globs. This wrapper creates one
+      dorny/paths-filter filter; use dorny/paths-filter directly for advanced
+      filters, change-type rules, or exclusions. Example:
         paths: |
           src/**
           package.json
@@ -22,13 +17,13 @@ inputs:
     description: >-
       Git reference (branch, tag or SHA) to use as the base of the comparison.
       Defaults to the PR base branch for `pull_request` events and to the
-      previous commit for `push` events. You usually do not need to set this.
+      previous commit for `push` events.
     required: false
     default: ''
   ref:
     description: >-
       Git reference (branch, tag or SHA) to use as the head of the comparison.
-      Defaults to the current ref. You usually do not need to set this.
+      Defaults to the current ref.
     required: false
     default: ''
   working-directory:
@@ -37,19 +32,18 @@ inputs:
     default: '.'
   token:
     description: >-
-      GitHub token used to fetch the list of changed files for pull request
-      events via the API. Defaults to the job token.
+      GitHub token used to fetch changed files for pull request events. Defaults
+      to the job token.
     required: false
     default: ${{ github.token }}
 
 outputs:
   changed:
-    description: "'true' if any of the watched paths changed, otherwise 'false'."
+    description: "'true' when any watched path changed."
     value: ${{ steps.filter.outputs.changed }}
   changed-files:
     description: >-
-      Space-separated, shell-escaped list of the changed files that matched the
-      watched paths.
+      Space-separated, shell-escaped list of matching changed files.
     value: ${{ steps.filter.outputs.changed_files }}
 
 runs:

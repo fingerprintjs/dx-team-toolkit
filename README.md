@@ -775,83 +775,9 @@ jobs:
 
 ## Reusable actions
 
-- [1. Detect changed paths without breaking required checks](#1-detect-changed-paths-without-breaking-required-checks)
+- [1. Detect changed paths](#1-detect-changed-paths)
 
-### 1. Detect changed paths without breaking required checks
+### 1. Detect changed paths
 
-The [`paths-changed`](.github/actions/paths-changed) composite action tells you whether a
-pull request or push touched any of a set of path globs, so you can run expensive steps
-only when relevant files change — **without** the "skipped but required" problem.
-
-Adding a `paths:` filter to a workflow trigger skips the workflow entirely when no matching
-file changes. If that check is _required_ by branch protection, the PR is then blocked
-forever waiting for a status that never reports (e.g. a `README.md`-only change against a
-workflow that only watches `src/**`). The fix is to keep the trigger free of `paths:`
-filters so the check always runs, and gate the heavy steps on this action's `changed`
-output instead.
-
-#### Inputs
-
-<!-- prettier-ignore -->
-
-| Input Parameter     | Required | Type   | Default               | Description                                                                                          |
-|---------------------|----------|--------|-----------------------|------------------------------------------------------------------------------------------------------|
-| `paths`             | Yes      | String | -                     | Newline-separated list of positive picomatch glob patterns to watch.                                 |
-| `base`              | No       | String | _(auto)_              | Base ref of the comparison. Defaults to the PR base branch / previous commit.                        |
-| `ref`               | No       | String | _(auto)_              | Head ref of the comparison. Defaults to the current ref.                                             |
-| `working-directory` | No       | String | `.`                   | Relative path under `$GITHUB_WORKSPACE` to run the detection in.                                     |
-| `token`             | No       | String | `${{ github.token }}` | Token used to fetch changed files for pull request events via the API.                               |
-
-#### Filter syntax
-
-Use positive [picomatch](https://github.com/micromatch/picomatch) glob patterns such as
-`src/**`, `*.md`, and `{package.json,pnpm-lock.yaml}`. This action wraps one
-[`dorny/paths-filter`](https://github.com/dorny/paths-filter) filter, so do not use GitHub
-trigger-style ordered exclusion patterns like `!src/**/*.md` here. Use `dorny/paths-filter`
-directly when you need advanced filter YAML, change-type rules such as `added|modified`,
-or exclusion semantics.
-
-#### Outputs
-
-<!-- prettier-ignore -->
-
-| Output          | Description                                                                          |
-|-----------------|--------------------------------------------------------------------------------------|
-| `changed`       | `'true'` if any of the watched paths changed, otherwise `'false'`.                   |
-| `changed-files` | Space-separated, shell-escaped list of the changed files that matched the patterns.  |
-
-#### Example of usage:
-
-```yaml
-name: Check broken links
-
-on:
-  pull_request: # no `paths:` filter — the workflow always runs
-
-permissions:
-  contents: read
-  pull-requests: read
-
-jobs:
-  check-broken-links:
-    name: Check broken links # mark THIS job as the required status check
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v4
-
-      - id: filter
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/paths-changed@v1
-        with:
-          paths: |
-            mintlify/**
-            package.json
-            pnpm-lock.yaml
-            .github/workflows/**
-
-      - name: Check broken links
-        if: steps.filter.outputs.changed == 'true'
-        run: pnpm check:broken-links
-```
-
-See the [action README](.github/actions/paths-changed) for more examples, including gating
-a whole downstream job.
+Use [`paths-changed`](.github/actions/paths-changed) to keep required checks reporting
+while skipping expensive steps when watched files did not change.
