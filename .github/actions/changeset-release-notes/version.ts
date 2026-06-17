@@ -5,9 +5,9 @@ import { PackageJSON } from '@changesets/types'
 import * as cp from 'child_process'
 
 function getCurrentVersion(project: Project) {
-  const pkg = JSON.parse(fs.readFileSync(path.join(project.rootPath, 'package.json'), 'utf-8'))
+  const pkg: PackageJSON = JSON.parse(fs.readFileSync(path.join(project.rootPath, 'package.json'), 'utf-8'))
 
-  return (pkg as PackageJSON).version
+  return pkg.version
 }
 
 function detectPackageManager(cwd: string): 'yarn' | 'pnpm' {
@@ -27,9 +27,9 @@ export function doVersion(projects: Project[], cwd = process.cwd()) {
 
   cp.execSync(command, {
     cwd,
-    stdio: 'inherit'
+    stdio: 'inherit',
   })
-  
+
   console.info('Version updated')
 
   return projects.some((project, i) => {

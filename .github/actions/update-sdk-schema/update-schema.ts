@@ -68,7 +68,7 @@ async function main() {
       cwd: process.cwd(),
     })
   } catch (err) {
-    core.setFailed(err as Error)
+    core.setFailed(err instanceof Error ? err : String(err))
   }
 }
 

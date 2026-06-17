@@ -1,7 +1,7 @@
 import * as path from 'path'
 import * as fs from 'fs'
 
-const assetsMap = {
+const assetsMap: Record<string, string | undefined> = {
   'https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/download/v1.1.0/changesets.zip':
     path.resolve(__dirname, './v1.1.0/changesets.zip'),
   'https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/download/v1.2.0/changesets.zip':
@@ -19,7 +19,7 @@ const assetsMap = {
 }
 
 export function maybeMockAsset(url: string) {
-  const assetPath = (assetsMap as Record<string, string | undefined>)[url]
+  const assetPath = assetsMap[url]
   if (assetPath) {
     const contents = fs.readFileSync(assetPath)
     return new Response(contents)

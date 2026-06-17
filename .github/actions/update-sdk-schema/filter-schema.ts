@@ -2,10 +2,11 @@ import * as yaml from 'js-yaml'
 import { ScopesMap } from './scopes'
 
 export function filterSchema(schemaYaml: string, scopes: ScopesMap, allowedScopes: string[]): string {
+  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-explicit-any
   const schema = yaml.load(schemaYaml) as Record<string, any>
   const allowedMethods = new Map<string, Set<string>>()
   for (const scope of allowedScopes) {
-    if (!scopes.hasOwnProperty(scope)) {
+    if (!Object.hasOwn(scopes, scope)) {
       console.error(`Scope ${scope} did not found in the configuration`)
       continue
     }
@@ -16,13 +17,17 @@ export function filterSchema(schemaYaml: string, scopes: ScopesMap, allowedScope
   for (const path in schema.paths) {
     if (!allowedMethods.has(path)) {
       console.info(`Removing path ${path}`)
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete schema.paths[path]
     } else {
-      const allowedMethodsForPath = allowedMethods.get(path) as Set<string>
-      for (const method in schema.paths[path]) {
-        if (!allowedMethodsForPath.has(method)) {
-          console.info(`Removing method ${method} from ${path}`)
-          delete schema.paths[path][method]
+      const allowedMethodsForPath = allowedMethods.get(path)
+      if (allowedMethodsForPath !== undefined) {
+        for (const method in schema.paths[path]) {
+          if (!allowedMethodsForPath.has(method)) {
+            console.info(`Removing method ${method} from ${path}`)
+            // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
+            delete schema.paths[path][method]
+          }
         }
       }
     }
@@ -36,6 +41,7 @@ export function filterSchema(schemaYaml: string, scopes: ScopesMap, allowedScope
   return yaml.dump(schema)
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 export function removeUnusedSchemas(schema: Record<string, any>) {
   const usageRegistry = new Set<string>()
   let removedCounter = 0
@@ -48,6 +54,7 @@ export function removeUnusedSchemas(schema: Record<string, any>) {
   for (const componentName of Object.keys(components)) {
     if (!usageRegistry.has(`#/components/schemas/${componentName}`)) {
       console.info(`Removing component ${componentName}`)
+      // eslint-disable-next-line @typescript-eslint/no-dynamic-delete
       delete components[componentName]
       removedCounter++
     }
@@ -55,6 +62,7 @@ export function removeUnusedSchemas(schema: Record<string, any>) {
   return removedCounter
 }
 
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function walkJson(json: Record<string, any>, key: string, callback: (json: Record<string, any>) => void) {
   Object.keys(json).forEach((iteratorKey) => {
     if (iteratorKey === key) {

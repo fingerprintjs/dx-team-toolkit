@@ -23,8 +23,7 @@ export function initTestPackage(withChangelogPreset = true) {
     fs.writeFileSync(changesetConfigPath, JSON.stringify(changesetConfig, null, 2))
   }
 
-  // eslint-disable-next-line @typescript-eslint/consistent-type-assertions
-  const testPkgJson = JSON.parse(fs.readFileSync(path.join(testPkg.path, 'package.json'), 'utf-8')) as PackageJSON
+  const testPkgJson: PackageJSON = JSON.parse(fs.readFileSync(path.join(testPkg.path, 'package.json'), 'utf-8'))
 
   testPkgJson.dependencies = {
     '@changesets/cli': pkg.devDependencies['@changesets/cli'],

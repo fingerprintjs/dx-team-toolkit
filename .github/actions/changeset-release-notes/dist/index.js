@@ -58244,7 +58244,7 @@ function doVersion(projects, cwd = process.cwd()) {
     const command = packageManager === 'yarn' ? 'yarn changeset version' : 'pnpm exec changeset version';
     external_child_process_.execSync(command, {
         cwd,
-        stdio: 'inherit'
+        stdio: 'inherit',
     });
     console.info('Version updated');
     return projects.some((project, i) => {
