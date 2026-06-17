@@ -772,3 +772,12 @@ jobs:
       APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
       SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
 ```
+
+## Reusable actions
+
+- [1. Detect changed paths](#1-detect-changed-paths)
+
+### 1. Detect changed paths
+
+Use [`paths-changed`](.github/actions/paths-changed) to keep required checks reporting
+while skipping expensive steps when watched files did not change.
