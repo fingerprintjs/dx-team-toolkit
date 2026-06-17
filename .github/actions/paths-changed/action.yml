@@ -1,0 +1,74 @@
+name: 'Paths changed'
+description: >-
+  Detect changed paths while still letting required checks report a status.
+
+inputs:
+  paths:
+    description: >-
+      Newline-separated positive git glob pathspecs. Example:
+        paths: |
+          src/**
+          package.json
+          .github/workflows/**
+    required: true
+
+outputs:
+  changed:
+    description: "'true' when any watched path changed."
+    value: ${{ steps.detect.outputs.changed }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Detect changed paths
+      id: detect
+      shell: bash
+      env:
+        PATHS: ${{ inputs.paths }}
+        PR_BASE_SHA: ${{ github.event.pull_request.base.sha }}
+      run: |
+        set -euo pipefail
+
+        if [ -z "${PATHS//[[:space:]]/}" ]; then
+          echo "::error::The 'paths' input must contain at least one glob pattern."
+          exit 1
+        fi
+
+        if [ -z "${GITHUB_BASE_REF:-}" ]; then
+          echo "::error::This action requires a pull_request workflow event."
+          exit 1
+        fi
+
+        cd "$GITHUB_WORKSPACE"
+
+        # Prefer the exact PR base SHA from the event. The base branch can move
+        # while the PR is open, and comparing against the new tip over-reports.
+        git fetch --no-tags --depth=1 origin "${PR_BASE_SHA:-$GITHUB_BASE_REF}"
+        base="$(git rev-parse FETCH_HEAD)"
+
+        # Convert each input line into a git glob pathspec, keeping the action
+        # deliberately narrower than full `git diff` pathspec syntax.
+        pathspecs=()
+        while IFS= read -r pattern; do
+          pattern="${pattern#"${pattern%%[![:space:]]*}"}"
+          pattern="${pattern%"${pattern##*[![:space:]]}"}"
+          [ -z "$pattern" ] && continue
+          if [[ "$pattern" == '!'* ]]; then
+            echo "::error::The 'paths' input only supports positive git glob pathspecs."
+            exit 1
+          fi
+          pathspecs+=(":(glob)$pattern")
+        done <<< "$PATHS"
+
+        set +e
+        git diff --quiet --diff-filter=ACMRT "$base" -- "${pathspecs[@]}"
+        diff_status=$?
+        set -e
+
+        if [ "$diff_status" -eq 0 ]; then
+          echo "changed=false" >> "$GITHUB_OUTPUT"
+        elif [ "$diff_status" -eq 1 ]; then
+          echo "changed=true" >> "$GITHUB_OUTPUT"
+        else
+          exit "$diff_status"
+        fi

@@ -1,0 +1,46 @@
+name: Test paths-changed action
+
+on:
+  pull_request:
+    paths-ignore:
+      - '**.md'
+
+permissions:
+  contents: read
+
+jobs:
+  test-paths-changed:
+    name: Test paths-changed action
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # A PR always changes at least one file, so '**' must always match.
+      - name: Run action with a matching pattern
+        id: match
+        uses: ./.github/actions/paths-changed
+        with:
+          paths: |
+            **
+
+      # No file lives under this path, so it must never match.
+      - name: Run action with a non-matching pattern
+        id: no-match
+        uses: ./.github/actions/paths-changed
+        with:
+          paths: |
+            this/path/does/not/exist/**
+
+      - name: Assert outputs
+        shell: bash
+        run: |
+          echo "match.changed=${{ steps.match.outputs.changed }}"
+          echo "no-match.changed=${{ steps.no-match.outputs.changed }}"
+          if [ "${{ steps.match.outputs.changed }}" != "true" ]; then
+            echo "::error::Expected 'changed' to be 'true' for the '**' pattern"
+            exit 1
+          fi
+          if [ "${{ steps.no-match.outputs.changed }}" != "false" ]; then
+            echo "::error::Expected 'changed' to be 'false' for a non-existent path"
+            exit 1
+          fi
