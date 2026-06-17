@@ -1,0 +1,90 @@
+name: 'Paths changed'
+description: >-
+  Detect whether a pull request or push touched any of the given path globs while
+  still always reporting a status, so the check can safely be marked as required.
+  Solves GitHub's "skipped but required" problem: keep your workflow trigger free
+  of `paths:` filters so the job always runs, then gate the expensive steps on the
+  `changed` output of this action.
+
+inputs:
+  paths:
+    description: >-
+      Newline-separated list of glob patterns to watch. Uses the same syntax as
+      GitHub's built-in `paths:` filter. Example:
+        paths: |
+          src/**
+          package.json
+          .github/workflows/**
+    required: true
+  base:
+    description: >-
+      Git reference (branch, tag or SHA) to use as the base of the comparison.
+      Defaults to the PR base branch for `pull_request` events and to the
+      previous commit for `push` events. You usually do not need to set this.
+    required: false
+    default: ''
+  ref:
+    description: >-
+      Git reference (branch, tag or SHA) to use as the head of the comparison.
+      Defaults to the current ref. You usually do not need to set this.
+    required: false
+    default: ''
+  working-directory:
+    description: 'Relative path under $GITHUB_WORKSPACE to run the detection in.'
+    required: false
+    default: '.'
+  token:
+    description: >-
+      GitHub token used to fetch the list of changed files for `push` events via
+      the API. Defaults to the job token.
+    required: false
+    default: ${{ github.token }}
+
+outputs:
+  changed:
+    description: "'true' if any of the watched paths changed, otherwise 'false'."
+    value: ${{ steps.filter.outputs.changed }}
+  changed-files:
+    description: >-
+      Space-separated, shell-escaped list of the changed files that matched the
+      watched paths.
+    value: ${{ steps.filter.outputs.changed_files }}
+
+runs:
+  using: 'composite'
+  steps:
+    - name: Build path filter
+      id: build-filter
+      shell: bash
+      env:
+        PATHS: ${{ inputs.paths }}
+      run: |
+        if [ -z "${PATHS//[[:space:]]/}" ]; then
+          echo "::error::The 'paths' input must contain at least one glob pattern."
+          exit 1
+        fi
+        {
+          echo 'filters<<__PATHS_CHANGED_EOF__'
+          echo 'changed:'
+          while IFS= read -r pattern; do
+            # Trim surrounding whitespace
+            pattern="${pattern#"${pattern%%[![:space:]]*}"}"
+            pattern="${pattern%"${pattern##*[![:space:]]}"}"
+            [ -z "$pattern" ] && continue
+            # Escape single quotes so the pattern is safe inside single-quoted YAML
+            escaped="${pattern//\'/\'\'}"
+            echo "  - '${escaped}'"
+          done <<< "$PATHS"
+          echo '__PATHS_CHANGED_EOF__'
+        } >> "$GITHUB_OUTPUT"
+
+    - name: Detect changed paths
+      id: filter
+      uses: dorny/paths-filter@fbd0ab8f3e69293af611ebaee6363fc25e6d187d # v4.0.1
+      with:
+        base: ${{ inputs.base }}
+        ref: ${{ inputs.ref }}
+        working-directory: ${{ inputs.working-directory }}
+        token: ${{ inputs.token }}
+        list-files: shell
+        filters: ${{ steps.build-filter.outputs.filters }}
