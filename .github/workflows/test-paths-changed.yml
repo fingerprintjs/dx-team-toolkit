@@ -7,7 +7,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
 
 jobs:
   test-paths-changed:
@@ -43,56 +42,5 @@ jobs:
           fi
           if [ "${{ steps.no-match.outputs.changed }}" != "false" ]; then
             echo "::error::Expected 'changed' to be 'false' for a non-existent path"
-            exit 1
-          fi
-
-      - name: Create local diff fixture
-        shell: bash
-        run: |
-          set -euo pipefail
-
-          mkdir -p paths-changed-fixture/matched paths-changed-fixture/ignored
-          echo "matched" > paths-changed-fixture/matched/file.txt
-          echo "ignored" > paths-changed-fixture/ignored/file.txt
-
-          git add paths-changed-fixture
-
-      - name: Run action with a matching local git diff
-        id: local-match
-        uses: ./.github/actions/paths-changed
-        with:
-          base: HEAD
-          paths: |
-            paths-changed-fixture/matched/**
-
-      - name: Run action with a non-matching local git diff
-        id: local-no-match
-        uses: ./.github/actions/paths-changed
-        with:
-          base: HEAD
-          paths: |
-            paths-changed-fixture/missing/**
-
-      - name: Assert local git diff outputs
-        shell: bash
-        run: |
-          echo "local-match.changed=${{ steps.local-match.outputs.changed }}"
-          echo "local-match.changed-files=${{ steps.local-match.outputs.changed-files }}"
-          echo "local-no-match.changed=${{ steps.local-no-match.outputs.changed }}"
-          echo "local-no-match.changed-files=${{ steps.local-no-match.outputs.changed-files }}"
-          if [ "${{ steps.local-match.outputs.changed }}" != "true" ]; then
-            echo "::error::Expected local git diff fixture to match"
-            exit 1
-          fi
-          if [ "${{ steps.local-match.outputs.changed-files }}" != "paths-changed-fixture/matched/file.txt" ]; then
-            echo "::error::Expected only the matched fixture file in 'changed-files'"
-            exit 1
-          fi
-          if [ "${{ steps.local-no-match.outputs.changed }}" != "false" ]; then
-            echo "::error::Expected missing fixture path not to match"
-            exit 1
-          fi
-          if [ -n "${{ steps.local-no-match.outputs.changed-files }}" ]; then
-            echo "::error::Expected no changed files for missing fixture path"
             exit 1
           fi

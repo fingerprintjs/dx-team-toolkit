@@ -16,7 +16,6 @@ on:
 
 permissions:
   contents: read
-  pull-requests: read
 
 jobs:
   check-broken-links:
@@ -74,11 +73,7 @@ jobs:
 
 | Input               | Required | Default              | Description                                               |
 |---------------------|----------|----------------------|-----------------------------------------------------------|
-| `paths`             | Yes      | -                    | Newline-separated positive picomatch globs.               |
-| `base`              | No       | _(auto)_             | Base ref. Defaults to the PR base branch / previous push commit. |
-| `ref`               | No       | _(auto)_             | Head ref. Defaults to the current ref.                    |
-| `working-directory` | No       | `.`                  | Checkout path under `$GITHUB_WORKSPACE`.                  |
-| `token`             | No       | job token            | Token for pull request file lookup.                       |
+| `paths`             | Yes      | -                    | Newline-separated positive git glob pathspecs.            |
 
 ## Outputs
 
@@ -87,18 +82,12 @@ jobs:
 | Output          | Description                                              |
 |-----------------|----------------------------------------------------------|
 | `changed`       | `'true'` when any watched path changed.                  |
-| `changed-files` | Space-separated, shell-escaped matching changed files.   |
 
 ## Filter Syntax
 
-`paths` accepts positive [picomatch](https://github.com/micromatch/picomatch) globs such
-as `src/**`, `*.md`, and `{package.json,pnpm-lock.yaml}`.
-
-This action wraps one [`dorny/paths-filter`](https://github.com/dorny/paths-filter) filter.
-Use `dorny/paths-filter` directly for advanced YAML, change-type rules such as
-`added|modified`, or exclusion logic like `!src/**/*.md`.
+`paths` accepts positive [git glob pathspecs](https://git-scm.com/docs/gitglossary#Documentation/gitglossary.txt-aiddefpathspecapathspec)
+such as `src/**`, `*.md`, and `package.json`.
 
 ## Permissions
 
-For `pull_request` workflows, grant `pull-requests: read`. If the job checks out the repo,
-also grant `contents: read`.
+Grant `contents: read` so the job can check out the repo and fetch the comparison ref.
