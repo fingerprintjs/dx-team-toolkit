@@ -78,7 +78,7 @@ jobs:
 | `base`              | No       | _(auto)_             | Base ref. Defaults to the PR base branch / previous push commit. |
 | `ref`               | No       | _(auto)_             | Head ref. Defaults to the current ref.                    |
 | `working-directory` | No       | `.`                  | Checkout path under `$GITHUB_WORKSPACE`.                  |
-| `token`             | No       | `${{ github.token }}` | Token for pull request file lookup.                       |
+| `token`             | No       | job token            | Token for pull request file lookup.                       |
 
 ## Outputs
 

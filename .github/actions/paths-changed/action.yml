@@ -32,10 +32,10 @@ inputs:
     default: '.'
   token:
     description: >-
-      GitHub token used to fetch changed files for pull request events. Defaults
-      to the job token.
+      GitHub token used to fetch changed files for pull request events. Falls
+      back to the job token.
     required: false
-    default: ${{ github.token }}
+    default: ''
 
 outputs:
   changed:
@@ -68,7 +68,7 @@ runs:
             pattern="${pattern%"${pattern##*[![:space:]]}"}"
             [ -z "$pattern" ] && continue
             # Escape single quotes so the pattern is safe inside single-quoted YAML
-            escaped="${pattern//\'/''}"
+            escaped="$(printf '%s' "$pattern" | sed "s/'/''/g")"
             echo "  - '${escaped}'"
           done <<< "$PATHS"
           echo '__PATHS_CHANGED_EOF__'
@@ -81,6 +81,6 @@ runs:
         base: ${{ inputs.base }}
         ref: ${{ inputs.ref }}
         working-directory: ${{ inputs.working-directory }}
-        token: ${{ inputs.token }}
+        token: ${{ inputs.token || github.token }}
         list-files: shell
         filters: ${{ steps.build-filter.outputs.filters }}
