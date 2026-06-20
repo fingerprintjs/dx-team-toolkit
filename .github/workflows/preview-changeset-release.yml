@@ -60,7 +60,7 @@ jobs:
 
       - name: 'Get release notes'
         id: notes
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-release-notes@v1
+        uses: ./.github/actions/changeset-release-notes
         env:
           GITHUB_TOKEN: ${{ github.token }}
 

@@ -139,7 +139,7 @@ jobs:
           node-version: ${{ inputs.nodeVersion }}
       - name: Setup language
         if: ${{ inputs.setupLanguage && inputs.setupLanguageVersion }}
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        uses: ./.github/actions/setup-lang
         with:
           language: ${{ inputs.setupLanguage }}
           language-version: ${{ inputs.setupLanguageVersion }}

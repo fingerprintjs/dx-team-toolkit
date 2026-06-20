@@ -114,7 +114,7 @@ jobs:
           repository: ${{ inputs.owner }}/${{ inputs.repository }}
 
       - name: Setup language
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        uses: ./.github/actions/setup-lang
         with:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
@@ -137,7 +137,7 @@ jobs:
           git config --global --add --bool push.autoSetupRemote true
 
       - name: Update schema
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/update-sdk-schema@v1
+        uses: ./.github/actions/update-sdk-schema
         with:
           schemaSource: ${{ inputs.schema-source }}
           schemaPath: ${{ inputs.schema-path }}
