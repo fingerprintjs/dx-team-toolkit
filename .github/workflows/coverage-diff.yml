@@ -71,7 +71,7 @@ jobs:
 
       - name: Jest coverage comment
         id: coverage
-        uses: ArtiomTr/jest-coverage-report-action@c026e98ae079f4b0b027252c8e957f5ebd420610
+        uses: ArtiomTr/jest-coverage-report-action@262a7bb0b20c4d1d6b6b026af0f008f78da72788 # v2.3.1
         with:
           package-manager: ${{ env.PACKAGE_MANAGER }}
           output: report-markdown

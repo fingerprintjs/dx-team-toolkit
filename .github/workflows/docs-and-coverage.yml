@@ -74,7 +74,7 @@ jobs:
         run: $PACKAGE_MANAGER test:coverage
 
       - name: Create Coverage Badges
-        uses: jaywcjlove/coverage-badges-cli@df58615045079f1c827de7867044bbab3ec22b43
+        uses: jaywcjlove/coverage-badges-cli@998665f7962b1a3935ba8c3e786171a99436e5d1 # v2.3.0
         with:
           source: coverage/coverage-summary.json
           output: coverage/lcov-report/badges.svg
@@ -85,7 +85,7 @@ jobs:
           ${{ inputs.prepare-gh-pages-commands }}
 
       - name: Deploy 🚀
-        uses: JamesIves/github-pages-deploy-action@65b5dfd4f5bcd3a7403bbc2959c144256167464e
+        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
         with:
           branch: gh-pages
           folder: gh-pages
