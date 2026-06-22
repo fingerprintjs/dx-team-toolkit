@@ -44,7 +44,7 @@ on:
         type: string
         default: ''
         required: false
-        description: 'GitHub App client ID for creating PR.'
+        description: 'GitHub App ID used to generate an installation token for creating the PR.'
       runnerAppId:
         type: string
         default: ''
