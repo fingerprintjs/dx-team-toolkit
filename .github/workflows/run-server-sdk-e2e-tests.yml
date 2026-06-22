@@ -11,10 +11,14 @@ on:
         description: 'Type of SDK to test, can be: go, dotnet, node, php, python, java'
         type: string
         required: true
+      clientId:
+        type: string
+        required: false
+        description: 'GitHub App client ID to access the repository with E2E tests'
       appId:
         type: string
-        required: true
-        description: 'GitHub app id to access the repository with E2E tests'
+        required: false
+        description: 'Deprecated: use clientId instead. GitHub App client ID to access the repository with E2E tests'
       sdkPackageName:
         description: 'Custom package name for old SDK versions'
         required: false
@@ -38,7 +42,7 @@ jobs:
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          client-id: ${{ inputs.appId }}
+          client-id: ${{ inputs.clientId || inputs.appId }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           owner: fingerprintjs
           repositories: dx-team-orchestra

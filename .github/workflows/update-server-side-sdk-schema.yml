@@ -40,10 +40,14 @@ on:
         description: 'Path to the OpenAPI examples.'
         required: true
         type: string
+      client-id:
+        type: string
+        required: false
+        description: 'GitHub App client ID for release process'
       app-id:
         type: string
-        required: true
-        description: 'GitHub app id for release process'
+        required: false
+        description: 'Deprecated: use client-id instead. GitHub App client ID for release process'
       repository:
         type: string
         required: true
@@ -102,7 +106,7 @@ jobs:
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          client-id: ${{ inputs.app-id }}
+          client-id: ${{ inputs.client-id || inputs.app-id }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
           repositories: '${{ inputs.repository }}'
           owner: '${{ inputs.owner }}'
