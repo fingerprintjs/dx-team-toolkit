@@ -107,6 +107,12 @@ jobs:
     needs: determine-changesets-step
     if: needs.determine-changesets-step.outputs.action == 'pr' && (inputs.runner-client-id != '' || inputs.runnerAppId != '')
     steps:
+      - name: 'Validate runner app credentials'
+        if: ${{ secrets.RUNNER_APP_PRIVATE_KEY == '' }}
+        run: |
+          echo "Error: RUNNER_APP_PRIVATE_KEY secret must be provided when runner-client-id or runnerAppId is set"
+          exit 1
+
       - name: 'Get token for the GitHub App'
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
@@ -155,6 +161,12 @@ jobs:
     needs: determine-changesets-step
     if: needs.determine-changesets-step.outputs.action == 'publish' || (inputs.runner-client-id == '' && inputs.runnerAppId == '')
     steps:
+      - name: 'Validate app credentials'
+        if: ${{ inputs.client-id == '' && inputs.appId == '' }}
+        run: |
+          echo "Error: either 'client-id' or 'appId' (deprecated) must be provided"
+          exit 1
+
       - name: 'Get token for the GitHub App'
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
