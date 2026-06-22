@@ -98,7 +98,7 @@ jobs:
           echo "EOF" >> $GITHUB_OUTPUT
         shell: bash
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
         with:
           header: Commitlint
           recreate: true
@@ -118,7 +118,7 @@ jobs:
             ### Commitlint Errors
             ${{ steps.commitlint_formatted_results.outputs.formatted }}
       - if: ${{ success() }}
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
         with:
           header: Commitlint
           hide: true
@@ -154,7 +154,7 @@ jobs:
           cwd: ${{ inputs.releaseWorkingDirectory }}
       - if: ${{ steps.semantic_release_info.outputs.no_release == 'false' }}
         name: Add comment to the PR
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
         with:
           header: ReleasePreview
           recreate: true
@@ -164,7 +164,7 @@ jobs:
             ${{steps.semantic_release_info.outputs.notes}}
       - if: ${{ steps.semantic_release_info.outputs.no_release == 'true' }}
         name: Add comment to the PR
-        uses: marocchino/sticky-pull-request-comment@331f8f5b4215f0445d3c07b4967662a32a2d3e31
+        uses: marocchino/sticky-pull-request-comment@0ea0beb66eb9baf113663a64ec522f60e49231c0 # v3.0.4
         with:
           header: ReleasePreview
           recreate: true
