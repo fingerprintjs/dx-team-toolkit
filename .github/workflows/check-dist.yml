@@ -19,13 +19,13 @@ jobs:
     outputs:
       diff: ${{ steps.diff.outputs.diff }}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           repository: ${{ github.event.pull_request.head.repo.full_name }}
           ref: ${{ github.event.pull_request.head.ref }}
 
       - name: Install pnpm
-        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: 9
 

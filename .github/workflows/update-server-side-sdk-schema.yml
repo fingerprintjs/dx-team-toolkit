@@ -108,7 +108,7 @@ jobs:
           owner: '${{ inputs.owner }}'
 
       - name: 'Checkout'
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           token: ${{ steps.app-token.outputs.token }}
           repository: ${{ inputs.owner }}/${{ inputs.repository }}
@@ -121,13 +121,13 @@ jobs:
           java-version: ${{ inputs.java-version }}
 
       - name: 'Setup pnpm'
-        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: 9
           run_install: true
 
       - name: 'Install Node'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.language == 'node' && inputs.language-version || 'lts/*' }}
           cache: 'pnpm'
