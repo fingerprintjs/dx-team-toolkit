@@ -32,15 +32,15 @@ on:
         required: false
         type: string
         default: '11'
-      clientId:
+      client-id:
         type: string
         required: false
         description: 'GitHub App client ID for release process.'
       appId:
         type: string
         required: false
-        description: 'Deprecated: use clientId instead. GitHub App client ID for release process.'
-      runnerClientId:
+        description: 'Deprecated: use client-id instead. GitHub App client ID for release process.'
+      runner-client-id:
         type: string
         default: ''
         required: false
@@ -49,7 +49,7 @@ on:
         type: string
         default: ''
         required: false
-        description: 'Deprecated: use runnerClientId instead. GitHub App client ID for creating PR.'
+        description: 'Deprecated: use runner-client-id instead. GitHub App client ID for creating PR.'
       useTrustedPublishing:
         type: boolean
         required: false
@@ -105,13 +105,13 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     needs: determine-changesets-step
-    if: needs.determine-changesets-step.outputs.action == 'pr' && (inputs.runnerClientId != '' || inputs.runnerAppId != '')
+    if: needs.determine-changesets-step.outputs.action == 'pr' && (inputs.runner-client-id != '' || inputs.runnerAppId != '')
     steps:
       - name: 'Get token for the GitHub App'
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          client-id: ${{ inputs.runnerClientId || inputs.runnerAppId }}
+          client-id: ${{ inputs.runner-client-id || inputs.runnerAppId }}
           private-key: ${{ secrets.RUNNER_APP_PRIVATE_KEY }}
 
       - name: 'Checkout repository'
@@ -153,14 +153,13 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     needs: determine-changesets-step
-    if: needs.determine-changesets-step.outputs.action == 'publish' || (inputs.runnerClientId == '' && inputs.runnerAppId == '')
+    if: needs.determine-changesets-step.outputs.action == 'publish' || (inputs.runner-client-id == '' && inputs.runnerAppId == '')
     steps:
       - name: 'Get token for the GitHub App'
-        if: ${{ inputs.clientId != '' || inputs.appId != '' }}
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          client-id: ${{ inputs.clientId || inputs.appId }}
+          client-id: ${{ inputs.client-id || inputs.appId }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: 'Checkout repository'
