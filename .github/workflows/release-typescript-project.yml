@@ -125,12 +125,12 @@ jobs:
 
       - name: 'Semantic Release'
         id: release
-        uses: cycjimmy/semantic-release-action@61680d0e9b02ff86f5648ade99e01be17f0260a4
+        uses: cycjimmy/semantic-release-action@b12c8f6015dc215fe37bc154d4ad456dd3833c90 # v6.0.0
         with:
           working_directory: ${{ inputs.releaseWorkingDirectory }}
           extra_plugins: |
-            @semantic-release/exec@6.0.3
-            conventional-changelog-conventionalcommits@5.0.0
+            @semantic-release/exec@7.1.0
+            conventional-changelog-conventionalcommits@9.3.1
         env:
           GITHUB_TOKEN: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}

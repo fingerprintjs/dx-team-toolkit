@@ -154,7 +154,7 @@ jobs:
           force: '${{ inputs.force }}'
 
       - name: Add & Commit
-        uses: EndBug/add-and-commit@a94899bca583c204427a224a7af87c02f9b325d5
+        uses: EndBug/add-and-commit@290ea2c423ad77ca9c62ae0f5b224379612c0321 # v10.0.0
         with:
           add: '.'
           github_token: ${{ steps.app-token.outputs.token }}
@@ -162,7 +162,7 @@ jobs:
           push: 'false'
 
       - name: Create Pull Request
-        uses: peter-evans/create-pull-request@c5a7806660adbe173f04e3e038b0ccdcd758773c
+        uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
           title: 'OpenAPI schema sync (${{ inputs.tag }})'
           body: 'Schema sync for [${{ inputs.tag }}](https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/tag/${{ inputs.tag }}) OpenAPI schema release.'

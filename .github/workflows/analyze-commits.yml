@@ -85,7 +85,7 @@ jobs:
       - name: 'Install commit lint config'
         if: ${{ inputs.installSharedCommitLintConfig }}
         run: $PACKAGE_MANAGER add @fingerprintjs/commit-lint-dx-team@latest --ignore-workspace-root-check
-      - uses: wagoid/commitlint-github-action@5ce82f5d814d4010519d15f0552aec4f17a1e1fe
+      - uses: wagoid/commitlint-github-action@dbd4ecd47d0256b6587d1d0c5737082cc439f2c5 # v6.1.0
         id: commitlint
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
         name: 'Format commitlint results'
