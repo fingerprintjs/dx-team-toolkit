@@ -40,6 +40,12 @@ jobs:
           ref: 'rc'
           persist-credentials: false
 
+      - name: 'Validate app credentials'
+        if: ${{ (inputs.client-id != '' || inputs.app_id != '') && secrets.APP_PRIVATE_KEY == '' }}
+        run: |
+          echo "Error: APP_PRIVATE_KEY secret must be provided when client-id or app_id is set"
+          exit 1
+
       - name: 'Get token for the GitHub App'
         if: ${{ inputs.client-id != '' || inputs.app_id != '' }}
         uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
@@ -63,6 +69,12 @@ jobs:
         with:
           ref: 'main'
           persist-credentials: false
+
+      - name: 'Validate app credentials'
+        if: ${{ (inputs.client-id != '' || inputs.app_id != '') && secrets.APP_PRIVATE_KEY == '' }}
+        run: |
+          echo "Error: APP_PRIVATE_KEY secret must be provided when client-id or app_id is set"
+          exit 1
 
       - name: 'Get token for the GitHub App'
         if: ${{ inputs.client-id != '' || inputs.app_id != '' }}
