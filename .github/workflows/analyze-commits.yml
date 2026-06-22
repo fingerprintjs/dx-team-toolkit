@@ -49,7 +49,7 @@ jobs:
     name: Analyze Commit Messages
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: 'Determine package manager'
@@ -69,11 +69,11 @@ jobs:
           fi
       - if: ${{ env.PACKAGE_MANAGER == 'pnpm' }}
         name: 'Install pnpm'
-        uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+        uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
         with:
           version: 9
       - name: 'Install latest node version'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.nodeVersion }}
           cache: ${{ env.PACKAGE_MANAGER_CACHE }}
@@ -130,11 +130,11 @@ jobs:
     env:
       TEST_MESSAGE: ${{ inputs.isTest && '### ⚠️ This is a test run of the release-notes-comment action that can be found in .github/workflows/analyze-commits.yml' || ''}}
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v7
         with:
           fetch-depth: 0
       - name: 'Install latest node version'
-        uses: actions/setup-node@v4
+        uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.nodeVersion }}
       - name: Setup language
