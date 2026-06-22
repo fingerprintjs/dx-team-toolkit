@@ -45,14 +45,14 @@ runs:
 
     - name: 'Install Flutter'
       if: ${{ inputs.language == 'flutter' }}
-      uses: subosito/flutter-action@2783a3f08e1baf891508463f8c6653c258246225
+      uses: subosito/flutter-action@1a449444c387b1966244ae4d4f8c696479add0b2 # v2.23.0
       with:
         flutter-version: ${{ inputs.language-version }}
         channel: 'stable'
 
     - name: 'Install PHP'
       if: ${{ inputs.language == 'php' }}
-      uses: shivammathur/setup-php@6d7209f44a25a59e904b1ee9f3b0c33ab2cd888d
+      uses: shivammathur/setup-php@f3e473d116dcccaddc5834248c87452386958240 # v2.37.2
       with:
         php-version: ${{ inputs.language-version }}
         coverage: none
@@ -60,7 +60,7 @@ runs:
 
     - name: 'Install Terraform'
       if: ${{ inputs.language == 'terraform' }}
-      uses: hashicorp/setup-terraform@651471c36a6092792c552e8b1bef71e592b462d8
+      uses: hashicorp/setup-terraform@dfe3c3f87815947d99a8997f908cb6525fc44e9e # v4.0.1
       with:
         terraform_version: ${{ inputs.language-version }}
 
@@ -72,7 +72,7 @@ runs:
 
     - name: 'Setup pnpm'
       if: ${{ inputs.language == 'node' }}
-      uses: pnpm/action-setup@129abb77bf5884e578fcaf1f37628e41622cc371
+      uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
       with:
         version: 9
         run_install: 'true'
