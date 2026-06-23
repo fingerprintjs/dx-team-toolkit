@@ -19,6 +19,9 @@
     "release-rules.js"
   ],
   "type": "module",
+  "engines": {
+    "node": ">=22"
+  },
   "dependencies": {
     "conventional-changelog-conventionalcommits": "^9.0.0"
   }
