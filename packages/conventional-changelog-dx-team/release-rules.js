@@ -11,4 +11,4 @@ const releaseRules = [
   { type: 'docs', scope: 'README', release: 'patch' },
 ]
 
-module.exports = releaseRules
+export default releaseRules
