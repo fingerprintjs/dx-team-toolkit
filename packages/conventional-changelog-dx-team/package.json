@@ -20,7 +20,7 @@
   ],
   "type": "module",
   "engines": {
-    "node": ">=22"
+    "node": ">=20"
   },
   "dependencies": {
     "conventional-changelog-conventionalcommits": "^9.0.0"
