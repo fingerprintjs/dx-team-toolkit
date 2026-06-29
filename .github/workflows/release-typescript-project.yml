@@ -15,10 +15,14 @@ on:
         type: boolean
         required: false
         description: 'Flag that we need `dist` folder to start release process'
+      client-id:
+        type: string
+        required: false
+        description: 'GitHub App client ID for release process'
       appId:
         type: string
         required: false
-        description: 'GitHub app id for release process'
+        description: 'Deprecated: use client-id instead. GitHub App client ID for release process'
       runsOn:
         type: string
         required: false
@@ -115,12 +119,18 @@ jobs:
         run: ${{ inputs.runAfterInstall }}
         if: ${{ inputs.runAfterInstall != '' }}
 
+      - name: 'Validate app credentials'
+        if: ${{ (inputs.client-id != '' || inputs.appId != '') && secrets.APP_PRIVATE_KEY == '' }}
+        run: |
+          echo "Error: APP_PRIVATE_KEY secret must be provided when client-id or appId is set"
+          exit 1
+
       - name: 'Get token for the GitHub App'
-        if: ${{ inputs.appId != '' }}
-        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        if: ${{ inputs.client-id != '' || inputs.appId != '' }}
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          app-id: ${{ inputs.appId }}
+          client-id: ${{ inputs.client-id || inputs.appId }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: 'Semantic Release'
@@ -132,7 +142,7 @@ jobs:
             @semantic-release/exec@6.0.3
             conventional-changelog-conventionalcommits@5.0.0
         env:
-          GITHUB_TOKEN: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ (inputs.client-id != '' || inputs.appId != '') && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_AUTH_TOKEN }}
           HUSKY: 0
       

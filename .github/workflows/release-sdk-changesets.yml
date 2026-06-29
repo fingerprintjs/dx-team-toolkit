@@ -32,15 +32,24 @@ on:
         required: false
         type: string
         default: '11'
+      client-id:
+        type: string
+        required: false
+        description: 'GitHub App client ID for release process.'
       appId:
         type: string
-        required: true
-        description: 'GitHub app id for release process.'
+        required: false
+        description: 'Deprecated: use client-id instead. GitHub App client ID for release process.'
+      runner-client-id:
+        type: string
+        default: ''
+        required: false
+        description: 'GitHub App ID used to generate an installation token for creating the PR.'
       runnerAppId:
         type: string
         default: ''
         required: false
-        description: 'GitHub app id for creating PR.'
+        description: 'Deprecated: use runner-client-id instead. GitHub App client ID for creating PR.'
       useTrustedPublishing:
         type: boolean
         required: false
@@ -96,13 +105,19 @@ jobs:
   create-pr:
     runs-on: ubuntu-latest
     needs: determine-changesets-step
-    if: needs.determine-changesets-step.outputs.action == 'pr' && inputs.runnerAppId != ''
+    if: needs.determine-changesets-step.outputs.action == 'pr' && (inputs.runner-client-id != '' || inputs.runnerAppId != '')
     steps:
+      - name: 'Validate runner app credentials'
+        if: ${{ secrets.RUNNER_APP_PRIVATE_KEY == '' }}
+        run: |
+          echo "Error: RUNNER_APP_PRIVATE_KEY secret must be provided when runner-client-id or runnerAppId is set"
+          exit 1
+
       - name: 'Get token for the GitHub App'
-        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          app-id: ${{ inputs.runnerAppId }}
+          client-id: ${{ inputs.runner-client-id || inputs.runnerAppId }}
           private-key: ${{ secrets.RUNNER_APP_PRIVATE_KEY }}
 
       - name: 'Checkout repository'
@@ -144,14 +159,19 @@ jobs:
     runs-on: ubuntu-latest
     environment: production
     needs: determine-changesets-step
-    if: needs.determine-changesets-step.outputs.action == 'publish' || inputs.runnerAppId == ''
+    if: needs.determine-changesets-step.outputs.action == 'publish' || (inputs.runner-client-id == '' && inputs.runnerAppId == '')
     steps:
+      - name: 'Validate app credentials'
+        if: ${{ inputs.client-id == '' && inputs.appId == '' }}
+        run: |
+          echo "Error: either 'client-id' or 'appId' (deprecated) must be provided"
+          exit 1
+
       - name: 'Get token for the GitHub App'
-        if: ${{ inputs.appId != '' }}
-        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          app-id: ${{ inputs.appId }}
+          client-id: ${{ inputs.client-id || inputs.appId }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: 'Checkout repository'

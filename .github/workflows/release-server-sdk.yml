@@ -23,10 +23,14 @@ on:
         description: 'Additional plugins to install for the semantic-release action.'
         required: false
         type: string
+      client-id:
+        type: string
+        required: false
+        description: 'GitHub App client ID for release process.'
       appId:
         type: string
         required: false
-        description: 'GitHub app id for release process.'
+        description: 'Deprecated: use client-id instead. GitHub App client ID for release process.'
     secrets:
       GH_RELEASE_TOKEN:
         description: 'GitHub token with permissions to create releases and perform other necessary operations.'
@@ -62,12 +66,18 @@ jobs:
         if: ${{ inputs.prepare-command != '' }}
         run: ${{ inputs.prepare-command }}
 
+      - name: 'Validate app credentials'
+        if: ${{ (inputs.client-id != '' || inputs.appId != '') && secrets.APP_PRIVATE_KEY == '' }}
+        run: |
+          echo "Error: APP_PRIVATE_KEY secret must be provided when client-id or appId is set"
+          exit 1
+
       - name: 'Get token for the GitHub App'
-        if: ${{ inputs.appId != '' }}
-        uses: actions/create-github-app-token@f2acddfb5195534d487896a656232b016a682f3c
+        if: ${{ inputs.client-id != '' || inputs.appId != '' }}
+        uses: actions/create-github-app-token@bcd2ba49218906704ab6c1aa796996da409d3eb1 # v3.2.0
         id: app-token
         with:
-          app-id: ${{ inputs.appId }}
+          client-id: ${{ inputs.client-id || inputs.appId }}
           private-key: ${{ secrets.APP_PRIVATE_KEY }}
 
       - name: 'Semantic Release'
@@ -79,6 +89,6 @@ jobs:
             @fingerprintjs/conventional-changelog-dx-team@0.1.0
             ${{ inputs.semantic-release-extra-plugins }}
         env:
-          GITHUB_TOKEN: ${{ inputs.appId != '' && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
+          GITHUB_TOKEN: ${{ (inputs.client-id != '' || inputs.appId != '') && steps.app-token.outputs.token || secrets.GH_RELEASE_TOKEN }}
           PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
           NUGET_API_KEY: ${{ secrets.NUGET_API_KEY }}
