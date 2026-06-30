@@ -29,14 +29,15 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Validate target is a tag
+        run: |
           if ! git show-ref --tags --verify --quiet "refs/tags/${{ github.event.inputs.target }}"; then
             echo "Error: '${{ github.event.inputs.target }}' is not a valid tag."
             exit 1
           fi
-      - name: Validate target tag is not detached
+      - name: Validate target tag is reachable from main
         run: |
-          commit=$(git rev-list -1 ${{ github.event.inputs.target }})
-          if ! git branch -a --contains "$commit" | grep -q "main"; then
+          commit=$(git rev-list -1 "${{ github.event.inputs.target }}")
+          if ! git merge-base --is-ancestor "$commit" origin/main; then
             echo "Error: Tag '${{ github.event.inputs.target }}' points to a commit not reachable from main."
             exit 1
           fi
