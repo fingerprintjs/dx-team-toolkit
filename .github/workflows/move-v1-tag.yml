@@ -10,6 +10,8 @@ on:
       major_version:
         type: choice
         description: The major version to update
+        required: true
+        default: v1
         options:
           - v1
 
