@@ -1,32 +1,43 @@
-name: Move v1 Tag
+name: Update Main Version
+run-name: Move ${{ github.event.inputs.major_version }} to ${{ github.event.inputs.target }}
 
 on:
   workflow_dispatch:
+    inputs:
+      target:
+        description: The tag to use
+        required: true
+      major_version:
+        type: choice
+        description: The major version to update
+        options:
+          - v1
 
 jobs:
-  move-tag:
+  tag:
     runs-on: ubuntu-latest
-
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v7
-
-      - name: Check branch
+      - uses: actions/checkout@v7
+        with:
+          fetch-depth: 0
+      - name: Git config
         run: |
-          if [[ "$GITHUB_REF" != "refs/heads/main" ]]; then
-            echo "This action can only be run on the main branch."
+          git config user.name "github-actions[bot]"
+          git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
+      - name: Validate target is a tag
+        run: |
+          if ! git tag -l | grep -qx "${{ github.event.inputs.target }}"; then
+            echo "Error: '${{ github.event.inputs.target }}' is not a valid tag."
             exit 1
           fi
-
-      - name: Set up Git user
+      - name: Validate target tag is not detached
         run: |
-          git config user.name "semantic-release-bot"
-          git config user.email "semantic-release-bot@martynus.net"
-
-      - name: Move v1 tag to the latest commit in main
-        run: |
-          git fetch --tags
-          git tag -d v1 || echo "v1 tag not found, continuing"
-          git push origin :refs/tags/v1 || echo "v1 tag not found in origin, continuing"
-          git tag v1
-          git push origin v1
+          commit=$(git rev-list -1 ${{ github.event.inputs.target }})
+          if ! git branch -a --contains "$commit" | grep -q "main"; then
+            echo "Error: Tag '${{ github.event.inputs.target }}' points to a commit not reachable from main."
+            exit 1
+          fi
+      - name: Tag new target
+        run: git tag -f ${{ github.event.inputs.major_version }} ${{ github.event.inputs.target }}
+      - name: Push new tag
+        run: git push origin ${{ github.event.inputs.major_version }} --force
