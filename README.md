@@ -781,3 +781,10 @@ jobs:
 
 Use [`paths-changed`](.github/actions/paths-changed) to keep required checks reporting
 while skipping expensive steps when watched files did not change.
+
+## Releasing
+
+This repository contains two types of publishable artifacts with different release processes. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
+
+- **npm packages** - released automatically via [changesets](https://github.com/changesets/changesets) when PRs with changeset files are merged to `main`.
+- **GitHub Actions and reusable workflows** - released manually by tagging a commit and running the "Update Main Version" workflow to move the `v1` tag.
