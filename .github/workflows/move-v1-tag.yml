@@ -42,6 +42,6 @@ jobs:
             exit 1
           fi
       - name: Tag new target
-        run: git tag -f ${{ github.event.inputs.major_version }} ${{ github.event.inputs.target }}
+        run: git tag -f "${{ github.event.inputs.major_version }}" "${{ github.event.inputs.target }}^{}"
       - name: Push new tag
-        run: git push origin ${{ github.event.inputs.major_version }} --force
+        run: git push origin "${{ github.event.inputs.major_version }}" --force
