@@ -29,8 +29,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "41898282+github-actions[bot]@users.noreply.github.com"
       - name: Validate target is a tag
-        run: |
-          if ! git tag -l | grep -qx "${{ github.event.inputs.target }}"; then
+          if ! git show-ref --tags --verify --quiet "refs/tags/${{ github.event.inputs.target }}"; then
             echo "Error: '${{ github.event.inputs.target }}' is not a valid tag."
             exit 1
           fi
