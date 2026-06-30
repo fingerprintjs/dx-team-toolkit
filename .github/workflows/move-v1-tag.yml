@@ -36,7 +36,7 @@ jobs:
           fi
       - name: Validate target tag is reachable from main
         run: |
-          commit=$(git rev-list -1 "${{ github.event.inputs.target }}")
+          commit=$(git rev-list -1 "refs/tags/${{ github.event.inputs.target }}^{}")
           if ! git merge-base --is-ancestor "$commit" origin/main; then
             echo "Error: Tag '${{ github.event.inputs.target }}' points to a commit not reachable from main."
             exit 1
