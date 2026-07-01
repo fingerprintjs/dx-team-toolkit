@@ -37,6 +37,10 @@ runs:
       with:
         python-version: ${{ inputs.language-version }}
 
+    - name: 'Install uv'
+      if: ${{ inputs.language == 'python' }}
+      uses: astral-sh/setup-uv@fac544c07dec837d0ccb6301d7b5580bf5edae39 # v8.2.0
+
     - name: 'Install Golang'
       if: ${{ inputs.language == 'golang' }}
       uses: actions/setup-go@v6
