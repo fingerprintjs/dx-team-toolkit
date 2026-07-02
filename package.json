@@ -1,6 +1,7 @@
 {
   "name": "@fingerprintjs/dx-team-toolkit",
   "version": "1.0.0",
+  "packageManager": "pnpm@11.5.1",
   "private": true,
   "description": "DX Team shared code and configurations like GitHub Actions reusable workflows.",
   "scripts": {
