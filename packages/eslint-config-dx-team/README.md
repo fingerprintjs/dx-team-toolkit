@@ -4,9 +4,9 @@ This package provides a custom preset for [eslint](https://github.com/eslint/esl
 
 ## Requirements
 
-- ESLint v9.18+ or v10
+- ESLint v10
 - `typescript-eslint` v8
-- Prettier v3+
+- Prettier v3
 
 ## Installation
 
