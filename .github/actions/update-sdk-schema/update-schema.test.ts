@@ -28,7 +28,7 @@ const orgFetch = globalThis.fetch
 
 describe('Update schema', () => {
   let pkg: ReturnType<typeof createTestPkg>
-  
+
   beforeEach(() => {
     jest.clearAllMocks()
 
