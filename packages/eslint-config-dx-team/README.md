@@ -4,14 +4,16 @@ This package provides a custom preset for [eslint](https://github.com/eslint/esl
 
 ## Requirements
 
+- ESLint v9.18+ or v10
+- `typescript-eslint` v8
 - Prettier v3+
 
 ## Installation
 
-To install this package, use the following command:
+`eslint`, `typescript-eslint`, and `prettier` are peer dependencies, so install them alongside the config:
 
 ```bash
-pnpm install -D @fingerprintjs/eslint-config-dx-team prettier
+pnpm install -D @fingerprintjs/eslint-config-dx-team eslint typescript-eslint prettier
 ```
 
 ## Configuration
@@ -78,15 +80,18 @@ export default [
 
 ## Dependencies
 
-To simplify dependencies update in project this package has eslint and eslint packages as a dependencies. Please don't add any of them as a dependencies for you project:
+`eslint` and `typescript-eslint` are declared as **peer dependencies**. Your project imports both directly (ESLint provides the CLI/bin you run, and your `eslint.config` typically imports `typescript-eslint`), and both need to resolve to a single instance to avoid "multiple ESLint instances" errors — so you must install them in your project:
 
-- `@typescript-eslint/eslint-plugin`
-- `@typescript-eslint/parser`
 - `eslint`
+- `typescript-eslint`
+
+Everything else is bundled by this package — **don't** add these to your project:
+
 - `eslint-config-prettier`
 - `eslint-plugin-prettier`
 - `globals`
-- `typescript-eslint`
+
+> **Note:** Under strict package managers such as pnpm v10+, transitive dependencies are no longer hoisted to the project root, which is why `eslint` and `typescript-eslint` must be declared as peers rather than bundled.
 
 ## License
 
