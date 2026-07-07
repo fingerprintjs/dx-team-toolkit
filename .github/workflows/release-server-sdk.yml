@@ -67,10 +67,14 @@ jobs:
         run: ${{ inputs.prepare-command }}
 
       - name: 'Validate app credentials'
-        if: ${{ (inputs.client-id != '' || inputs.appId != '') && secrets.APP_PRIVATE_KEY == '' }}
+        if: ${{ inputs.client-id != '' || inputs.appId != '' }}
+        env:
+          APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
         run: |
-          echo "Error: APP_PRIVATE_KEY secret must be provided when client-id or appId is set"
-          exit 1
+          if [ -z "$APP_PRIVATE_KEY" ]; then
+            echo "Error: APP_PRIVATE_KEY secret must be provided when client-id or appId is set"
+            exit 1
+          fi
 
       - name: 'Get token for the GitHub App'
         if: ${{ inputs.client-id != '' || inputs.appId != '' }}
