@@ -13,21 +13,21 @@ function formatter(platforms: { displayName: string; versionRange: string }[]) {
   return result
 }
 
-export async function generateNativeDepsNote() {
+export async function generateNativeDepsNote(androidPath: string, iosPodspecPath: string) {
   const platformVersions: { displayName: string; versionRange: string }[] = [
     {
       displayName: 'Fingerprint iOS SDK',
       versionRange: await resolveIOSDependency({
         displayName: 'Fingerprint iOS SDK',
         dependencyName: 'FingerprintPro',
-        podSpecPath: 'sdk/RNFingerprintjsPro.podspec',
+        podSpecPath: iosPodspecPath,
       }),
     },
 
     {
       displayName: 'Fingerprint Android SDK',
       versionRange: await resolveAndroidDependency({
-        path: 'sdk/android',
+        path: androidPath,
         displayName: 'Fingerprint Android SDK',
         gradleTaskName: 'printFingerprintNativeSDKVersion',
       }),
