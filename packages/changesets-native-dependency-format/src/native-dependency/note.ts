@@ -1,7 +1,9 @@
 import { resolveIOSDependency } from './ios'
 import { resolveAndroidDependency } from './android'
 
-function formatter(platforms: { displayName: string; versionRange: string }[]) {
+export type NativePlatformDefinition = { displayName: string; versionRange: string }
+
+function formatter(platforms: NativePlatformDefinition[]) {
   let result = `### Supported Native SDK Version Range\n\n`
 
   result += platforms
@@ -14,7 +16,7 @@ function formatter(platforms: { displayName: string; versionRange: string }[]) {
 }
 
 export async function generateNativeDepsNote(androidPath: string, iosPodspecPath: string) {
-  const platformVersions: { displayName: string; versionRange: string }[] = [
+  const platformVersions: NativePlatformDefinition[] = [
     {
       displayName: 'Fingerprint iOS SDK',
       versionRange: await resolveIOSDependency({
