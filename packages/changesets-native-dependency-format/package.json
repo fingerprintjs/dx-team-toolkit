@@ -1,7 +1,7 @@
 {
   "name": "@fingerprintjs/changesets-native-dependency-format",
   "description": "Changeset format that appends native dependencies note to the last changeset",
-  "version": "0.0.0",
+  "version": "0.1.0",
   "repository": {
     "type": "git",
     "url": "https://github.com/fingerprintjs/dx-team-toolkit"
