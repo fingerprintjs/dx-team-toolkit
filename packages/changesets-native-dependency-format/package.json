@@ -1,0 +1,27 @@
+{
+  "name": "@fingerprintjs/changesets-native-dependency-format",
+  "description": "Changeset format that appends native dependencies note to the last changeset",
+  "version": "0.0.0",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/fingerprintjs/dx-team-toolkit"
+  },
+  "author": "FingerprintJS, Inc (https://fingerprint.com)",
+  "license": "MIT",
+  "publishConfig": {
+    "access": "public",
+    "provenance": true
+  },
+  "main": "dist/index.js",
+  "files": [
+    "dist/index.js"
+  ],
+  "scripts": {
+    "build": "tsup src/index.ts --sourcemap"
+  },
+  "dependencies": {
+    "@changesets/get-release-plan": "^4.0.16",
+    "@changesets/types": "^6.0.0",
+    "@fingerprintjs/changesets-changelog-format": "workspace:^"
+  }
+}
