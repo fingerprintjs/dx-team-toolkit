@@ -1,8 +1,8 @@
 import { resolveIOSDependency } from './ios'
 import { resolveAndroidDependency } from './android'
 
-function formatter(platforms: { displayName: string; versionRange: string }[], heading?: string) {
-  let result = `### ${heading ?? 'Supported Native SDK Version Range'}\n\n`
+function formatter(platforms: { displayName: string; versionRange: string }[]) {
+  let result = `### Supported Native SDK Version Range\n\n`
 
   result += platforms
     .map(({ displayName, versionRange }) => {
