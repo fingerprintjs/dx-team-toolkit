@@ -23,7 +23,16 @@ export function initTestPackage(withChangelogPreset = true) {
     fs.writeFileSync(changesetConfigPath, JSON.stringify(changesetConfig, null, 2))
   }
 
-  const testPkgJson: PackageJSON = JSON.parse(fs.readFileSync(path.join(testPkg.path, 'package.json'), 'utf-8'))
+  const testPkgJson: PackageJSON & { devEngines?: unknown; packageManager?: unknown } = JSON.parse(
+    fs.readFileSync(path.join(testPkg.path, 'package.json'), 'utf-8')
+  )
+
+  // `pnpm init` may add package-manager metadata (`devEngines` / `packageManager`)
+  // whose exact shape depends on the pnpm version that generated it. We want this
+  // temp fixture to install predictably with whatever pnpm runs the tests, so drop
+  // that metadata and let the ambient package manager resolve dependencies as-is.
+  delete testPkgJson.devEngines
+  delete testPkgJson.packageManager
 
   testPkgJson.dependencies = {
     '@changesets/cli': pkg.devDependencies['@changesets/cli'],
