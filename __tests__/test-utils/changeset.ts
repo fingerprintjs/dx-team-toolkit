@@ -27,9 +27,10 @@ export function initTestPackage(withChangelogPreset = true) {
     fs.readFileSync(path.join(testPkg.path, 'package.json'), 'utf-8')
   )
 
-  // Recent pnpm `init` writes a `devEngines.packageManager` block which makes the
-  // subsequent `pnpm install` crash with "Cannot use 'in' operator to search for
-  // 'integrity' in undefined". Strip it so the temp package installs cleanly.
+  // `pnpm init` may add package-manager metadata (`devEngines` / `packageManager`)
+  // whose exact shape depends on the pnpm version that generated it. We want this
+  // temp fixture to install predictably with whatever pnpm runs the tests, so drop
+  // that metadata and let the ambient package manager resolve dependencies as-is.
   delete testPkgJson.devEngines
   delete testPkgJson.packageManager
 
