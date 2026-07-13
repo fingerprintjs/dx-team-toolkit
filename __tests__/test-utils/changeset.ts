@@ -23,7 +23,15 @@ export function initTestPackage(withChangelogPreset = true) {
     fs.writeFileSync(changesetConfigPath, JSON.stringify(changesetConfig, null, 2))
   }
 
-  const testPkgJson: PackageJSON = JSON.parse(fs.readFileSync(path.join(testPkg.path, 'package.json'), 'utf-8'))
+  const testPkgJson: PackageJSON & { devEngines?: unknown; packageManager?: unknown } = JSON.parse(
+    fs.readFileSync(path.join(testPkg.path, 'package.json'), 'utf-8')
+  )
+
+  // Recent pnpm `init` writes a `devEngines.packageManager` block which makes the
+  // subsequent `pnpm install` crash with "Cannot use 'in' operator to search for
+  // 'integrity' in undefined". Strip it so the temp package installs cleanly.
+  delete testPkgJson.devEngines
+  delete testPkgJson.packageManager
 
   testPkgJson.dependencies = {
     '@changesets/cli': pkg.devDependencies['@changesets/cli'],
