@@ -1,5 +1,21 @@
 # @fingerprintjs/eslint-config-dx-team
 
+## 3.0.0
+
+### Major Changes
+
+- Move `eslint` and `typescript-eslint` to peer dependencies
+
+  Under strict package managers (pnpm v10+), transitive dependencies are no longer exposed at the project root, which broke `eslint` bin resolution and `import ... from 'typescript-eslint'` in consuming projects. Declaring them as peers guarantees a single, project-controlled instance of each and avoids "multiple ESLint instances" errors.
+
+  **Breaking change:** consumers must now install `eslint` and `typescript-eslint` themselves (plus `typescript`, which `typescript-eslint` requires as a peer):
+
+  ```bash
+  pnpm install -D eslint typescript-eslint typescript
+  ```
+
+  The redundant `@typescript-eslint/eslint-plugin` and `@typescript-eslint/parser` direct dependencies were also removed (they are provided by the `typescript-eslint` umbrella package). `eslint-config-prettier`, `eslint-plugin-prettier`, and `globals` remain bundled. ([3832930](https://github.com/fingerprintjs/dx-team-toolkit/commit/38329309267ff0e53e35583410aaaf311cc4ad59))
+
 ## 2.0.0
 
 ### Major Changes
@@ -15,15 +31,15 @@
      **`eslint.config.js`** (CommonJS):
 
      ```js
-     const dxTeamConfig = require('@fingerprintjs/eslint-config-dx-team')
-     module.exports = [...dxTeamConfig]
+     const dxTeamConfig = require("@fingerprintjs/eslint-config-dx-team");
+     module.exports = [...dxTeamConfig];
      ```
 
      **`eslint.config.mjs`** (ESM):
 
      ```js
-     import dxTeamConfig from '@fingerprintjs/eslint-config-dx-team'
-     export default [...dxTeamConfig]
+     import dxTeamConfig from "@fingerprintjs/eslint-config-dx-team";
+     export default [...dxTeamConfig];
      ```
 
   2. Fix new lint errors from the updated `@typescript-eslint/strict` preset (upgraded from v6 to v8):
