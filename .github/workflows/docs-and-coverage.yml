@@ -11,20 +11,16 @@ on:
         type: string
         required: false
         description: Commands to run after installing dependencies.
-      prepare-gh-pages-commands:
-        required: false
-        default: |
-          mv docs ./gh-pages
-          mv coverage/lcov-report ./gh-pages/coverage
-        type: string
-        description: >
-          Commands to prepare the content of the gh-pages folder. The gh-pages folder will be created automatically.
-          Only specify the commands for moving files into it.
       skip-docs-step:
         required: false
         default: false
         type: boolean
         description: 'Skip the documentation generation step.'
+      skip-coverage-step:
+        required: false
+        default: false
+        type: boolean
+        description: 'Skip the coverage report generation step.'
 
 jobs:
   generate-docs-and-coverage:
@@ -69,18 +65,26 @@ jobs:
         run: $PACKAGE_MANAGER run docs
 
       - name: Collect coverage report
+        if: ${{ inputs.skip-coverage-step != true }}
         run: $PACKAGE_MANAGER test:coverage
 
       - name: Create Coverage Badges
+        if: ${{ inputs.skip-coverage-step != true }}
         uses: jaywcjlove/coverage-badges-cli@998665f7962b1a3935ba8c3e786171a99436e5d1 # v2.3.0
         with:
           source: coverage/coverage-summary.json
           output: coverage/lcov-report/badges.svg
 
-      - name: Prepare folder for gh-pages
-        run: |
-          mkdir gh-pages
-          ${{ inputs.prepare-gh-pages-commands }}
+      - name: Prepare gh-pages folder
+        run: mkdir gh-pages
+
+      - name: Move docs to the gh-pages folder
+        if: ${{ inputs.skip-docs-step != true }}
+        run: mv docs ./gh-pages
+
+      - name: Move coverage report to the gh-pages folder
+        if: ${{ inputs.skip-coverage-step != true }}
+        run: mv coverage/lcov-report ./gh-pages/coverage
 
       - name: Deploy 🚀
         uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
