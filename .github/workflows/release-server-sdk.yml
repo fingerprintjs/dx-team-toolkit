@@ -55,12 +55,23 @@ jobs:
         with:
           persist-credentials: false
 
+      - name: 'Checkout dx-team-toolkit actions'
+        uses: actions/checkout@v7
+        with:
+          repository: fingerprintjs/dx-team-toolkit
+          ref: ${{ github.workflow_sha }}
+          path: _dx-toolkit
+          sparse-checkout: .github/actions
+
       - name: Setup language
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        uses: ./_dx-toolkit/.github/actions/setup-lang
         with:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
           java-version: ${{ inputs.java-version }}
+
+      - name: 'Clean up dx-team-toolkit checkout'
+        run: rm -rf _dx-toolkit
 
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}

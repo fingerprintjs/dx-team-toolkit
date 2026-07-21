@@ -135,9 +135,18 @@ jobs:
         uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.nodeVersion }}
+      - name: 'Checkout dx-team-toolkit actions'
+        if: ${{ inputs.setupLanguage && inputs.setupLanguageVersion }}
+        uses: actions/checkout@v7
+        with:
+          repository: fingerprintjs/dx-team-toolkit
+          ref: ${{ github.workflow_sha }}
+          path: _dx-toolkit
+          sparse-checkout: .github/actions
+
       - name: Setup language
         if: ${{ inputs.setupLanguage && inputs.setupLanguageVersion }}
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        uses: ./_dx-toolkit/.github/actions/setup-lang
         with:
           language: ${{ inputs.setupLanguage }}
           language-version: ${{ inputs.setupLanguageVersion }}

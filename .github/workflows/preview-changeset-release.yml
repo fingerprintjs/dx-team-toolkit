@@ -56,9 +56,17 @@ jobs:
         if: ${{ inputs.prepare-command }}
         run: ${{ inputs.prepare-command }}
 
+      - name: 'Checkout dx-team-toolkit actions'
+        uses: actions/checkout@v7
+        with:
+          repository: fingerprintjs/dx-team-toolkit
+          ref: ${{ github.workflow_sha }}
+          path: _dx-toolkit
+          sparse-checkout: .github/actions
+
       - name: 'Get release notes'
         id: notes
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-release-notes@v1
+        uses: ./_dx-toolkit/.github/actions/changeset-release-notes
         env:
           GITHUB_TOKEN: ${{ github.token }}
 
