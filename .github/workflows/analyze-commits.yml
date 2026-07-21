@@ -145,6 +145,10 @@ jobs:
           sparse-checkout: .github/actions
           sparse-checkout-cone-mode: false
 
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        if: ${{ inputs.setupLanguage && inputs.setupLanguageVersion }}
+        run: echo '_dx-toolkit/' >> .git/info/exclude
+
       - name: Setup language
         if: ${{ inputs.setupLanguage && inputs.setupLanguageVersion }}
         uses: ./_dx-toolkit/.github/actions/setup-lang

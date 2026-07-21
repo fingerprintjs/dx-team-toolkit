@@ -107,6 +107,9 @@ jobs:
           sparse-checkout: .github/actions
           sparse-checkout-cone-mode: false
 
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
+
       - name: Determine changesets step
         id: changeset-determine-step
         uses: ./_dx-toolkit/.github/actions/changeset-determine-step
@@ -145,15 +148,15 @@ jobs:
           sparse-checkout: .github/actions
           sparse-checkout-cone-mode: false
 
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
+
       - name: Setup language
         uses: ./_dx-toolkit/.github/actions/setup-lang
         with:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
           java-version: ${{ inputs.java-version }}
-
-      - name: 'Exclude dx-team-toolkit checkout from git'
-        run: echo '_dx-toolkit/' >> .git/info/exclude
 
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}
@@ -210,15 +213,15 @@ jobs:
           sparse-checkout: .github/actions
           sparse-checkout-cone-mode: false
 
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
+
       - name: Setup language
         uses: ./_dx-toolkit/.github/actions/setup-lang
         with:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
           java-version: ${{ inputs.java-version }}
-
-      - name: 'Exclude dx-team-toolkit checkout from git'
-        run: echo '_dx-toolkit/' >> .git/info/exclude
 
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}
