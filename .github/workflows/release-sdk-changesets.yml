@@ -98,9 +98,21 @@ jobs:
       - name: 'Install changesets'
         run: 'npm install @changesets/cli --global'
 
+      - name: 'Checkout dx-team-toolkit actions'
+        uses: actions/checkout@v7
+        with:
+          repository: fingerprintjs/dx-team-toolkit
+          ref: ${{ github.workflow_sha }}
+          path: _dx-toolkit
+          sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
+
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
+
       - name: Determine changesets step
         id: changeset-determine-step
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/changeset-determine-step@v1
+        uses: ./_dx-toolkit/.github/actions/changeset-determine-step
   create-pr:
     runs-on: ubuntu-latest
     needs: determine-changesets-step
@@ -127,8 +139,20 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: 'Checkout dx-team-toolkit actions'
+        uses: actions/checkout@v7
+        with:
+          repository: fingerprintjs/dx-team-toolkit
+          ref: ${{ github.workflow_sha }}
+          path: _dx-toolkit
+          sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
+
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
+
       - name: Setup language
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        uses: ./_dx-toolkit/.github/actions/setup-lang
         with:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
@@ -180,8 +204,20 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
 
+      - name: 'Checkout dx-team-toolkit actions'
+        uses: actions/checkout@v7
+        with:
+          repository: fingerprintjs/dx-team-toolkit
+          ref: ${{ github.workflow_sha }}
+          path: _dx-toolkit
+          sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
+
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
+
       - name: Setup language
-        uses: fingerprintjs/dx-team-toolkit/.github/actions/setup-lang@v1
+        uses: ./_dx-toolkit/.github/actions/setup-lang
         with:
           language: ${{ inputs.language }}
           language-version: ${{ inputs.language-version }}
