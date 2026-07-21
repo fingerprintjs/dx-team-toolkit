@@ -105,6 +105,7 @@ jobs:
           ref: ${{ github.workflow_sha }}
           path: _dx-toolkit
           sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
 
       - name: Determine changesets step
         id: changeset-determine-step
@@ -142,6 +143,7 @@ jobs:
           ref: ${{ github.workflow_sha }}
           path: _dx-toolkit
           sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
 
       - name: Setup language
         uses: ./_dx-toolkit/.github/actions/setup-lang
@@ -150,8 +152,8 @@ jobs:
           language-version: ${{ inputs.language-version }}
           java-version: ${{ inputs.java-version }}
 
-      - name: 'Clean up dx-team-toolkit checkout'
-        run: rm -rf _dx-toolkit
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
 
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}
@@ -206,6 +208,7 @@ jobs:
           ref: ${{ github.workflow_sha }}
           path: _dx-toolkit
           sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
 
       - name: Setup language
         uses: ./_dx-toolkit/.github/actions/setup-lang
@@ -214,8 +217,8 @@ jobs:
           language-version: ${{ inputs.language-version }}
           java-version: ${{ inputs.java-version }}
 
-      - name: 'Clean up dx-team-toolkit checkout'
-        run: rm -rf _dx-toolkit
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
 
       - name: 'Prepare project'
         if: ${{ inputs.prepare-command != '' }}

@@ -130,6 +130,7 @@ jobs:
           ref: ${{ github.workflow_sha }}
           path: _dx-toolkit
           sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
 
       - name: Setup language
         uses: ./_dx-toolkit/.github/actions/setup-lang
@@ -170,8 +171,8 @@ jobs:
           preReleaseTag: '${{ inputs.pre-release-tag }}'
           force: '${{ inputs.force }}'
 
-      - name: 'Clean up dx-team-toolkit checkout'
-        run: rm -rf _dx-toolkit
+      - name: 'Exclude dx-team-toolkit checkout from git'
+        run: echo '_dx-toolkit/' >> .git/info/exclude
 
       - name: Add & Commit
         uses: EndBug/add-and-commit@290ea2c423ad77ca9c62ae0f5b224379612c0321 # v10.0.0

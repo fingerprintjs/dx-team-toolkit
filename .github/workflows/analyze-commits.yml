@@ -143,6 +143,7 @@ jobs:
           ref: ${{ github.workflow_sha }}
           path: _dx-toolkit
           sparse-checkout: .github/actions
+          sparse-checkout-cone-mode: false
 
       - name: Setup language
         if: ${{ inputs.setupLanguage && inputs.setupLanguageVersion }}
