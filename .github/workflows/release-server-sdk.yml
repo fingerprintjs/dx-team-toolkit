@@ -59,7 +59,7 @@ jobs:
         uses: actions/checkout@v7
         with:
           repository: fingerprintjs/dx-team-toolkit
-          ref: ${{ github.workflow_sha }}
+          ref: ${{ job.workflow_sha }}
           path: _dx-toolkit
           sparse-checkout: .github/actions
           sparse-checkout-cone-mode: false
