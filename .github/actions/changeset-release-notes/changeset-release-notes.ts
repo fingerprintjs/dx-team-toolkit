@@ -1,7 +1,7 @@
 import readChangesets from '@changesets/read'
-import { getReleaseNotes } from './notes'
-import { listProjects } from './changelog'
-import { doVersion } from './version'
+import { getReleaseNotes } from './notes.ts'
+import { listProjects } from './changelog.ts'
+import { doVersion } from './version.ts'
 
 export async function changesetReleaseNotes(cwd = process.cwd()) {
   const changesets = await readChangesets(cwd)

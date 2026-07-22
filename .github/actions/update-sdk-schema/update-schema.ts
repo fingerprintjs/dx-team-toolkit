@@ -2,12 +2,12 @@ import * as fs from 'fs'
 import * as path from 'path'
 import * as core from '@actions/core'
 import { getOctokit } from '@actions/github'
-import { startPreRelease } from './changesets'
-import { Config, getConfig } from './config'
-import { updateSchemaForTag } from './update-schema-for-tag'
-import { getLatestSchemaVersion, writeSchemaVersion } from './schema-version'
-import { downloadRepoFile, getRelease, listReleasesBetween } from './github'
-import { loadScopes } from './scopes'
+import { startPreRelease } from './changesets.ts'
+import { Config, getConfig } from './config.ts'
+import { updateSchemaForTag } from './update-schema-for-tag.ts'
+import { getLatestSchemaVersion, writeSchemaVersion } from './schema-version.ts'
+import { downloadRepoFile, getRelease, listReleasesBetween } from './github.ts'
+import { loadScopes } from './scopes.ts'
 
 interface UpdateSchemaParams {
   config: Config

@@ -1,5 +1,5 @@
 import * as yaml from 'js-yaml'
-import { ScopesMap } from './scopes'
+import { ScopesMap } from './scopes.ts'
 
 export function filterSchema(schemaYaml: string, scopes: ScopesMap, allowedScopes: string[]): string {
   // eslint-disable-next-line @typescript-eslint/consistent-type-assertions, @typescript-eslint/no-explicit-any

@@ -1,5 +1,5 @@
 import { NewChangeset } from '@changesets/types'
-import { listChangesForAllProjects } from './changelog'
+import { listChangesForAllProjects } from './changelog.ts'
 
 export function getReleaseNotes(changesets: NewChangeset[], cwd = process.cwd()) {
   let result = ''

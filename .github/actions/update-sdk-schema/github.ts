@@ -1,11 +1,11 @@
 import { Octokit } from '@octokit/rest'
 import * as unzipper from 'unzipper'
-import { getChangesetScope, replacePackageName } from './changesets'
+import { getChangesetScope, replacePackageName } from './changesets.ts'
 import * as path from 'path'
 import * as semver from 'semver'
 import { getOctokit } from '@actions/github'
-import { Config } from './config'
-import { withRetry } from './retry'
+import { Config } from './config.ts'
+import { withRetry } from './retry.ts'
 
 export type GitHubClient = ReturnType<typeof getOctokit>
 

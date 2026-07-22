@@ -5,8 +5,10 @@
     "module": "es6",
     "moduleResolution": "node",
     "target": "es2022",
+    "allowImportingTsExtensions": true,
   },
 
   "files": ["./src/index.ts"],
-  "exclude": ["dist", "node_modules", "**/*.test.ts"]
+  "include": [".github/**/*.ts"],
+  "exclude": ["dist", "node_modules", "**/*.test.ts"],
 }

@@ -1,4 +1,4 @@
-import { Project } from './changelog'
+import { Project } from './changelog.ts'
 import * as fs from 'fs'
 import * as path from 'path'
 import { PackageJSON } from '@changesets/types'

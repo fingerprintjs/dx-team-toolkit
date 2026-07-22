@@ -1,13 +1,13 @@
-import { Config } from './config'
-import { downloadAsset, findAsset, getReleaseNotes, GitHubClient } from './github'
-import { CHANGESETS_PATH, EXAMPLE_PATH_TO_REPLACE, EXAMPLES_FILE, RELEASE_NOTES } from './const'
+import { Config } from './config.ts'
+import { downloadAsset, findAsset, getReleaseNotes, GitHubClient } from './github.ts'
+import { CHANGESETS_PATH, EXAMPLE_PATH_TO_REPLACE, EXAMPLES_FILE, RELEASE_NOTES } from './const.ts'
 import * as fs from 'fs'
 import * as unzipper from 'unzipper'
 import * as path from 'path'
 import * as cp from 'child_process'
-import { filterSchema } from './filter-schema'
-import { ScopesMap } from './scopes'
-import { withRetry } from './retry'
+import { filterSchema } from './filter-schema.ts'
+import { ScopesMap } from './scopes.ts'
+import { withRetry } from './retry.ts'
 
 export async function updateSchemaForTag(
   tag: string,
