@@ -45,4 +45,4 @@ inputs:
     default: 'false'
 runs:
   using: 'node24'
-  main: 'dist/index.js'
+  main: 'update-schema.ts'
