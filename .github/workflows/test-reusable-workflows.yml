@@ -5,7 +5,7 @@ on:
 jobs:
   release-server-sdk-python:
     name: 'Release Python SDK'
-    uses: ./.github/workflows/release-server-sdk.yml
+    uses: ./.github/workflows/release-sdk-changesets.yml
     with:
       language: python
       language-version: '3.9'
@@ -14,7 +14,7 @@ jobs:
       GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-server-sdk-dotnet:
     name: 'Release DotNET SDK'
-    uses: ./.github/workflows/release-server-sdk.yml
+    uses: ./.github/workflows/release-sdk-changesets.yml
     with:
       language: dotnet
       language-version: '7.x'
@@ -23,7 +23,7 @@ jobs:
       GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-server-sdk-php:
     name: 'Release PHP SDK'
-    uses: ./.github/workflows/release-server-sdk.yml
+    uses: ./.github/workflows/release-sdk-changesets.yml
     with:
       language: php
       language-version: '7.3'
@@ -32,7 +32,7 @@ jobs:
       GH_RELEASE_TOKEN: ${{ secrets.GITHUB_TOKEN }}
   release-server-sdk-golang:
     name: 'Release Go SDK'
-    uses: ./.github/workflows/release-server-sdk.yml
+    uses: ./.github/workflows/release-sdk-changesets.yml
     with:
       language: golang
       language-version: '1.19'
