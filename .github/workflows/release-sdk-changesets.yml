@@ -178,6 +178,7 @@ jobs:
           version: ${{ inputs.version-command }}
           commit: 'chore(release): changeset created a new release'
           title: 'Release [changeset]'
+          commitMode: 'github-api'
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
   release:
@@ -254,6 +255,7 @@ jobs:
           version: ${{ inputs.version-command }}
           commit: 'chore(release): changeset created a new release'
           title: 'Release [changeset]'
+          commitMode: 'github-api'
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
           # If useTrustedPublishing is true, use OIDC for npm authentication instead of NPM_TOKEN https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868 by passing an empty string
