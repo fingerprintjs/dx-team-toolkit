@@ -7,6 +7,7 @@
   "scripts": {
     "prepare": "husky install",
     "build": "pnpm run -r build",
+    "build:actions": "bash ./scripts/build-actions.sh",
     "test": "jest --runInBand",
     "test:coverage": "jest --runInBand --coverage",
     "docs": "mkdir docs && cp README.md ./docs/README.md",
@@ -28,6 +29,7 @@
     "@octokit/rest": "^21.0.1",
     "@types/jest": "^29.5.12",
     "@types/unzipper": "^0.10.10",
+    "@vercel/ncc": "^0.38.1",
     "eslint": "^10.4.1",
     "glob": "^11.0.0",
     "human-id": "^4.1.1",

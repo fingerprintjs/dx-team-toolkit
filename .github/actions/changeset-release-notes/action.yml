@@ -6,4 +6,4 @@ outputs:
 
 runs:
   using: 'node24'
-  main: 'main.ts'
+  main: 'dist/index.js'
