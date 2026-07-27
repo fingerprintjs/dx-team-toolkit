@@ -1,7 +1,7 @@
-import { Project } from './changelog'
+import type { Project } from './changelog.ts'
 import * as fs from 'fs'
 import * as path from 'path'
-import { PackageJSON } from '@changesets/types'
+import type { PackageJSON } from '@changesets/types'
 import * as cp from 'child_process'
 
 function getCurrentVersion(project: Project) {

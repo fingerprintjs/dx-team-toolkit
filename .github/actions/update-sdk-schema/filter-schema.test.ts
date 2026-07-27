@@ -1,5 +1,5 @@
-import { filterSchema } from './filter-schema'
-import { loadScopes } from './scopes'
+import { filterSchema } from './filter-schema.ts'
+import { loadScopes } from './scopes.ts'
 
 const scopes = loadScopes(`
 events:

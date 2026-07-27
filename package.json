@@ -7,7 +7,6 @@
   "scripts": {
     "prepare": "husky install",
     "build": "pnpm run -r build",
-    "build:actions": "tsup",
     "test": "jest --runInBand",
     "test:coverage": "jest --runInBand --coverage",
     "docs": "mkdir docs && cp README.md ./docs/README.md",

@@ -1,5 +1,5 @@
 import * as core from '@actions/core'
-import { changesetReleaseNotes } from './changeset-release-notes'
+import { changesetReleaseNotes } from './changeset-release-notes.ts'
 
 export async function main() {
   const notes = await changesetReleaseNotes()

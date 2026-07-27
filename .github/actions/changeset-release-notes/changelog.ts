@@ -1,4 +1,4 @@
-import { NewChangeset, PackageJSON } from '@changesets/types'
+import type { NewChangeset, PackageJSON } from '@changesets/types'
 import { sync as globSync } from 'glob'
 import * as fs from 'fs'
 import * as path from 'path'

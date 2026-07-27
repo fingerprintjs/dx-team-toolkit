@@ -1,0 +1,14 @@
+{
+  "extends": "@fingerprintjs/tsconfig-dx-team/tsconfig.json",
+  "compilerOptions": {
+    "allowImportingTsExtensions": true,
+    "noEmit": true,
+    "target": "esnext",
+    "module": "nodenext",
+    "rewriteRelativeImportExtensions": true,
+    "erasableSyntaxOnly": true,
+    "strict": true,
+    "verbatimModuleSyntax": true,
+    "resolveJsonModule": true,
+  },
+}

@@ -1,5 +1,5 @@
-import { initTestPackage } from '../../../__tests__/test-utils/changeset'
-import { changesetReleaseNotes } from './changeset-release-notes'
+import { initTestPackage } from '../../../__tests__/test-utils/changeset.ts'
+import { changesetReleaseNotes } from './changeset-release-notes.ts'
 
 jest.mock('@actions/core')
 

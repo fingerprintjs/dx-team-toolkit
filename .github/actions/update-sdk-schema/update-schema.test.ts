@@ -1,8 +1,8 @@
-import { updateSchema } from './update-schema'
+import { updateSchema } from './update-schema.ts'
 import * as v110 from './__test__/v1.1.0/release.json'
 import * as v120 from './__test__/v1.2.0/release.json'
-import { maybeMockAsset } from './__test__/assets'
-import { createTestPkg } from '../../../__tests__/test-utils/testPkgExec'
+import { maybeMockAsset } from './__test__/assets.ts'
+import { createTestPkg } from '../../../__tests__/test-utils/testPkgExec.ts'
 import * as fs from 'fs'
 import * as path from 'path'
 

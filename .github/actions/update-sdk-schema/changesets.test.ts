@@ -1,4 +1,4 @@
-import { getChangesetScope, replacePackageName } from './changesets'
+import { getChangesetScope, replacePackageName } from './changesets.ts'
 
 describe('replacePackageName', () => {
   it('replaces package name with single quote', () => {

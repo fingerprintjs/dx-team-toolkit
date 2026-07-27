@@ -1,0 +1,11 @@
+{
+  "name": "changeset-determine-step",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@actions/core": "^1.11.1"
+  },
+  "devDependencies": {
+    "@fingerprintjs/tsconfig-dx-team": "^0.0.2"
+  }
+}

@@ -3,7 +3,25 @@ description: 'Determine if publish or creating PR should run based on changeset 
 outputs:
   action:
     description: 'Which action should be performed based on changesets (`pr` | `publish` | `none`)'
+    value: ${{ steps.run.outputs.action }}
 
 runs:
-  using: 'node24'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile --ignore-workspace
+      working-directory: ${{ github.action_path }}
+
+    - name: Determine changeset step
+      id: run
+      shell: bash
+      run: node ${{ github.action_path }}/main.ts

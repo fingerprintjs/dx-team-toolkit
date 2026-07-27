@@ -1,0 +1,20 @@
+{
+  "name": "update-sdk-schema",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@actions/github": "^6.0.0",
+    "@octokit/rest": "^21.0.1",
+    "cockatiel": "^3.2.1",
+    "js-yaml": "4.1.1",
+    "semver": "^7.6.3",
+    "unzipper": "^0.12.3"
+  },
+  "devDependencies": {
+    "@fingerprintjs/tsconfig-dx-team": "^0.0.2",
+    "@types/js-yaml": "^4.0.9",
+    "@types/semver": "^7.5.8",
+    "@types/unzipper": "^0.10.10"
+  }
+}
