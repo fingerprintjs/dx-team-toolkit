@@ -52,6 +52,7 @@ jobs:
           publish: pnpm changeset publish
           commit: 'chore(release): changeset created a new release'
           title: 'Release packages [changeset]'
+          commitMode: 'github-api'
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
           NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
