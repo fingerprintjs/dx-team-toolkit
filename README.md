@@ -25,14 +25,13 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 - [3. Analyze commits](#3-analyze-commits)
 - [4. Build typescript project](#4-build-typescript-project)
 - [5. Release TypeScript project](#5-release-typescript-project)
-- [6. Release Server SDK](#6-release-server-sdk)
-- [7. Report Workflow Status](#7-report-workflow-status)
-- [8. Create PR to Main on Release](#8-create-pr-to-main-on-release)
-- [9. Create Prerelease Branch and Force Push](#9-create-prerelease-branch-and-force-push)
-- [10. Release SDKs using changesets](#10-release-sdks-using-changesets)
-- [11. Sync server-side SDK schema with OpenAPI release](#11-sync-server-side-sdk-schema-with-openapi-release)
-- [12. Preview changeset release](#12-preview-changeset-release)
-- [13. Run server-side SDK E2E tests](#13-run-server-side-sdk-e2e-tests)
+- [6. Report Workflow Status](#6-report-workflow-status)
+- [7. Create PR to Main on Release](#7-create-pr-to-main-on-release)
+- [8. Create Prerelease Branch and Force Push](#8-create-prerelease-branch-and-force-push)
+- [9. Release SDKs using changesets](#9-release-sdks-using-changesets)
+- [10. Sync server-side SDK schema with OpenAPI release](#10-sync-server-side-sdk-schema-with-openapi-release)
+- [11. Preview changeset release](#11-preview-changeset-release)
+- [12. Run server-side SDK E2E tests](#12-run-server-side-sdk-e2e-tests)
 
 ### 1. Run tests and show coverage diff
 
@@ -322,81 +321,7 @@ automatically picked up from the `production` environment.
 Make sure you've configured the `production` environment and the required secrets: `GH_RELEASE_TOKEN` and
 `NPM_AUTH_TOKEN` (if you want to release to NPM) in your repository settings.
 
-### 6. Release Server SDK
-
-#### Description
-
-This workflow handles the release process for server projects across multiple programming languages like Java, DotNET,
-Python, Golang, and PHP. It sets up the required environment, prepares the project, and executes a semantic release to
-determine the next version number and generate release notes based on commit messages.
-
-#### Prerequisites:
-
-1. The project is written in one of the supported languages: Java, DotNET, Python, Golang, or PHP.
-2. The workflow requires the `production` environment to be configured in your repository settings.
-
-#### Workflow Inputs
-
-The workflow accepts the following input parameters:
-
-<!-- prettier-ignore -->
-
-| Input Parameter                  | Required | Type   | Default | Description                                                                                                    |
-|----------------------------------|----------|--------|---------|----------------------------------------------------------------------------------------------------------------|
-| `language`                       | Yes      | String | -       | Programming language for the project. Supported are `java`, `dotnet`, `python`, `golang`, `flutter` and `php`. |
-| `language-version`               | Yes      | String | -       | Version of the programming language to set up.                                                                 |
-| `prepare-command`                | No       | String | -       | Command(s) to run for project preparation, such as installing dependencies.                                    |
-| `java-version`                   | No       | String | `11`    | Version of Java to set up.                                                                                     |
-| `semantic-release-extra-plugins` | No       | String | -       | Additional plugins to install for the semantic-release action.                                                 |
-| `appId`                          | No       | String | -       | GitHub App Id for creating GitHub token for the release                                                        |
-
-#### Workflow Secrets
-
-The workflow expects the following secrets to be provided:
-
-<!-- prettier-ignore -->
-
-| Secret Name        | Description                                                      | Required For    |
-|--------------------|------------------------------------------------------------------|-----------------|
-| `APP_PRIVATE_KEY`  | GitHub App private key for creating GitHub token for the release | All projects    |
-| `GH_RELEASE_TOKEN` | GitHub token used for making releases and other operations.      | All projects    |
-| `PYPI_TOKEN`       | PyPI token used for publishing Python packages.                  | Python projects |
-| `NUGET_API_KEY`    | NuGet API key for publishing .NET packages.                      | DotNET projects |
-
-#### Example of usage:
-
-Below is an example showcasing the workflow setup for releasing a Python SDK:
-
-```yaml
-name: 'Release Python SDK'
-on:
-  push:
-    branches:
-      - main
-      - test
-
-jobs:
-  release-server-sdk-python:
-    name: 'Publish new version'
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/release-server-sdk.yml@v1
-    with:
-      appId: ${{ vars.APP_ID }}
-      language: python
-      language-version: '3.9'
-      prepare-command: |
-        python -m pip install --upgrade pip
-        pip install -r requirements.txt
-        pip install wheel
-        pip install twine
-    secrets:
-      APP_PRIVATE_KEY: ${{ secrets.APP_PRIVATE_KEY }}
-      PYPI_TOKEN: ${{ secrets.PYPI_TOKEN }}
-```
-
-**Note**: Ensure you've configured the appropriate environment and secrets based on the programming language of your
-project. For a Python project, for instance, the `PYPI_TOKEN` must be available.
-
-### 7. Report Workflow Status
+### 6. Report Workflow Status
 
 This reusable workflow sends notifications reporting the status of a GitHub Actions workflow. Currently, it sends these
 notifications to Slack using the `ravsamhq/notify-slack-action`. The workflow requires the status of a job and a
@@ -457,7 +382,7 @@ jobs:
 Make sure you've set up the required `SLACK_WEBHOOK_URL` secret in your repository's settings. Adjust the values in the
 example as needed for your use case.
 
-### 8. Create PR to Main on Release
+### 7. Create PR to Main on Release
 
 This reusable workflow creates a Pull Request (PR) to the `main` branch in case of the prerelease or from `main` branch
 to another specified branch.
@@ -506,7 +431,7 @@ jobs:
       prerelease: ${{ github.event.release.prerelease }}
 ```
 
-### 9. Create Prerelease Branch and Force Push
+### 8. Create Prerelease Branch and Force Push
 
 This reusable workflow creates a new branch from the `main` branch and performs a force push to overwrite it. It's
 designed to reset a branch to a specific state before a release. The workflow uses a GitHub App token for
@@ -558,7 +483,7 @@ jobs:
 Ensure you've set up the required `APP_PRIVATE_KEY` secret in your repository's settings. Adjust the values in the
 example as needed for your use case.
 
-### 10. Release SDKs using changesets
+### 9. Release SDKs using changesets
 
 This reusable workflow handles release process using [changesets](https://github.com/changesets/changesets)
 
@@ -621,7 +546,7 @@ jobs:
       RUNNER_APP_PRIVATE_KEY: ${{ secrets.RUNNER_APP_PRIVATE_KEY }}
 ```
 
-### 11. Sync server-side SDK schema with OpenAPI release
+### 10. Sync server-side SDK schema with OpenAPI release
 
 This workflow handles release of OpenAPI schema and syncs it with given server-side SDK. It is meant to be triggered by
 OpenAPI tag creation via `repository-dispatch` trigger.
@@ -682,7 +607,7 @@ jobs:
       GH_TOKEN: ${{ secrets.GH_TOKEN }}
 ```
 
-### 12. Preview changeset release
+### 11. Preview changeset release
 
 This reusable workflow processes parsed [changesets](https://github.com/changesets/changesets) and generates preview of
 release notes.
@@ -722,7 +647,7 @@ jobs:
       pr-title: ${{ github.event.pull_request.title }}
 ```
 
-### 13. Run server-side SDK E2E tests
+### 12. Run server-side SDK E2E tests
 
 This workflow can be used for triggering E2E tests for given server-side SDK. It triggers the tests stored in
 `fingerprintjs/dx-team-orchestra` using `repository-dispatch` trigger.
