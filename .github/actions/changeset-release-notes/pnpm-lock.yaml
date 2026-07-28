@@ -15,7 +15,7 @@ importers:
         specifier: ^0.6.1
         version: 0.6.7
       glob:
-        specifier: 11.1.0
+        specifier: ^11.1.0
         version: 11.1.0
     devDependencies:
       '@changesets/types':
