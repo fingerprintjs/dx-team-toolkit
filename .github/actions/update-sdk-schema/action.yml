@@ -44,5 +44,36 @@ inputs:
     description: 'Whether to force update to given tag, even if it was already updated before'
     default: 'false'
 runs:
-  using: 'node24'
-  main: 'dist/index.js'
+  using: 'composite'
+  steps:
+    - name: Setup pnpm
+      uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
+
+    - name: Setup Node.js
+      uses: actions/setup-node@v6
+      with:
+        node-version: 24
+
+    - name: Install dependencies
+      shell: bash
+      run: pnpm install --frozen-lockfile --ignore-workspace
+      working-directory: ${{ github.action_path }}
+
+    - name: Update schema
+      shell: bash
+      run: node ${{ github.action_path }}/update-schema.ts
+      env:
+        INPUT_SCHEMASOURCE: ${{ inputs.schemaSource }}
+        INPUT_SCHEMAPATH: ${{ inputs.schemaPath }}
+        INPUT_EXAMPLESPATH: ${{ inputs.examplesPath }}
+        INPUT_GENERATECOMMAND: ${{ inputs.generateCommand }}
+        INPUT_TAG: ${{ inputs.tag }}
+        INPUT_GITHUBTOKEN: ${{ inputs.githubToken }}
+        INPUT_OPENAPIREPOSITORY: ${{ inputs.openApiRepository }}
+        INPUT_SCOPESREPOSITORY: ${{ inputs.scopesRepository }}
+        INPUT_SCOPESCONFIGPATH: ${{ inputs.scopesConfigPath }}
+        INPUT_SCOPESREF: ${{ inputs.scopesRef }}
+        INPUT_PRERELEASE: ${{ inputs.preRelease }}
+        INPUT_PRERELEASETAG: ${{ inputs.preReleaseTag }}
+        INPUT_ALLOWEDSCOPES: ${{ inputs.allowedScopes }}
+        INPUT_FORCE: ${{ inputs.force }}

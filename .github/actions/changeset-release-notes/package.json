@@ -1,0 +1,14 @@
+{
+  "name": "changeset-release-notes",
+  "private": true,
+  "type": "module",
+  "dependencies": {
+    "@actions/core": "^1.11.1",
+    "@changesets/read": "^0.6.1",
+    "glob": "^11.1.0"
+  },
+  "devDependencies": {
+    "@changesets/types": "^6.0.0",
+    "@fingerprintjs/tsconfig-dx-team": "^0.0.2"
+  }
+}
