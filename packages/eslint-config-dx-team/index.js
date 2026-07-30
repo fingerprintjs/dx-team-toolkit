@@ -1,12 +1,21 @@
 /* eslint-disable @typescript-eslint/no-require-imports */
-const { defineConfig } = require('eslint/config')
+const fs = require('node:fs')
+const path = require('node:path')
+const { defineConfig, includeIgnoreFile } = require('eslint/config')
 const tseslint = require('typescript-eslint')
 const prettierPlugin = require('eslint-plugin-prettier')
 const prettierConfig = require('eslint-config-prettier')
 const globals = require('globals')
 
+// Flat config does not read .gitignore. Honor the consuming repo's root .gitignore so
+// git-ignored paths (build output, dependencies) are not linted. Only .gitignore is read,
+// not .git/info/exclude. Guarded because a repo may not have a .gitignore at the cwd.
+const gitignorePath = path.resolve('.gitignore')
+const gitignoreConfig = fs.existsSync(gitignorePath) ? [includeIgnoreFile(gitignorePath)] : []
+
 module.exports = defineConfig([
   { ignores: ['**/build/**', '**/dist/**'] },
+  ...gitignoreConfig,
   ...tseslint.configs.strict,
   {
     plugins: {
