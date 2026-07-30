@@ -94,7 +94,7 @@ export async function updateSchemaForTag(
 
   console.info('Generating code')
   cp.execSync(generateCommand, {
-    stdio: 'pipe',
+    stdio: 'inherit',
     cwd,
   })
   console.info('Code generated')
