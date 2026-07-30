@@ -122,6 +122,10 @@ jobs:
         with:
           token: ${{ steps.app-token.outputs.token }}
           repository: ${{ inputs.owner }}/${{ inputs.repository }}
+          # Check the SDK out into its own subdir so `_dx-toolkit` is a sibling, not a
+          # child. Tools run inside `sdk/` (lint, format, tests) can't reach the toolkit
+          # checkout, which lives at the workspace root.
+          path: sdk
 
       - name: 'Checkout dx-team-toolkit actions'
         uses: actions/checkout@v7
@@ -132,8 +136,8 @@ jobs:
           sparse-checkout: .github/actions
           sparse-checkout-cone-mode: false
 
-      - name: 'Exclude dx-team-toolkit checkout from git'
-        run: echo '_dx-toolkit/' >> .git/info/exclude
+      # No longer needed: `_dx-toolkit` is now outside the SDK checkout (sdk/), so the
+      # commit step scoped to sdk/ never picks it up.
 
       - name: Setup language
         uses: ./_dx-toolkit/.github/actions/setup-lang
@@ -144,14 +148,17 @@ jobs:
 
       - name: 'Setup pnpm'
         uses: pnpm/action-setup@0ebf47130e4866e96fce0953f49152a61190b271 # v6.0.9
-        with:
-          run_install: true
 
       - name: 'Install Node'
         uses: actions/setup-node@v6
         with:
           node-version: ${{ inputs.language == 'node' && inputs.language-version || 'lts/*' }}
           cache: 'pnpm'
+          cache-dependency-path: sdk/pnpm-lock.yaml
+
+      - name: 'Install SDK dependencies'
+        run: pnpm install
+        working-directory: sdk
 
       - name: Set git config
         run: |
@@ -160,6 +167,7 @@ jobs:
       - name: Update schema
         uses: ./_dx-toolkit/.github/actions/update-sdk-schema
         with:
+          workingDirectory: sdk
           schemaSource: ${{ inputs.schema-source }}
           schemaPath: ${{ inputs.schema-path }}
           examplesPath: ${{ inputs.examples-path }}
@@ -178,6 +186,7 @@ jobs:
         uses: EndBug/add-and-commit@290ea2c423ad77ca9c62ae0f5b224379612c0321 # v10.0.0
         with:
           add: '.'
+          cwd: sdk
           github_token: ${{ steps.app-token.outputs.token }}
           message: 'feat: sync OpenAPI schema to ${{ inputs.tag }}'
           push: 'false'
@@ -185,6 +194,7 @@ jobs:
       - name: Create Pull Request
         uses: peter-evans/create-pull-request@5f6978faf089d4d20b00c7766989d076bb2fc7f1 # v8.1.1
         with:
+          path: sdk
           title: 'OpenAPI schema sync (${{ inputs.tag }})'
           body: 'Schema sync for [${{ inputs.tag }}](https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/tag/${{ inputs.tag }}) OpenAPI schema release.'
           token: ${{ steps.app-token.outputs.token }}

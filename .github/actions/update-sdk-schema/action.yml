@@ -1,6 +1,9 @@
 name: 'Update Schema'
 description: 'Run schema updates using Node.js'
 inputs:
+  workingDirectory:
+    description: 'Directory of the SDK checkout. Schema paths and the generate command run here.'
+    default: '.'
   schemaSource:
     description: 'Source of the schema in OpenAPI release artifacts'
     required: true
@@ -62,6 +65,7 @@ runs:
     - name: Update schema
       shell: bash
       run: node ${{ github.action_path }}/update-schema.ts
+      working-directory: ${{ inputs.workingDirectory }}
       env:
         INPUT_SCHEMASOURCE: ${{ inputs.schemaSource }}
         INPUT_SCHEMAPATH: ${{ inputs.schemaPath }}
