@@ -1,5 +1,11 @@
 # @fingerprintjs/prettier-config-dx-team
 
+## 0.3.1
+
+### Patch Changes
+
+- remove `svelteSortOrder` option. Svelte projects should set `svelteSortOrder` by merging a config with the dx-team-toolkit config. ([4d51b03](https://github.com/fingerprintjs/dx-team-toolkit/commit/4d51b03eef196cb3b50410deae576d4990a88a8c))
+
 ## 0.3.0
 
 ### Minor Changes

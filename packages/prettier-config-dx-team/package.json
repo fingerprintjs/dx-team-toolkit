@@ -1,6 +1,6 @@
 {
   "name": "@fingerprintjs/prettier-config-dx-team",
-  "version": "0.3.0",
+  "version": "0.3.1",
   "private": false,
   "description": "Custom prettier config for DX Team",
   "repository": {
