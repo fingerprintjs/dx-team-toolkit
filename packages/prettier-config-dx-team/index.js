@@ -9,7 +9,6 @@ module.exports = {
   bracketSpacing: true,
   bracketSameLine: false,
   arrowParens: 'always',
-  svelteSortOrder: 'options-scripts-markup-styles',
   proseWrap: 'never',
   overrides: [
     {
