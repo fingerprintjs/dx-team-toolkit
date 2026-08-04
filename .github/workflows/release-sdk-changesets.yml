@@ -55,6 +55,11 @@ on:
         required: false
         default: false
         description: 'Whether to use trusted publishing for publishing packages'
+      unmarkReleaseAsLatest:
+        type: boolean
+        required: false
+        default: false
+        description: 'Set to true for releases cut from a non-default branch (e.g. a legacy/maintenance branch) so they don''t override the "Latest" badge on releases from the default branch.'
     secrets:
       APP_PRIVATE_KEY:
         description: 'GitHub App private key to request GitHub token for release process.'
@@ -261,18 +266,16 @@ jobs:
           # If useTrustedPublishing is true, use OIDC for npm authentication instead of NPM_TOKEN https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868 by passing an empty string
           NPM_TOKEN: ${{ inputs.useTrustedPublishing && '' || secrets.NPM_AUTH_TOKEN }}
 
-      - name: 'Upload files to GitHub release'
-        if: inputs.github-release-files != '' && steps.changesets-release.outputs.published == 'true'
+      # Only needed by the steps below: unmarking a release as latest (requires the tag to target
+      # `gh release edit`) and uploading release assets (requires the tag to target `gh release upload`).
+      # Marking a release as latest needs no action since new releases default to latest, so this step
+      # is skipped whenever neither of those steps will run.
+      - name: 'Compute published release tag'
+        id: release-tag
+        if: steps.changesets-release.outputs.published == 'true' && (inputs.unmarkReleaseAsLatest || inputs.github-release-files != '')
         env:
           PACKAGES: ${{ steps.changesets-release.outputs.publishedPackages }}
-          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
         run: |
-          # Expand support for '**'
-          shopt -s globstar
-
-          # Convert no match patterns into the empty string to result in upload failures
-          shopt -s nullglob
-          
           # Check if changeset config has any ignored packages
           CHANGESET_CONFIG_IGNORE=$(jq -r .ignore ./.changeset/config.json | jq 'length')
 
@@ -286,6 +289,27 @@ jobs:
             # Changesets uses a different naming convention for multi-package repos
             TAG="${PACKAGE_NAME}@${VERSION}"
           fi
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
+      - name: 'Unmark release as latest'
+        if: steps.changesets-release.outputs.published == 'true' && inputs.unmarkReleaseAsLatest
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: gh release edit "${{ steps.release-tag.outputs.tag }}" --latest=false
+
+      - name: 'Upload files to GitHub release'
+        if: inputs.github-release-files != '' && steps.changesets-release.outputs.published == 'true'
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          # Expand support for '**'
+          shopt -s globstar
+
+          # Convert no match patterns into the empty string to result in upload failures
+          shopt -s nullglob
+
+          TAG="${{ steps.release-tag.outputs.tag }}"
 
           IFS=',' read -ra GLOB_PATTERNS <<< "${{ inputs.github-release-files }}"
           for pattern in "${GLOB_PATTERNS[@]}"; do
