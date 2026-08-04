@@ -586,6 +586,7 @@ The workflow accepts the following input parameters:
 | `runnerAppId`          | No       | String  | GitHub App Id for creating PR.                                                                              |
 | `useTrustedPublishing` | No       | Boolean | Whether to use Trusted Publishing instead of NPM token for publishing the package.                          |
 | `github-release-files` | No       | String  | A comma-delimited list of glob patterns to identify the local files to attach to the GitHub release.        |
+| `unmarkReleaseAsLatest`| No       | Boolean | Set to `true` for releases cut from a non-default branch (e.g. a legacy/maintenance branch) so they don't override the "Latest" badge on releases from the default branch. Defaults to `false`. |
 
 #### Workflow Secrets
 
