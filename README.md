@@ -573,19 +573,19 @@ The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
 
-| Input Parameter        | Required | Type    | Description                                                                                                 |
-|------------------------|----------|---------|-------------------------------------------------------------------------------------------------------------|
-| `prepare-command`      | No       | String  | Command(s) to run for project preparation, such as installing dependencies.                                 |
-| `version-command`      | No       | String  | Command to run for project versioning                                                                       |
-| `publish-command`      | No       | String  | Command to run for project publishing                                                                       |
-| `language`             | Yes      | String  | Programming language for the project. Supported are `java`, `dotnet`, `node`, `python`, `golang` and `php`. |
-| `language-version`     | Yes      | String  | Version of the programming language to set up.                                                              |
-| `prepare-command`      | No       | String  | Command(s) to run for project preparation, such as installing dependencies.                                 |
-| `java-version`         | No       | String  | Version of Java to set up.                                                                                  |
-| `appId`                | Yes      | String  | GitHub App Id for creating GitHub token for the release                                                     |
-| `runnerAppId`          | No       | String  | GitHub App Id for creating PR.                                                                              |
-| `useTrustedPublishing` | No       | Boolean | Whether to use Trusted Publishing instead of NPM token for publishing the package.                          |
-| `github-release-files` | No       | String  | A comma-delimited list of glob patterns to identify the local files to attach to the GitHub release.        |
+| Input Parameter         | Required | Type    | Description                                                                                                 |
+|-------------------------|----------|---------|-------------------------------------------------------------------------------------------------------------|
+| `prepare-command`       | No       | String  | Command(s) to run for project preparation, such as installing dependencies.                                 |
+| `version-command`       | No       | String  | Command to run for project versioning                                                                       |
+| `publish-command`       | No       | String  | Command to run for project publishing                                                                       |
+| `language`              | Yes      | String  | Programming language for the project. Supported are `java`, `dotnet`, `node`, `python`, `golang` and `php`. |
+| `language-version`      | Yes      | String  | Version of the programming language to set up.                                                              |
+| `java-version`          | No       | String  | Version of Java to set up.                                                                                  |
+| `appId`                 | Yes      | String  | GitHub App Id for creating GitHub token for the release                                                     |
+| `runnerAppId`           | No       | String  | GitHub App Id for creating PR.                                                                              |
+| `useTrustedPublishing`  | No       | Boolean | Whether to use Trusted Publishing instead of NPM token for publishing the package.                          |
+| `github-release-files`  | No       | String  | A comma-delimited list of glob patterns to identify the local files to attach to the GitHub release.        |
+| `unmarkReleaseAsLatest` | No       | Boolean | Prevent this release from being marked as GitHub's "Latest". Defaults to `false`.                           |
 
 #### Workflow Secrets
 
