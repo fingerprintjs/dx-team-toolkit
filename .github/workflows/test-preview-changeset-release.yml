@@ -12,5 +12,5 @@ jobs:
     with:
       pr-title: ${{ github.event.pull_request.title }}
       setupLanguage: golang
-      setupLanguageVersion: '1.19'
-      prepare-command: 'go version | grep "go1.19" && pnpm run -r build'
+      setupLanguageVersion: '1.25'
+      prepare-command: 'go version | grep "go1.25" && pnpm run -r build'
