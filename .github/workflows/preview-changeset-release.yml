@@ -25,7 +25,7 @@ on:
         required: false
         type: string
       setupLanguageVersion:
-        description: 'Version of the programming language to setup.'
+        description: 'Version of the programming language to set up.'
         required: false
         type: string
 
