@@ -703,7 +703,7 @@ The workflow accepts the following input parameters:
 | `node-version`         | No       | String | `lts/*`              | Node version to use                                                                                                               |
 | `changeset-command`    | No       | String | `pnpm exec changeset`| Command used to generate changeset. It will be used in a suggestion if there are no changesets.                                   |
 | `prepare-command`      | No       | String | -                    | Command(s) to run for project preparation, such as installing dependencies. Runs after language setup when those inputs are set.  |
-| `setupLanguage`        | No       | String | -                    | Setup project for specific programming language. Supported values are `java`, `dotnet`, `python`, `golang`, `flutter`, and `php`. |
+| `setupLanguage`        | No       | String | -                    | Set up the project for a specific programming language. Supported values are `java`, `dotnet`, `python`, `golang`, `flutter`, and `php`. |
 | `setupLanguageVersion` | No       | String | -                    | Version of the programming language to set up.                                                                                    |
 
 Both `setupLanguage` and `setupLanguageVersion` must be set for the toolchain to be installed. Use this when
