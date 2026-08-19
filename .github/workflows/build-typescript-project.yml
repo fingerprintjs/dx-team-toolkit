@@ -38,7 +38,7 @@ on:
 
 jobs:
   build:
-    name: 'Build sdk using last node version'
+    name: 'Build project using last node version'
     runs-on: ${{ inputs.runsOn }}
     steps:
       - name: 'Checkout project for pull_request_target trigger'
