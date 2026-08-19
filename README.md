@@ -697,12 +697,17 @@ The workflow accepts the following input parameters:
 
 <!-- prettier-ignore -->
 
-| Input Parameter     | Required | Type   | Default              | Description                                                                                       |
-|---------------------|----------|--------|----------------------|---------------------------------------------------------------------------------------------------|
-| `pr-title`          | Yes      | String | -                    | Title of created PR                                                                               |
-| `node-version`      | No       | String | `lts/*`              | Node version to use                                                                               |
-| `changeset-command` | No       | String | `pnpm exec changeset`| Command used to generate changeset. It will be used in a suggestion if there are no changesets.   |
-| `prepare-command`   | No       | String | -                    | Command(s) to run for project preparation, such as installing dependencies.                       |
+| Input Parameter        | Required | Type   | Default              | Description                                                                                                                       |
+|------------------------|----------|--------|----------------------|-----------------------------------------------------------------------------------------------------------------------------------|
+| `pr-title`             | Yes      | String | -                    | Title of created PR                                                                                                               |
+| `node-version`         | No       | String | `lts/*`              | Node version to use                                                                                                               |
+| `changeset-command`    | No       | String | `pnpm exec changeset`| Command used to generate changeset. It will be used in a suggestion if there are no changesets.                                   |
+| `prepare-command`      | No       | String | -                    | Command(s) to run for project preparation, such as installing dependencies. Runs after language setup when those inputs are set.  |
+| `setupLanguage`        | No       | String | -                    | Set up the project for a specific programming language. Supported values are `java`, `dotnet`, `python`, `golang`, `flutter`, and `php`. |
+| `setupLanguageVersion` | No       | String | -                    | Version of the programming language to set up.                                                                                    |
+
+Both `setupLanguage` and `setupLanguageVersion` must be set for the toolchain to be installed. Use this when
+`prepare-command` needs toolchain env vars (for example `FLUTTER_ROOT`).
 
 #### Example of usage:
 
@@ -720,6 +725,27 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/preview-changeset-release.yml@1
     with:
       pr-title: ${{ github.event.pull_request.title }}
+```
+
+#### Example with a native toolchain:
+
+```yaml
+name: 'Preview changeset release'
+on:
+  pull_request:
+
+permissions:
+  pull-requests: write
+
+jobs:
+  preview:
+    name: Preview changeset release
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/preview-changeset-release.yml@1
+    with:
+      pr-title: ${{ github.event.pull_request.title }}
+      setupLanguage: flutter
+      setupLanguageVersion: '3.29.2'
+      prepare-command: echo "flutter.sdk=$FLUTTER_ROOT" > android/local.properties
 ```
 
 ### 13. Run server-side SDK E2E tests

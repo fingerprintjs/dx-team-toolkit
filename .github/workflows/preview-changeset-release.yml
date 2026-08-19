@@ -20,6 +20,14 @@ on:
         description: 'Command to run for project preparation (e.g., installing dependencies).'
         required: false
         type: string
+      setupLanguage:
+        description: 'Programming language for the project. Supported values are "java", "dotnet", "python", "golang", "flutter" and "php".'
+        required: false
+        type: string
+      setupLanguageVersion:
+        description: 'Version of the programming language to set up.'
+        required: false
+        type: string
 
 jobs:
   preview:
@@ -52,10 +60,6 @@ jobs:
       - name: Install dependencies
         run: $PACKAGE_MANAGER install
 
-      - name: Prepare project
-        if: ${{ inputs.prepare-command }}
-        run: ${{ inputs.prepare-command }}
-
       - name: 'Checkout dx-team-toolkit actions'
         uses: actions/checkout@v7
         with:
@@ -67,6 +71,17 @@ jobs:
 
       - name: 'Exclude dx-team-toolkit checkout from git'
         run: echo '_dx-toolkit/' >> .git/info/exclude
+
+      - name: Setup language
+        if: ${{ inputs.setupLanguage && inputs.setupLanguageVersion }}
+        uses: ./_dx-toolkit/.github/actions/setup-lang
+        with:
+          language: ${{ inputs.setupLanguage }}
+          language-version: ${{ inputs.setupLanguageVersion }}
+
+      - name: Prepare project
+        if: ${{ inputs.prepare-command }}
+        run: ${{ inputs.prepare-command }}
 
       - name: 'Get release notes'
         id: notes
@@ -82,7 +97,7 @@ jobs:
           recreate: true
           message: |
             ### 🚀 Following releases will be created using changesets from this PR:
-            
+
             ${{ steps.notes.outputs.release-notes }}
 
       - name: 'Add comment to PR'
@@ -102,4 +117,3 @@ jobs:
         if: steps.notes.outputs.release-notes != ''
         run: |
           echo "${{ steps.notes.outputs.release-notes }}" >> $GITHUB_STEP_SUMMARY
-
