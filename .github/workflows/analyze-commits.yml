@@ -83,8 +83,20 @@ jobs:
       - name: 'Install commit lint config'
         if: ${{ inputs.installSharedCommitLintConfig }}
         run: $PACKAGE_MANAGER add @fingerprintjs/commit-lint-dx-team@latest --ignore-workspace-root-check
+      - name: Resolve commitlint config
+        id: commitlint_config
+        run: |
+          for f in commitlint.config.mjs commitlint.config.js commitlint.config.cjs; do
+            if [[ -f "$f" ]]; then
+              echo "file=./$f" >> "$GITHUB_OUTPUT"
+              exit 0
+            fi
+          done
+          echo "file=./commitlint.config.mjs" >> "$GITHUB_OUTPUT"
       - uses: wagoid/commitlint-github-action@dbd4ecd47d0256b6587d1d0c5737082cc439f2c5 # v6.1.0
         id: commitlint
+        with:
+          configFile: ${{ steps.commitlint_config.outputs.file }}
       - if: ${{ failure() && steps.commitlint.outcome == 'failure' }}
         name: 'Format commitlint results'
         id: commitlint_formatted_results

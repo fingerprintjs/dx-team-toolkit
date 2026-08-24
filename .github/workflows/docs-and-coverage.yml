@@ -82,7 +82,12 @@ jobs:
           mkdir gh-pages
           ${{ inputs.prepare-gh-pages-commands }}
 
+      # GITHUB_TOKEN commits are unsigned. gh-pages requires verified
+      # signatures, so pull_request / pull_request_target cannot push
+      # (and should not publish).
+      # https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#require-signed-commits
       - name: Deploy 🚀
+        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
         uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
         with:
           branch: gh-pages
