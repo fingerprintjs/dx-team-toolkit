@@ -86,13 +86,19 @@ jobs:
       - name: Resolve commitlint config
         id: commitlint_config
         run: |
-          for f in commitlint.config.mjs commitlint.config.js commitlint.config.cjs; do
-            if [[ -f "$f" ]]; then
-              echo "file=./$f" >> "$GITHUB_OUTPUT"
-              exit 0
-            fi
-          done
-          echo "file=./commitlint.config.mjs" >> "$GITHUB_OUTPUT"
+          # wagoid/commitlint-github-action throws on paths ending in `.js`:
+          # https://github.com/wagoid/commitlint-github-action/blob/v6.1.0/src/action.mjs#L114-L118
+          # `.mjs` and `.cjs` are allowed. SDK configs are CommonJS (`module.exports`).
+          if [[ -f commitlint.config.mjs ]]; then
+            echo "file=./commitlint.config.mjs" >> "$GITHUB_OUTPUT"
+          elif [[ -f commitlint.config.cjs ]]; then
+            echo "file=./commitlint.config.cjs" >> "$GITHUB_OUTPUT"
+          elif [[ -f commitlint.config.js ]]; then
+            cp commitlint.config.js commitlint.config.generated.cjs
+            echo "file=./commitlint.config.generated.cjs" >> "$GITHUB_OUTPUT"
+          else
+            echo "file=./commitlint.config.mjs" >> "$GITHUB_OUTPUT"
+          fi
       - uses: wagoid/commitlint-github-action@dbd4ecd47d0256b6587d1d0c5737082cc439f2c5 # v6.1.0
         id: commitlint
         with:
