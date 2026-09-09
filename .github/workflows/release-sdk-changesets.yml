@@ -59,7 +59,7 @@ on:
         type: boolean
         required: false
         default: false
-        description: 'Set to true for releases cut from a non-default branch (e.g. a legacy/maintenance branch) so they don''t override the "Latest" badge on releases from the default branch.'
+        description: 'Set to true for releases cut from a non-default branch (e.g. a legacy/maintenance branch) so they don''t override the "Latest" badge on releases from the default branch. The badge is kept in place by re-promoting the release that held it before this publish.'
     secrets:
       APP_PRIVATE_KEY:
         description: 'GitHub App private key to request GitHub token for release process.'
@@ -252,6 +252,29 @@ jobs:
       - name: 'Install changesets'
         run: 'pnpm install @changesets/cli --global'
 
+      # Restored after publishing by the promote step below. The endpoint returns the release
+      # holding the "Latest" badge, excluding drafts and prereleases.
+      - name: 'Capture previous latest release'
+        id: previous-latest
+        if: inputs.unmarkReleaseAsLatest
+        env:
+          GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
+        run: |
+          if TAG=$(gh api "repos/${{ github.repository }}/releases/latest" --jq .tag_name 2>/tmp/gh-error.log); then
+            echo "Previous Latest release: $TAG"
+          else
+            TAG=""
+            # Indented so a `::`-prefixed line in the output is not read as a workflow command.
+            sed 's/^/  /' /tmp/gh-error.log
+            if grep -q 404 /tmp/gh-error.log; then
+              echo "::notice::No release is currently marked as Latest - nothing to restore."
+            else
+              echo "::warning::Could not look up the current Latest release, see the log above - nothing to restore."
+            fi
+          fi
+
+          echo "tag=$TAG" >> "$GITHUB_OUTPUT"
+
       - name: Create Release
         id: changesets-release
         uses: changesets/action@a45c4d594aa4e2c509dc14a9f2b3b67ba3780d0d # v1.9.0
@@ -266,13 +289,10 @@ jobs:
           # If useTrustedPublishing is true, use OIDC for npm authentication instead of NPM_TOKEN https://github.com/changesets/changesets/issues/1152#issuecomment-3190884868 by passing an empty string
           NPM_TOKEN: ${{ inputs.useTrustedPublishing && '' || secrets.NPM_AUTH_TOKEN }}
 
-      # Only needed by the steps below: unmarking a release as latest (requires the tag to target
-      # `gh release edit`) and uploading release assets (requires the tag to target `gh release upload`).
-      # Marking a release as latest needs no action since new releases default to latest, so this step
-      # is skipped whenever neither of those steps will run.
+      # Only needed to upload release assets, which requires the tag to target `gh release upload`.
       - name: 'Compute published release tag'
         id: release-tag
-        if: steps.changesets-release.outputs.published == 'true' && (inputs.unmarkReleaseAsLatest || inputs.github-release-files != '')
+        if: steps.changesets-release.outputs.published == 'true' && inputs.github-release-files != ''
         env:
           PACKAGES: ${{ steps.changesets-release.outputs.publishedPackages }}
         run: |
@@ -292,11 +312,18 @@ jobs:
 
           echo "tag=$TAG" >> "$GITHUB_OUTPUT"
 
-      - name: 'Unmark release as latest'
+      # Promoting implicitly demotes the release that held the badge.
+      - name: 'Restore previous release as latest'
         if: steps.changesets-release.outputs.published == 'true' && inputs.unmarkReleaseAsLatest
         env:
           GITHUB_TOKEN: ${{ steps.app-token.outputs.token }}
-        run: gh release edit "${{ steps.release-tag.outputs.tag }}" --latest=false
+          PREV_TAG: ${{ steps.previous-latest.outputs.tag }}
+        run: |
+          if [ -n "$PREV_TAG" ]; then
+            gh release edit "$PREV_TAG" --latest
+          else
+            echo "::notice::No previous Latest release to restore, the new release keeps the badge."
+          fi
 
       - name: 'Upload files to GitHub release'
         if: inputs.github-release-files != '' && steps.changesets-release.outputs.published == 'true'
