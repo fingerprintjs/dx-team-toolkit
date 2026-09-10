@@ -585,7 +585,12 @@ The workflow accepts the following input parameters:
 | `runnerAppId`           | No       | String  | GitHub App Id for creating PR.                                                                              |
 | `useTrustedPublishing`  | No       | Boolean | Whether to use Trusted Publishing instead of NPM token for publishing the package.                          |
 | `github-release-files`  | No       | String  | A comma-delimited list of glob patterns to identify the local files to attach to the GitHub release.        |
-| `unmarkReleaseAsLatest` | No       | Boolean | Prevent this release from being marked as GitHub's "Latest". Defaults to `false`.                           |
+| `unmarkReleaseAsLatest` | No       | Boolean | Keep GitHub's "Latest" badge on the previous latest release. See the note below. Defaults to `false`.       |
+
+> **Note on `unmarkReleaseAsLatest`:** GitHub's "Latest" badge moves only when a release is
+> explicitly promoted with `--latest`. The workflow records the release holding the badge _before_
+> publishing and re-promotes it after, which implicitly demotes the new release. With no previous
+> Latest release to restore, the new release keeps the badge.
 
 #### Workflow Secrets
 
