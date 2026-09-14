@@ -35,6 +35,15 @@ jobs:
             echo "Error: '${{ github.event.inputs.target }}' is not a valid tag."
             exit 1
           fi
+      - name: Validate target matches major version
+        env:
+          TARGET: ${{ github.event.inputs.target }}
+          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
+        run: |
+          if [[ ! "$TARGET" =~ ^$MAJOR_VERSION\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Error: Target '$TARGET' does not match major version '$MAJOR_VERSION'."
+            exit 1
+          fi
       - name: Validate target tag is reachable from main
         run: |
           commit=$(git rev-list -1 "refs/tags/${{ github.event.inputs.target }}^{}")
