@@ -83,12 +83,7 @@ jobs:
           mkdir gh-pages
           ${{ inputs.prepare-gh-pages-commands }}
 
-      - name: Setup Pages
-        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
-        uses: actions/configure-pages@v6
-
       - name: Upload Pages artifact
-        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
         uses: actions/upload-pages-artifact@v5
         with:
           path: gh-pages
