@@ -104,14 +104,13 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   generate-docs-and-coverage:
     name: Generate docs and coverage report
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v2
 ```
 
@@ -128,14 +127,13 @@ on:
     branches:
       - main
 
-permissions:
-  contents: read
-  pages: write
-  id-token: write
-
 jobs:
   generate-docs-and-coverage:
     name: Generate docs and coverage report
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v2
     with:
       prepare-gh-pages-commands: |
