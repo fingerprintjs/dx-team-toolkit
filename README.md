@@ -137,6 +137,7 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v2
     with:
       prepare-gh-pages-commands: |
+        shopt -s dotglob
         mv docs/* ./gh-pages
         mv coverage/lcov-report ./gh-pages/coverage
 ```
