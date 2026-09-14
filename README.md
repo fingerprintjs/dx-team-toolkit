@@ -112,7 +112,7 @@ permissions:
 jobs:
   generate-docs-and-coverage:
     name: Generate docs and coverage report
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v2
 ```
 
 This example uploads the generated content as a GitHub Pages artifact. The default commands place `docs` at the site
@@ -136,7 +136,7 @@ permissions:
 jobs:
   generate-docs-and-coverage:
     name: Generate docs and coverage report
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v2
     with:
       prepare-gh-pages-commands: |
         mv docs/* ./gh-pages
@@ -828,4 +828,4 @@ while skipping expensive steps when watched files did not change.
 This repository contains two types of publishable artifacts with different release processes. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 - **npm packages** - released automatically via [changesets](https://github.com/changesets/changesets) when PRs with changeset files are merged to `main`.
-- **GitHub Actions and reusable workflows** - released manually by tagging a commit and running the "Update Main Version" workflow to move the `v1` tag.
+- **GitHub Actions and reusable workflows** - released manually by tagging a commit and running the "Update Main Version" workflow to move the appropriate major version tag.
