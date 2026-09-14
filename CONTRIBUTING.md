@@ -54,16 +54,17 @@ npm packages are released automatically via [changesets](https://github.com/chan
 
 ### GitHub Actions and reusable workflows
 
-Actions and reusable workflows are consumed by other repositories via git tags (e.g. `@v1`). To release a new version:
+Actions and reusable workflows are consumed by other repositories via major git tags (e.g. `@v1` or `@v2`). To release a new version:
 
 1. Merge your PR with the action/workflow changes to `main`.
-2. Create and push a new semver tag from the merge commit:
+2. Choose the major version to release, then create and push a semver tag from the merge commit. For example, to
+   release `v2`:
    ```sh
-   git tag v1.x.y
-   git push origin v1.x.y
+   git tag v2.0.0
+   git push origin v2.0.0
    ```
 3. Go to **Actions > Update Main Version** and run the workflow with:
-   - **target**: the tag you just pushed (e.g. `v1.x.y`)
-   - **major_version**: `v1`
+   - **target**: the tag you just pushed (e.g. `v2.0.0`)
+   - **major_version**: the matching major version (e.g. `v2`)
 
-   This moves the `v1` tag to point at your new release, so all consumers referencing `@v1` pick up the change.
+   This moves that major tag to point at the new release, so consumers referencing that major version pick up the change.
