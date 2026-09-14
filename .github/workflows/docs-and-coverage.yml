@@ -14,7 +14,8 @@ on:
       prepare-gh-pages-commands:
         required: false
         default: |
-          mv docs ./gh-pages
+          shopt -s dotglob
+          mv docs/* ./gh-pages
           mv coverage/lcov-report ./gh-pages/coverage
         type: string
         description: >
