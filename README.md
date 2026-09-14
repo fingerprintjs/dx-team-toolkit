@@ -111,7 +111,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v2
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
 ```
 
 This example uploads the generated content as a GitHub Pages artifact. The default commands place `docs` at the site
@@ -134,7 +134,7 @@ jobs:
       contents: read
       pages: write
       id-token: write
-    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v2
+    uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
     with:
       prepare-gh-pages-commands: |
         shopt -s dotglob
