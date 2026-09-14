@@ -14,6 +14,7 @@ on:
         default: v1
         options:
           - v1
+          - v2
 permissions:
   contents: write
 
@@ -32,6 +33,15 @@ jobs:
         run: |
           if ! git show-ref --tags --verify --quiet "refs/tags/${{ github.event.inputs.target }}"; then
             echo "Error: '${{ github.event.inputs.target }}' is not a valid tag."
+            exit 1
+          fi
+      - name: Validate target matches major version
+        env:
+          TARGET: ${{ github.event.inputs.target }}
+          MAJOR_VERSION: ${{ github.event.inputs.major_version }}
+        run: |
+          if [[ ! "$TARGET" =~ ^$MAJOR_VERSION\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Error: Target '$TARGET' does not match major version '$MAJOR_VERSION'."
             exit 1
           fi
       - name: Validate target tag is reachable from main

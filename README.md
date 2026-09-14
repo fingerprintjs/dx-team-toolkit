@@ -20,8 +20,7 @@ This monorepo stores reusable configurations for tools like ESLint, Prettier, et
 ## Reusable workflows
 
 - [1. Run tests and show coverage diff](#1-run-tests-and-show-coverage-diff)
-- [2. Generate docs and coverage report and publish to the Github Pages using
-  `gh-pages` branch](#2-generate-docs-and-coverage-report-and-publish-to-the-github-pages-using-gh-pages-branch)
+- [2. Generate docs and coverage report and publish to GitHub Pages](#2-generate-docs-and-coverage-report-and-publish-to-github-pages)
 - [3. Analyze commits](#3-analyze-commits)
 - [4. Build typescript project](#4-build-typescript-project)
 - [5. Release TypeScript project](#5-release-typescript-project)
@@ -70,7 +69,7 @@ jobs:
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/coverage-diff.yml@v1
 ```
 
-### 2. Generate docs and coverage report and publish to the Github Pages using `gh-pages` branch
+### 2. Generate docs and coverage report and publish to GitHub Pages
 
 #### Prerequisites:
 
@@ -78,10 +77,11 @@ jobs:
 2. `yarn build` command builds the project
 3. `yarn test:coverage` runs tests and prepares coverage report in `./coverage/coverage.txt`
 4. `yarn docs` generate documentation using typedoc in `./docs` folder
+5. Configure the repository's Pages source as **GitHub Actions** under **Settings → Pages → Build and deployment → Source**
 
-> **Note**: By default, this workflow prepares the `gh-pages` folder by moving the contents of `./docs` and
-`./coverage/lcov-report` into it. If you need a different structure, you can override the default behavior by passing
-> the appropriate commands in the `prepare-gh-pages-commands` input parameter.
+> **Note**: By default, this workflow stages the contents of `./docs` and `./coverage/lcov-report` for the Pages
+> artifact. If you need a different structure, you can override the default behavior by passing the appropriate
+> commands in the `prepare-gh-pages-commands` input parameter. The input name is retained for backward compatibility.
 
 #### Inputs
 
@@ -89,7 +89,7 @@ jobs:
 
 | Input Parameter             | Required | Type    | Default                                                                      | Description                                                                                                                                                        |
 |-----------------------------|----------|---------|------------------------------------------------------------------------------|--------------------------------------------------------------------------------------------------------------------------------------------------------------------|
-| `prepare-gh-pages-commands` | No       | String  | <pre>mv docs ./gh-pages<br>mv coverage/lcov-report ./gh-pages/coverage</pre> | Commands to prepare the content of the `gh-pages` folder. The `gh-pages` folder will be created automatically. Only specify the commands for moving files into it. |
+| `prepare-gh-pages-commands` | No       | String  | <pre>shopt -s dotglob<br>mv docs/* ./gh-pages<br>mv coverage/lcov-report ./gh-pages/coverage</pre> | Commands to stage files for the Pages artifact. The `gh-pages` staging folder will be created automatically. |
 | `skip-docs-step`            | No       | Boolean | `false`                                                                      | Skip the documentation generation step.                                                                                                                            |
 | `run-after-install`         | No       | String  | `""`                                                                         | Commands to run after installing dependencies.                                                                                                                     |
 | `node-version`              | No       | String  | `lts/*`                                                                      | Node version to use                                                                                                                                                |
@@ -107,11 +107,15 @@ on:
 jobs:
   generate-docs-and-coverage:
     name: Generate docs and coverage report
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
 ```
 
-This example uses the default commands to prepare the content of the gh-pages folder, which moves the `docs` and
-`coverage/lcov-report` folders into the `gh-pages` folder.
+This example uploads the generated content as a GitHub Pages artifact. The default commands place `docs` at the site
+root and `coverage/lcov-report` under `coverage`.
 
 #### Example of usage with custom behavior:
 
@@ -126,16 +130,21 @@ on:
 jobs:
   generate-docs-and-coverage:
     name: Generate docs and coverage report
+    permissions:
+      contents: read
+      pages: write
+      id-token: write
     uses: fingerprintjs/dx-team-toolkit/.github/workflows/docs-and-coverage.yml@v1
     with:
       prepare-gh-pages-commands: |
+        shopt -s dotglob
         mv docs/* ./gh-pages
         mv coverage/lcov-report ./gh-pages/coverage
 ```
 
-In this example, we're explicitly passing the `prepare-gh-pages-commands` parameter with the commands to move the `docs`
-and `coverage/lcov-report` folders into the `gh-pages` folder. You can customize these commands to fit your project's
-structure.
+In this example, we're explicitly passing the `prepare-gh-pages-commands` parameter with the commands to stage the
+`docs` and `coverage/lcov-report` folders for the Pages artifact. You can customize these commands to fit your
+project's structure.
 
 ### 3. Analyze commits
 
@@ -818,4 +827,4 @@ while skipping expensive steps when watched files did not change.
 This repository contains two types of publishable artifacts with different release processes. See [CONTRIBUTING.md](CONTRIBUTING.md) for details.
 
 - **npm packages** - released automatically via [changesets](https://github.com/changesets/changesets) when PRs with changeset files are merged to `main`.
-- **GitHub Actions and reusable workflows** - released manually by tagging a commit and running the "Update Main Version" workflow to move the `v1` tag.
+- **GitHub Actions and reusable workflows** - released manually by tagging a commit and running the "Update Main Version" workflow to move the appropriate major version tag.

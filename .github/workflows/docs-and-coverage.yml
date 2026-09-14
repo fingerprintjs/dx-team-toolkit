@@ -14,21 +14,29 @@ on:
       prepare-gh-pages-commands:
         required: false
         default: |
-          mv docs ./gh-pages
+          shopt -s dotglob
+          mv docs/* ./gh-pages
           mv coverage/lcov-report ./gh-pages/coverage
         type: string
         description: >
-          Commands to prepare the content of the gh-pages folder. The gh-pages folder will be created automatically.
-          Only specify the commands for moving files into it.
+          Commands to stage files for the Pages artifact. The gh-pages staging folder (named for backward compatibility) will be created automatically. Only specify the commands for moving files into it.
+
+
       skip-docs-step:
         required: false
         default: false
         type: boolean
         description: 'Skip the documentation generation step.'
 
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
 jobs:
   generate-docs-and-coverage:
     runs-on: ubuntu-latest
+    permissions:
+      contents: read
     steps:
       - name: Checkout the repository
         uses: actions/checkout@v7
@@ -77,18 +85,28 @@ jobs:
           source: coverage/coverage-summary.json
           output: coverage/lcov-report/badges.svg
 
-      - name: Prepare folder for gh-pages
+      - name: Prepare Pages artifact
         run: |
           mkdir gh-pages
           ${{ inputs.prepare-gh-pages-commands }}
 
-      # GITHUB_TOKEN commits are unsigned. gh-pages requires verified
-      # signatures, so pull_request / pull_request_target cannot push
-      # (and should not publish).
-      # https://docs.github.com/en/repositories/configuring-branches-and-merges-in-your-repository/managing-rulesets/available-rules-for-rulesets#require-signed-commits
-      - name: Deploy 🚀
-        if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
-        uses: JamesIves/github-pages-deploy-action@d92aa235d04922e8f08b40ce78cc5442fcfbfa2f # v4.8.0
+      - name: Upload Pages artifact
+        uses: actions/upload-pages-artifact@v5
         with:
-          branch: gh-pages
-          folder: gh-pages
+          path: gh-pages
+          include-hidden-files: true
+
+  deploy-pages:
+    if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
+    needs: generate-docs-and-coverage
+    runs-on: ubuntu-latest
+    permissions:
+      pages: write
+      id-token: write
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - name: Deploy to GitHub Pages 🚀
+        id: deployment
+        uses: actions/deploy-pages@v5
