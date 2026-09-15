@@ -4,6 +4,8 @@ import fs from 'fs'
 
 import * as core from '@actions/core'
 
+import { releaseTagCandidates } from './release-tags.ts'
+
 try {
   // Collect changesets stats
   const random = Math.random().toString(36).slice(2, 10)
@@ -21,12 +23,23 @@ try {
   } else {
     const pkg = JSON.parse(fs.readFileSync('package.json', 'utf-8'))
     const currentVersion = pkg.version
-    console.log(`[determine-changeset-action] currentVersion=${currentVersion}`)
-    try {
-      execSync(`git fetch --tags`) // fetch tags
-      execSync(`git rev-parse --verify --quiet v${currentVersion}`)
-    } catch {
-      // tag was not found, we can publish
+    const tags = releaseTagCandidates(pkg.name, currentVersion)
+    console.log(`[determine-changeset-action] currentVersion=${currentVersion} candidateTags=${tags.join(', ')}`)
+
+    execSync(`git fetch --tags`) // fetch tags
+    const released = tags.some((tag) => {
+      try {
+        // The full ref path and the `--` keep a tag name such as
+        // `@scope/pkg@1.2.3` from being read as an option.
+        execSync(`git rev-parse --verify --quiet "refs/tags/${tag}" --`, { stdio: 'ignore' })
+        return true
+      } catch {
+        return false
+      }
+    })
+
+    if (!released) {
+      // no tag was found, we can publish
       action = 'publish'
     }
   }
