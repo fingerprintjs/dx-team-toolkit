@@ -1,12 +1,12 @@
 import type { ChangelogFunctions, GetDependencyReleaseLine, GetReleaseLine } from '@changesets/types'
 import fpFormat from '@fingerprintjs/changesets-changelog-format'
-import { generateNativeDepsNote } from './native-dependency/note'
+import { type AndroidNoteOptions, generateNativeDepsNote, type IOSNoteOptions } from './native-dependency/note'
 import { getLastChangeset } from './native-dependency/changeset'
 
 export type Options = {
   packageName?: string
-  androidPath?: string
-  iosPodspecPath?: string
+  android?: AndroidNoteOptions
+  ios?: IOSNoteOptions
   repo?: string
 }
 
@@ -15,12 +15,12 @@ const getReleaseLine: GetReleaseLine = async (changeset, type, opts: Options | n
     throw new Error('Missing `opts.packageName`')
   }
 
-  if (!opts?.androidPath) {
-    throw new Error('Missing `opts.androidPath`')
+  if (!opts?.android?.path) {
+    throw new Error('Missing `opts.android.path`')
   }
 
-  if (!opts?.iosPodspecPath) {
-    throw new Error('Missing `opts.iosPodspecPath`')
+  if (!opts?.ios?.podspecPath) {
+    throw new Error('Missing `opts.ios.podspecPath`')
   }
 
   if (!opts?.repo) {
@@ -34,7 +34,7 @@ const getReleaseLine: GetReleaseLine = async (changeset, type, opts: Options | n
 
   if (isLastChangeset) {
     try {
-      const nativeDepsNote = await generateNativeDepsNote(opts.androidPath, opts.iosPodspecPath)
+      const nativeDepsNote = await generateNativeDepsNote(opts.android, opts.ios)
       line += `\n\n ${nativeDepsNote}`
     } catch (e) {
       console.error('Failed to generate native dependencies note', e)
