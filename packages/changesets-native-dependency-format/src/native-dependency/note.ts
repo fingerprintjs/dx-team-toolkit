@@ -3,8 +3,11 @@ import { resolveAndroidDependency } from './android'
 
 export type NativePlatformDefinition = { displayName: string; versionRange: string }
 
-export type AndroidNoteOptions = { path: string; gradleTaskName: string }
-export type IOSNoteOptions = { podspecPath: string; dependencyName: string }
+export type AndroidNoteOptions = { path: string; gradleTaskName?: string }
+export type IOSNoteOptions = { podspecPath: string; dependencyName?: string }
+
+const DEFAULT_GRADLE_TASK_NAME = 'printFingerprintNativeSDKVersion'
+const DEFAULT_IOS_DEPENDENCY_NAME = 'Fingerprint-iOS'
 
 function formatter(platforms: NativePlatformDefinition[]) {
   let result = `### Supported Native SDK Version Range\n\n`
@@ -24,7 +27,7 @@ export async function generateNativeDepsNote(android: AndroidNoteOptions, ios: I
       displayName: 'Fingerprint iOS SDK',
       versionRange: await resolveIOSDependency({
         displayName: 'Fingerprint iOS SDK',
-        dependencyName: ios.dependencyName,
+        dependencyName: ios.dependencyName ?? DEFAULT_IOS_DEPENDENCY_NAME,
         podSpecPath: ios.podspecPath,
       }),
     },
@@ -34,7 +37,7 @@ export async function generateNativeDepsNote(android: AndroidNoteOptions, ios: I
       versionRange: await resolveAndroidDependency({
         path: android.path,
         displayName: 'Fingerprint Android SDK',
-        gradleTaskName: android.gradleTaskName,
+        gradleTaskName: android.gradleTaskName ?? DEFAULT_GRADLE_TASK_NAME,
       }),
     },
   ]

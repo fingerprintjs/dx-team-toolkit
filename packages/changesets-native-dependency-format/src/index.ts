@@ -19,16 +19,8 @@ const getReleaseLine: GetReleaseLine = async (changeset, type, opts: Options | n
     throw new Error('Missing `opts.android.path`')
   }
 
-  if (!opts?.android?.gradleTaskName) {
-    throw new Error('Missing `opts.android.gradleTaskName`')
-  }
-
   if (!opts?.ios?.podspecPath) {
     throw new Error('Missing `opts.ios.podspecPath`')
-  }
-
-  if (!opts?.ios?.dependencyName) {
-    throw new Error('Missing `opts.ios.dependencyName`')
   }
 
   if (!opts?.repo) {
