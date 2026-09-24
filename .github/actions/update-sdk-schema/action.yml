@@ -21,7 +21,7 @@ inputs:
     required: true
   openApiRepository:
     description: 'OpenAPI repository in format of owner/repo'
-    default: 'fingerprintjs/fingerprint-pro-server-api-openapi'
+    default: 'fingerprintjs/openapi'
   scopesRepository:
     description: 'Repository to source scopes.yaml from, in format of owner/repo. Defaults to openApiRepository.'
     default: ''
