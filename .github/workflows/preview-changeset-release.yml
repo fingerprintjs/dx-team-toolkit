@@ -113,7 +113,12 @@ jobs:
             ```
             to create a changeset.
 
+      # Put notes in env so markdown is not pasted into the bash script.
+      # echo "${{ steps.notes.outputs.release-notes }}" treats backticks as command substitution
+      # and " as string closers.
+      # https://docs.github.com/en/actions/security-guides/security-hardening-for-github-actions#using-an-intermediate-environment-variable
       - name: 'Add release notes preview to the job summary'
         if: steps.notes.outputs.release-notes != ''
-        run: |
-          echo "${{ steps.notes.outputs.release-notes }}" >> $GITHUB_STEP_SUMMARY
+        env:
+          RELEASE_NOTES: ${{ steps.notes.outputs.release-notes }}
+        run: printf '%s\n' "$RELEASE_NOTES" >> "$GITHUB_STEP_SUMMARY"
