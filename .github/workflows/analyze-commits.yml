@@ -203,12 +203,15 @@ jobs:
             ${{ env.TEST_MESSAGE }}
       - name: Add release notes preview to the job summary
         if: ${{ steps.semantic_release_info.outputs.no_release == 'false' }}
+        env:
+          RELEASE_TYPE: ${{ steps.semantic_release_info.outputs.type }}
+          RELEASE_NOTES: ${{ steps.semantic_release_info.outputs.notes }}
         run: |
-          echo "## This PR will create a ${{steps.semantic_release_info.outputs.type}} release :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo ${{ env.TEST_MESSAGE }} >> $GITHUB_STEP_SUMMARY
-          echo "${{steps.semantic_release_info.outputs.notes}}" >> $GITHUB_STEP_SUMMARY
+          echo "## This PR will create a ${RELEASE_TYPE} release :rocket:" >> "$GITHUB_STEP_SUMMARY"
+          echo "${TEST_MESSAGE}" >> "$GITHUB_STEP_SUMMARY"
+          printf '%s\n' "$RELEASE_NOTES" >> "$GITHUB_STEP_SUMMARY"
       - name: Add release notes preview to the job summary
         if: ${{ steps.semantic_release_info.outputs.no_release == 'true' }}
         run: |
-          echo "## This PR will not create a new release :rocket:" >> $GITHUB_STEP_SUMMARY
-          echo ${{ env.TEST_MESSAGE }} >> $GITHUB_STEP_SUMMARY
+          echo "## This PR will not create a new release :rocket:" >> "$GITHUB_STEP_SUMMARY"
+          echo "${TEST_MESSAGE}" >> "$GITHUB_STEP_SUMMARY"
