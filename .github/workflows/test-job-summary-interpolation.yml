@@ -1,0 +1,44 @@
+# Proves the job-summary step can ingest the notes that failed Flutter CI.
+# Fixture is the release-notes output from:
+# https://github.com/fingerprintjs/fingerprintjs-pro-flutter/pull/164
+name: Test job summary interpolation
+on:
+  pull_request:
+    paths:
+      - '.github/workflows/preview-changeset-release.yml'
+      - '.github/workflows/test-job-summary-interpolation.yml'
+      - '.github/workflows/fixtures/flutter-pr-164-release-notes.md'
+
+jobs:
+  interpolation:
+    name: Flutter v5 notes
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v7
+
+      - name: Expose notes as a step output
+        id: notes
+        run: |
+          {
+            echo 'NOTES<<NOTES_EOF'
+            cat .github/workflows/fixtures/flutter-pr-164-release-notes.md
+            echo 'NOTES_EOF'
+          } >> "$GITHUB_OUTPUT"
+
+      - name: Old echo interpolation
+        id: old
+        continue-on-error: true
+        run: echo "${{ steps.notes.outputs.NOTES }}" >> "$GITHUB_STEP_SUMMARY"
+
+      - name: Old interpolation must fail
+        if: steps.old.outcome == 'success'
+        run: |
+          echo 'Old echo interpolation was supposed to fail on this fixture'
+          exit 1
+
+      - name: Env printf interpolation
+        env:
+          RELEASE_NOTES: ${{ steps.notes.outputs.NOTES }}
+        run: |
+          printf '%s\n' "$RELEASE_NOTES" >> "$GITHUB_STEP_SUMMARY"
+          grep -q 'WidgetsFlutterBinding.ensureInitialized' "$GITHUB_STEP_SUMMARY"
