@@ -180,6 +180,6 @@ jobs:
           commit-message: 'feat: sync OpenAPI schema to ${{ inputs.tag }}'
           sign-commits: true
           title: 'OpenAPI schema sync (${{ inputs.tag }})'
-          body: 'Schema sync for [${{ inputs.tag }}](https://github.com/fingerprintjs/fingerprint-pro-server-api-openapi/releases/tag/${{ inputs.tag }}) OpenAPI schema release.'
+          body: 'Schema sync for [${{ inputs.tag }}](https://github.com/fingerprintjs/openapi/releases/tag/${{ inputs.tag }}) OpenAPI schema release.'
           token: ${{ steps.app-token.outputs.token }}
           branch: feat/open-api-${{ inputs.tag }}
