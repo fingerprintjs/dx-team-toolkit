@@ -1,5 +1,11 @@
 # @fingerprintjs/commit-lint-dx-team
 
+## 0.2.0
+
+### Minor Changes
+
+- accept any subject case and a ticket ID in place of the type (`INTER-123: add X`) ([67d6158](https://github.com/fingerprintjs/dx-team-toolkit/commit/67d615845d3254f711d6da3e29f24e955be1568e))
+
 ## 0.1.0
 
 ### Minor Changes
