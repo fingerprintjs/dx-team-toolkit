@@ -26,7 +26,8 @@ export async function getPendingChangesets(packageName: string) {
 export function getLastChangeset(packageName: string) {
   return getPendingChangesets(packageName).then((changesets) => {
     for (const type of changeTypesOrder) {
-      const changeset = changesets.find((c) => c.type === type)
+      // Changesets prints entries of the same type in this order, so take the last match
+      const changeset = changesets.filter((c) => c.type === type).at(-1)
 
       if (changeset) {
         return changeset.id
