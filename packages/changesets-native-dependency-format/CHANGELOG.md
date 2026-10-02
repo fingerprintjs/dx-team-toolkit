@@ -1,5 +1,11 @@
 # @fingerprintjs/changesets-native-dependency-format
 
+## 0.2.1
+
+### Patch Changes
+
+- Append the native SDK version note to the last changeset of the lowest change type, not the first. Before, with two or more changesets of that type, the note appeared between them. ([610d138](https://github.com/fingerprintjs/dx-team-toolkit/commit/610d1387f75c144d8d99c1551b03343369a1b54b))
+
 ## 0.2.0
 
 ### Minor Changes
