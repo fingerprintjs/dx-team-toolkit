@@ -612,6 +612,7 @@ The workflow expects the following secret to be provided:
 | `APP_PRIVATE_KEY`        | GitHub App private key to request GitHub token for release process.                                       |
 | `RUNNER_APP_PRIVATE_KEY` | GitHub App private key to request GitHub token for creating PR.                                           |
 | `NPM_AUTH_TOKEN`         | NPM authentication token for publishing packages. Can be omitted if `useTrustedPublishing` is set to true |
+| `SLACK_WEBHOOK_URL`      | Slack incoming webhook URL. When set, published releases and failed release runs are posted to its channel. |
 
 #### Example of Usage:
 
