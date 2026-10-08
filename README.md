@@ -595,6 +595,7 @@ The workflow accepts the following input parameters:
 | `useTrustedPublishing`  | No       | Boolean | Whether to use Trusted Publishing instead of NPM token for publishing the package.                          |
 | `github-release-files`  | No       | String  | A comma-delimited list of glob patterns to identify the local files to attach to the GitHub release.        |
 | `unmarkReleaseAsLatest` | No       | Boolean | Keep GitHub's "Latest" badge on the previous latest release. See the note below. Defaults to `false`.       |
+| `slack-channel`         | No       | String  | Slack channel to notify about published releases and failed release runs. Requires `SLACK_WEBHOOK_URL`.   |
 
 > **Note on `unmarkReleaseAsLatest`:** GitHub's "Latest" badge moves only when a release is
 > explicitly promoted with `--latest`. The workflow records the release holding the badge _before_
@@ -612,6 +613,7 @@ The workflow expects the following secret to be provided:
 | `APP_PRIVATE_KEY`        | GitHub App private key to request GitHub token for release process.                                       |
 | `RUNNER_APP_PRIVATE_KEY` | GitHub App private key to request GitHub token for creating PR.                                           |
 | `NPM_AUTH_TOKEN`         | NPM authentication token for publishing packages. Can be omitted if `useTrustedPublishing` is set to true |
+| `SLACK_WEBHOOK_URL`      | Slack webhook URL used when `slack-channel` is set.                                                       |
 
 #### Example of Usage:
 

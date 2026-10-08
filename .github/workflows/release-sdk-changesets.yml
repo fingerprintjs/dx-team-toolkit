@@ -60,6 +60,11 @@ on:
         required: false
         default: false
         description: 'Set to true for releases cut from a non-default branch (e.g. a legacy/maintenance branch) so they don''t override the "Latest" badge on releases from the default branch. The badge is kept in place by re-promoting the release that held it before this publish.'
+      slack-channel:
+        type: string
+        default: ''
+        required: false
+        description: 'Slack channel to notify about published releases and failed release runs. Requires the SLACK_WEBHOOK_URL secret.'
     secrets:
       APP_PRIVATE_KEY:
         description: 'GitHub App private key to request GitHub token for release process.'
@@ -69,6 +74,9 @@ on:
         required: false
       NPM_AUTH_TOKEN:
         description: 'NPM authentication token for publishing packages.'
+        required: false
+      SLACK_WEBHOOK_URL:
+        description: 'Slack webhook URL used when slack-channel is set.'
         required: false
 
 jobs:
@@ -343,3 +351,37 @@ jobs:
             echo "Uploading files matching the pattern \"$pattern\" to the $TAG release"
             gh release upload "$TAG" $pattern
           done
+
+      - name: 'Format published packages for Slack'
+        id: slack-packages
+        if: inputs.slack-channel != '' && steps.changesets-release.outputs.published == 'true'
+        env:
+          PACKAGES: ${{ steps.changesets-release.outputs.publishedPackages }}
+        run: echo "list=$(echo "$PACKAGES" | jq -r 'map("`\(.name)@\(.version)`") | join(", ")')" >> "$GITHUB_OUTPUT"
+
+      - name: 'Notify Slack about the release'
+        if: inputs.slack-channel != '' && steps.changesets-release.outputs.published == 'true'
+        uses: rtCamp/action-slack-notify@33ca3be66c6f378fe1610fd1d5258632dbed5e58 # v2.4.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: ${{ inputs.slack-channel }}
+          SLACK_COLOR: good
+          SLACK_TITLE: 'Released ${{ github.repository }}'
+          SLACK_MESSAGE: |
+            :package: *Packages:* ${{ steps.slack-packages.outputs.list }}
+            :link: *Releases:* https://github.com/${{ github.repository }}/releases
+            :bust_in_silhouette: *Author:* `${{ github.actor }}`
+          SLACK_FOOTER: ''
+
+      - name: 'Notify Slack about the failed release'
+        if: failure() && inputs.slack-channel != ''
+        uses: rtCamp/action-slack-notify@33ca3be66c6f378fe1610fd1d5258632dbed5e58 # v2.4.0
+        env:
+          SLACK_WEBHOOK: ${{ secrets.SLACK_WEBHOOK_URL }}
+          SLACK_CHANNEL: ${{ inputs.slack-channel }}
+          SLACK_COLOR: danger
+          SLACK_TITLE: 'Release failed: ${{ github.repository }}'
+          SLACK_MESSAGE: |
+            :x: *Run:* https://github.com/${{ github.repository }}/actions/runs/${{ github.run_id }}
+            :bust_in_silhouette: *Author:* `${{ github.actor }}`
+          SLACK_FOOTER: ''
