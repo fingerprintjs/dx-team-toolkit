@@ -27,6 +27,7 @@ module.exports = {
     type: 'problem',
     docs: {
       description: 'Disallow new URL(path, base) and URL.parse(path, base) when path is not a fixed string',
+      url: 'https://github.com/fingerprintjs/dx-team-toolkit/tree/main/packages/eslint-config-dx-team#dx-teamno-url-variable-path',
     },
     schema: [],
     messages: {
