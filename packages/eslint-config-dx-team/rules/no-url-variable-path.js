@@ -36,7 +36,10 @@ module.exports = {
   },
   create(context) {
     function check(node, call) {
-      if (node.arguments.length >= 2 && !isFixedString(node.arguments[0])) {
+      const [first] = node.arguments
+      // A spread first argument can supply both path and base, so it can't be checked.
+      const mayHaveBase = node.arguments.length >= 2 || first?.type === 'SpreadElement'
+      if (first && mayHaveBase && !isFixedString(first)) {
         context.report({ node, messageId: 'variablePath', data: { call } })
       }
     }

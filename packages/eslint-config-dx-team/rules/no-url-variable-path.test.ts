@@ -10,6 +10,7 @@ ruleTester.run('no-url-variable-path', rule, {
     'new URL(`/path`, base)',
     'new URL(href)',
     "URL.parse('/path', base)",
+    "new URL('/path', ...rest)",
     'URL.parse(href)',
     'new Other(path, base)',
     'URL.canParse(path, base)',
@@ -23,5 +24,7 @@ ruleTester.run('no-url-variable-path', rule, {
     { code: 'new globalThis.URL(path, base)', errors: [{ messageId: 'variablePath' }] },
     { code: 'URL.parse(path, base)', errors: [{ messageId: 'variablePath' }] },
     { code: 'window.URL.parse(path, base)', errors: [{ messageId: 'variablePath' }] },
+    { code: 'new URL(...[path, base])', errors: [{ messageId: 'variablePath' }] },
+    { code: 'URL.parse(...args)', errors: [{ messageId: 'variablePath' }] },
   ],
 })
