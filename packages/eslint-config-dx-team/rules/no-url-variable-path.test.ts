@@ -14,6 +14,11 @@ ruleTester.run('no-url-variable-path', rule, {
     'URL.parse(href)',
     'new Other(path, base)',
     'URL.canParse(path, base)',
+    'class URL { constructor(a: string, b: string) {} }\nnew URL(path, base)',
+    'function f(URL: any) { return new URL(path, base) }',
+    'const URL = { parse: (a: string, b: string) => a + b }\nURL.parse(path, base)',
+    'const window = { URL: Other }\nnew window.URL(path, base)',
+    "import { URL } from './routes'\nnew URL(path, base)",
   ],
   invalid: [
     { code: 'new URL(path, base)', errors: [{ messageId: 'variablePath' }] },
@@ -26,5 +31,10 @@ ruleTester.run('no-url-variable-path', rule, {
     { code: 'window.URL.parse(path, base)', errors: [{ messageId: 'variablePath' }] },
     { code: 'new URL(...[path, base])', errors: [{ messageId: 'variablePath' }] },
     { code: 'URL.parse(...args)', errors: [{ messageId: 'variablePath' }] },
+    { code: "import { URL } from 'node:url'\nnew URL(path, base)", errors: [{ messageId: 'variablePath' }] },
+    { code: "import { URL } from 'url'\nURL.parse(path, base)", errors: [{ messageId: 'variablePath' }] },
+    { code: "import { URL } from 'whatwg-url'\nnew URL(path, base)", errors: [{ messageId: 'variablePath' }] },
+    { code: 'interface URL { extra: string }\nnew URL(path, base)', errors: [{ messageId: 'variablePath' }] },
+    { code: 'function f() { return new URL(path, base) }', errors: [{ messageId: 'variablePath' }] },
   ],
 })

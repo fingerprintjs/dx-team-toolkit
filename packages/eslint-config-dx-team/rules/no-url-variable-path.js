@@ -2,16 +2,41 @@
 // https://url.spec.whatwg.org/#url-parsing
 const GLOBAL_OBJECTS = new Set(['globalThis', 'window', 'self', 'global'])
 
-function isUrlConstructor(node) {
+const URL_MODULES = new Set(['url', 'node:url', 'whatwg-url'])
+
+function isUrlModuleImport(def) {
+  return (
+    def.type === 'ImportBinding' &&
+    def.node.type === 'ImportSpecifier' &&
+    def.node.imported.name === 'URL' &&
+    URL_MODULES.has(def.parent.source.value)
+  )
+}
+
+// True when `name` resolves to the global, not a local class, function, variable, or parameter.
+// `URL` imported from `url`, `node:url`, or `whatwg-url` is the same WHATWG URL, so it counts as the global.
+function isGlobal(scope, name) {
+  for (let current = scope; current; current = current.upper) {
+    const variable = current.set.get(name)
+    // typescript-eslint adds type-only names like `interface URL {}` to the scope. They don't shadow the value.
+    if (variable && variable.isValueVariable !== false) {
+      return variable.defs.every((def) => name === 'URL' && isUrlModuleImport(def))
+    }
+  }
+  return true
+}
+
+function isUrlConstructor(node, scope) {
   if (node.type === 'Identifier') {
-    return node.name === 'URL'
+    return node.name === 'URL' && isGlobal(scope, 'URL')
   }
   return (
     node.type === 'MemberExpression' &&
     !node.computed &&
     node.object.type === 'Identifier' &&
     GLOBAL_OBJECTS.has(node.object.name) &&
-    node.property.name === 'URL'
+    node.property.name === 'URL' &&
+    isGlobal(scope, node.object.name)
   )
 }
 
@@ -47,7 +72,7 @@ module.exports = {
 
     return {
       NewExpression(node) {
-        if (isUrlConstructor(node.callee)) {
+        if (isUrlConstructor(node.callee, context.sourceCode.getScope(node))) {
           check(node, 'new URL(path, base)')
         }
       },
@@ -57,7 +82,7 @@ module.exports = {
           callee.type === 'MemberExpression' &&
           !callee.computed &&
           callee.property.name === 'parse' &&
-          isUrlConstructor(callee.object)
+          isUrlConstructor(callee.object, context.sourceCode.getScope(node))
         ) {
           check(node, 'URL.parse(path, base)')
         }
