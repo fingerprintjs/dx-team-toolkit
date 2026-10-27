@@ -6,6 +6,7 @@ const tseslint = require('typescript-eslint')
 const prettierPlugin = require('eslint-plugin-prettier')
 const prettierConfig = require('eslint-config-prettier')
 const globals = require('globals')
+const noUrlVariablePath = require('./rules/no-url-variable-path')
 
 // Flat config does not read .gitignore. Honor the consuming repo's root .gitignore so
 // git-ignored paths (build output, dependencies) are not linted. Only .gitignore is read,
@@ -20,6 +21,7 @@ module.exports = defineConfig([
   {
     plugins: {
       prettier: prettierPlugin,
+      'dx-team': { rules: { 'no-url-variable-path': noUrlVariablePath } },
     },
     languageOptions: {
       globals: {
@@ -63,6 +65,7 @@ module.exports = defineConfig([
       'no-implicit-coercion': 'error',
       'no-self-compare': 'error',
       'no-constant-binary-expression': 'error',
+      'dx-team/no-url-variable-path': 'error',
       /*
         Type-casting should be avoided if possible,
         or require an explicit eslint-disable-next-line directive with an explanation why it's necessary there
