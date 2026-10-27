@@ -20,7 +20,8 @@
   },
   "files": [
     "index.js",
-    "type-checked.js"
+    "type-checked.js",
+    "rules/*.js"
   ],
   "dependencies": {
     "eslint-config-prettier": "^9.1.0",
