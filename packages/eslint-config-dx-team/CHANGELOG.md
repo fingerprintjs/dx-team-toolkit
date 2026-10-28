@@ -1,5 +1,11 @@
 # @fingerprintjs/eslint-config-dx-team
 
+## 3.2.0
+
+### Minor Changes
+
+- Add the `dx-team/no-url-variable-path` rule, on by default. It flags `new URL(path, base)` and `URL.parse(path, base)` when `path` is not a fixed string. If `path` is an absolute URL or starts with `//` or a backslash, the URL parser drops `base`, so a request path can send a redirect or upstream request to another host. Build from a fixed origin and assign `pathname`, or disable the rule on that line with a reason where resolving against the base is intended. ([51bf099](https://github.com/fingerprintjs/dx-team-toolkit/commit/51bf099348129d09611f2d2ab175509d8ac79f81))
+
 ## 3.1.0
 
 ### Minor Changes
