@@ -234,7 +234,7 @@ Build project and run functional tests
 ```yaml
 name: Build project and run functional tests
 on:
-  pull_request_target:
+  pull_request:
 jobs:
   build-and-check:
     name: Build project and run CI checks
@@ -252,8 +252,6 @@ jobs:
         node-version: [ 10, 12, 14, 16, 17, 18, 19, 20 ]
     steps:
       - uses: actions/checkout@v4
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
       - uses: actions/setup-node@v4
         with:
           node-version: ${{ matrix.node-version }}

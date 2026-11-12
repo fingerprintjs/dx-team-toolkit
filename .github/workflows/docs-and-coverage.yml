@@ -97,7 +97,7 @@ jobs:
           include-hidden-files: true
 
   deploy-pages:
-    if: github.event_name != 'pull_request' && github.event_name != 'pull_request_target'
+    if: github.event_name != 'pull_request'
     needs: generate-docs-and-coverage
     runs-on: ubuntu-latest
     permissions:
