@@ -41,14 +41,7 @@ jobs:
     name: 'Build project using last node version'
     runs-on: ${{ inputs.runsOn }}
     steps:
-      - name: 'Checkout project for pull_request_target trigger'
-        if: ${{ github.event_name == 'pull_request_target' }}
-        uses: actions/checkout@v7
-        with:
-          ref: ${{ github.event.pull_request.head.sha }}
-
-      - name: 'Checkout project for other scenarios'
-        if: ${{ github.event_name != 'pull_request_target' }}
+      - name: 'Checkout project'
         uses: actions/checkout@v7
 
       - name: 'Determine package manager'
