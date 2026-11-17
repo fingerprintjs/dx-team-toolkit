@@ -21,13 +21,13 @@ runs:
   steps:
     - uses: actions/setup-node@v6
       with:
-        node-version: 'lts/*'
+        node-version: 24
 
     # Uses the Chrome that GitHub-hosted Ubuntu runners already have; no browser download.
     - name: Install Playwright
       shell: bash
       working-directory: ${{ github.action_path }}
-      run: npm install --no-package-lock --no-audit --no-fund
+      run: npm install --omit=dev --no-package-lock --no-audit --no-fund
 
     - name: Create events
       shell: bash
@@ -36,4 +36,4 @@ runs:
         PUBLIC_API_KEY: ${{ inputs.public-api-key }}
         REGION: ${{ inputs.region }}
         COUNT: ${{ inputs.count }}
-      run: node seed.mjs
+      run: node seed.ts

@@ -11,6 +11,8 @@ The action runs the JS agent (v4, from the CDN) in the Chrome that GitHub-hosted
 - a regular context, which the agent reports as incognito;
 - a persistent-profile context, which the agent reports as non-incognito.
 
+Every event has the page URL `https://dx-team-toolkit-events.test/`, so you can tell seeded events from real ones.
+
 ## Usage
 
 Run the action in its own job and make the test job depend on it with `needs:`:
