@@ -1,0 +1,43 @@
+name: Test seed-identification-events action
+
+on:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  test-seed-identification-events:
+    name: Test seed-identification-events action
+    runs-on: ubuntu-latest
+    defaults:
+      run:
+        working-directory: .github/actions/seed-identification-events
+    steps:
+      - uses: actions/checkout@v7
+
+      - uses: actions/setup-node@v6
+        with:
+          node-version: 'lts/*'
+
+      # Creating events needs a real public API key, so this only checks what runs without one.
+      - name: Install dependencies and check syntax
+        run: |
+          npm install --no-package-lock --no-audit --no-fund
+          node --check seed.mjs
+
+      - name: Reject a missing public API key
+        run: |
+          if PUBLIC_API_KEY= node seed.mjs 2> error.log; then
+            echo "::error::Expected seed.mjs to fail without a public API key"
+            exit 1
+          fi
+          grep -q 'public-api-key is required' error.log
+
+      - name: Reject an invalid count
+        run: |
+          if PUBLIC_API_KEY=test-key COUNT=0 node seed.mjs 2> error.log; then
+            echo "::error::Expected seed.mjs to fail with count 0"
+            exit 1
+          fi
+          grep -q 'count must be a positive integer' error.log

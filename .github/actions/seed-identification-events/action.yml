@@ -1,0 +1,39 @@
+name: 'Seed identification events'
+description: >-
+  Create identification events in a Fingerprint workspace by running the JS agent in headless Chrome, so server SDK tests that search for events always find some.
+
+
+inputs:
+  public-api-key:
+    description: 'Public API key of the workspace environment to create events in.'
+    required: true
+  region:
+    description: 'Workspace region: us, eu or ap.'
+    required: false
+    default: 'us'
+  count:
+    description: 'Number of events to create.'
+    required: false
+    default: '5'
+
+runs:
+  using: 'composite'
+  steps:
+    - uses: actions/setup-node@v6
+      with:
+        node-version: 'lts/*'
+
+    # Uses the Chrome that GitHub-hosted Ubuntu runners already have; no browser download.
+    - name: Install Playwright
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      run: npm install --no-package-lock --no-audit --no-fund
+
+    - name: Create events
+      shell: bash
+      working-directory: ${{ github.action_path }}
+      env:
+        PUBLIC_API_KEY: ${{ inputs.public-api-key }}
+        REGION: ${{ inputs.region }}
+        COUNT: ${{ inputs.count }}
+      run: node seed.mjs

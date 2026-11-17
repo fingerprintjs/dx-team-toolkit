@@ -815,11 +815,18 @@ jobs:
 ## Reusable actions
 
 - [1. Detect changed paths](#1-detect-changed-paths)
+- [2. Seed identification events](#2-seed-identification-events)
 
 ### 1. Detect changed paths
 
 Use [`paths-changed`](.github/actions/paths-changed) to keep required checks reporting
 while skipping expensive steps when watched files did not change.
+
+### 2. Seed identification events
+
+Use [`seed-identification-events`](.github/actions/seed-identification-events) to create a
+few identification events in a Fingerprint test workspace before server SDK functional tests
+that search for recent events. Test workspaces keep data for 30 days and get no other traffic.
 
 ## Releasing
 
